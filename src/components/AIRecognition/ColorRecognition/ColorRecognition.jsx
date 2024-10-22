@@ -55,7 +55,7 @@ const ColorRecognition = ( {
     // Save to Account button to save Color details into PostgreSQL as blob metadata
     const saveColor = async () => {
         // Reset latest response.status.code before next action
-        setResponseStatusCode(undefined);
+        // setResponseStatusCode(undefined);
 
         const callbackName = `src/components/AIRecognition/ColorRecognition/ColorDetails/ColorDetails.jsx\nsaveColor = async () => {...}`;
 
@@ -102,7 +102,7 @@ const ColorRecognition = ( {
         console.log(`\nColorDetails saveColor imageDetails:\n`, imageDetails, `\n`);
         console.log(`\nFetching ${fetchUrl} with bodyData`, bodyData, `\n`);
 
-        fetch(fetchUrl, {
+        await fetch(fetchUrl, {
         method: 'post', 
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ // sending stringified this.state variables as JSON objects
@@ -131,7 +131,7 @@ const ColorRecognition = ( {
     // Save to Device button to save Color details into PostgreSQL as blob metadata
     const saveColorToDevice = async () => {
       // Reset latest response.status.code before next action
-      setResponseStatusCode(undefined);
+      // setResponseStatusCode(undefined);
     }
 
     const showModal = () => {

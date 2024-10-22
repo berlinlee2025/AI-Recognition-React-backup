@@ -243,13 +243,13 @@ class App extends Component {
   // sending data to server-side
   
   /* Updating Entries - Fetching local web server vs live web server on Render */
-  updateEntries = () => {
+  updateEntries = async () => {
     const devUpdateEntriesUrl = 'http://localhost:3001/image';
     const prodUpdateEntriesUrl = 'https://ai-recognition-backend.onrender.com/image';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodUpdateEntriesUrl : devUpdateEntriesUrl;
     
-    fetch(fetchUrl, {
+    await fetch(fetchUrl, {
         method: 'put', // PUT (Update) 
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ // sending stringified this.state variables as JSON objects
@@ -278,7 +278,7 @@ class App extends Component {
   // Arrow function to send this.state.state_raw_hex_array
   // to server-side right after setting state for state_raw_hex_array
   // to avoid delay in server-side
-  loadRawHex = () => {
+  loadRawHex = async () => {
     const devFetchRawHexUrl = 'http://localhost:3001/image';
     const prodFetchRawHexUrl = 'https://ai-recognition-backend.onrender.com/image';
     
@@ -286,7 +286,7 @@ class App extends Component {
 
     /* Sending state user.id && state_raw_hex_array to local server-side */
     // Fetching live Web Server on Render
-    fetch(fetchUrl, {
+    await fetch(fetchUrl, {
       method: 'put', // PUT (Update) 
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -325,7 +325,7 @@ class App extends Component {
   }
 
   // ClarifaiAPI Celebrity Face Detection model
-  onCelebrityButton = () => {
+  onCelebrityButton = async () => {
     // Reset all state variables to allow proper rendering from Detection Models
     // Before next fetch
     this.resetState();
@@ -351,7 +351,7 @@ class App extends Component {
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchCelebrityImageUrl : devFetchCelebrityImageUrl;
 
-    fetch(fetchUrl, {
+    await fetch(fetchUrl, {
         method: 'post', 
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ // sending stringified this.state variables as JSON objects
@@ -386,7 +386,7 @@ class App extends Component {
   };
 
   // Retrieve User's Color Records from Node.js => PostgreSQL
-  onColorRecordsButton = () => {
+  onColorRecordsButton = async () => {
     // Reset all state variables to allow proper rendering of side-effects
     // this.resetState();
 
@@ -404,7 +404,7 @@ class App extends Component {
 
     console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
 
-    fetch(fetchUrl, {
+    await fetch(fetchUrl, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -433,7 +433,7 @@ class App extends Component {
   }
 
   // ClarifaiAPI Color Detection model
-  onColorButton = () => {
+  onColorButton = async () => {
     // Reset all state variables to allow proper rendering from Detection Models
     // Before next fetch
     this.resetState(); 
@@ -456,7 +456,7 @@ class App extends Component {
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchColorImageUrl : devFetchColorImageUrl;
 
-    fetch(fetchUrl, {
+    await fetch(fetchUrl, {
       method: 'post', 
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
@@ -480,7 +480,7 @@ class App extends Component {
   };
   
   // ClarifaiAPI Age Detection model
-  onAgeButton = () => {
+  onAgeButton = async () => {
     // Reset all state variables to allow proper rendering from Detection Models
     // Before next fetch
     this.resetState();
@@ -503,7 +503,7 @@ class App extends Component {
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchAgeUrl : devFetchAgeUrl;
 
-    fetch(fetchUrl, {
+    await fetch(fetchUrl, {
         method: 'post', 
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ // sending stringified this.state variables as JSON objects
