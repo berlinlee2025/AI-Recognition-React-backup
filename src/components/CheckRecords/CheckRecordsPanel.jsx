@@ -8,12 +8,25 @@ import { ImCross } from "react-icons/im";
 
 // Parent components
 // 1. src/routes/Home.jsx
-export default function CheckRecordsPanel({ 
+// Child components
+// 2. src/components/CheckRecords/CheckRecordsLi.jsx
+const CheckRecordsPanel = ({ 
   user, 
   isSignedIn, 
   onRouteChange,
+  // 1. 'Home' page
+  onHomeButton,
+  // 2. 'Celebrity records' page
+  onCelebrityRecordsButton,
+  userCelebrityRecords,
+  // 3. 'Color records' page
+  onColorRecordsButton,
+  userColorRecords,
+  // 4. 'Age records' page
+  onAgeRecordsButton,    
+  userAgeRecords,
   resetState 
-}) {
+}) => {
   // Keep monitor resolution changes
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -91,7 +104,15 @@ export default function CheckRecordsPanel({
           fontGt={fontGt}
           fontLt={fontLt}
           dimensions={dimensions}
-          onRouteChange={onRouteChange}
+          // 1. 'Home' page
+          onHomeButton={onHomeButton}
+          // 2. 'Celebrity records' page
+          onCelebrityRecordsButton={onCelebrityRecordsButton}
+          // 3. 'Color records' page
+          userColorRecords={userColorRecords}
+          onColorRecordsButton={onColorRecordsButton}
+          // 4. 'Age records' page
+          userAgeRecords={userAgeRecords}
           resetState={resetState}
         />
       </div>
@@ -147,11 +168,19 @@ export default function CheckRecordsPanel({
         <div className={`${classes.nav}`}>
           <ul className={`${classes.ls} ${classes.frosted}`}>
             <CheckRecordsLi
+              user={user}
               fontGt={fontGt}
               fontLt={fontLt}
               dimensions={dimensions}
-              user={user}
-              onRouteChange={onRouteChange}
+              // 1. 'Home' page
+              onHomeButton={onHomeButton}
+              // 2. 'Celebrity records' page
+              onCelebrityRecordsButton={onCelebrityRecordsButton}
+              // 3. 'Color records' page
+              userColorRecords={userColorRecords}
+              onColorRecordsButton={onColorRecordsButton}
+              // 4. 'Age records' page
+              userAgeRecords={userAgeRecords}
               resetState={resetState}
             />
           </ul>
@@ -171,4 +200,4 @@ export default function CheckRecordsPanel({
   // return dimensions.width > mobileBreakpoint ? <NavGt860 /> : <NavLt860 />;
 }
 
-
+export default CheckRecordsPanel;

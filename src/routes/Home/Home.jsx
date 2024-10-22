@@ -1,7 +1,6 @@
 import React from 'react';
 // import Rank from '../../components/Rank/Rank';
 import CheckRecordsPanel from '../../components/CheckRecords/CheckRecordsPanel';
-import CheckRecordsLi from '../../components/CheckRecords/CheckRecordsLi';
 import ImageLinkForm from '../../components/ImageLinkForm/ImageLinkForm';
 import FaceRecognition from '../../components/AIRecognition/FaceRecognition/FaceRecognition';
 import ColorRecognition from '../../components/AIRecognition/ColorRecognition/ColorRecognition';
@@ -28,6 +27,18 @@ const Home = ( {
     age,
     age_hidden,
     box,
+    // 1. 'Home' page
+    onHomeButton,
+    // 2. 'Celebrity records' page
+    onCelebrityRecordsButton,
+    userCelebrityRecords,
+    // 3. 'Color records' page
+    onColorRecordsButton,
+    userColorRecords,
+    // 4. 'Age records' page
+    onAgeRecordsButton,    
+    userAgeRecords,
+    // Callback function passed from src/App.js to allow custom onClick routing methods
     onRouteChange,
     resetUser,
     resetState 
@@ -45,6 +56,16 @@ const Home = ( {
                 isSignedIn={isSignedIn} 
                 onRouteChange={onRouteChange}
                 resetState={resetState}
+                // 1. 'Home' page
+                onHomeButton={onHomeButton}
+                // 2. 'Celebrity records' page
+                onCelebrityRecordsButton={onCelebrityRecordsButton}
+                // 3. 'Color records' page
+                userColorRecords={userColorRecords}
+                onColorRecordsButton={onColorRecordsButton}
+                // 4. 'Age records' page
+                userAgeRecords={userAgeRecords}
+                onAgeRecordsButton={onAgeRecordsButton}
             />
             <ImageLinkForm
                 onInputChange={onInputChange}
@@ -62,6 +83,7 @@ const Home = ( {
                 imageUrl={imageUrl}
                 celebrityName={celebrityName}
                 face_hidden={face_hidden}
+                onRouteChange={onRouteChange}
             />
             <ColorRecognition
                 user={user}
@@ -71,6 +93,7 @@ const Home = ( {
                 color_hidden={color_hidden}
                 name={name}
                 onSaveColorButton={onSaveColorButton}
+                onRouteChange={onRouteChange}
             />
             <AgeRecognition
                 user={user}
@@ -78,6 +101,7 @@ const Home = ( {
                 input={input}
                 imageUrl={imageUrl}
                 age_hidden={age_hidden}
+                onRouteChange={onRouteChange}
             />
         </React.Fragment>
     )

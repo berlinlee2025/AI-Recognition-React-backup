@@ -8,7 +8,12 @@ import Navigation from './components/Navigation/Navigation';
 import Home from './routes/Home/Home';
 import Signin from './routes/Signin/Signin';
 import Register from './routes/Register/container/Register';
-import ColorRecords from './routes/Records/ColorRecords';
+
+// User Records
+import CheckRecordsPanel from './components/CheckRecords/CheckRecordsPanel';
+import ColorRecords from './routes/Records/ColorRecords/ColorRecords';
+import CelebrityRecords from './routes/Records/CelebrityRecords/CelebrityRecords';
+import AgeRecords from './routes/Records/AgeRecords/AgeRecords';
 
 // Utility helper functions
 // import loadUserFromLocalStorage from './util/loadUserFromLocalStorage';
@@ -23,13 +28,16 @@ const localStorage = window.localStorage;
 class App extends Component {
   constructor() {
     super();
-    // this.state = initialState;
 
     const userData = localStorage.getItem('user');
-    // const userData = loadUserFromLocalStorage();
+    const lastRoute = localStorage.getItem('lastRoute');
+    // const defaultRoute = userData ? 'home' : 'signin';
+    const defaultRoute = userData? (lastRoute || 'home') : 'signin';
 
-
-    const defaultRoute = userData? 'home' : 'signin';
+    // Load User's records from localStorage, or set to null if not yet stored
+    const userColorRecords = localStorage.getItem('userColorRecords');
+    const userCelebrityRecords = localStorage.getItem('userCelebrityRecords');
+    const userAgeRecords = localStorage.getItem('userAgeRecords');
 
     this.state = {
       input: '', // this.state.input => Users' input imageUrl => Can be used for onClick events
@@ -46,10 +54,16 @@ class App extends Component {
       responseStatusCode: Number(''),
       route: defaultRoute,
       isSignedIn: userData ? true : false,
-      user: JSON.parse(userData) || {}, // localStorage user{} is stored in JSON.stringified
-      userColorRecords: {}
-    };
+      
+      // user: JSON.parse(userData) || {}, // localStorage user{} is stored in JSON.stringified
+      // Retrieving User's records from PostgreSQL
 
+      user: userData ? JSON.parse(userData) : {}, // localStorage user{} is stored in JSON.stringified
+
+      userCelebrityRecords: userCelebrityRecords ? JSON.parse(userCelebrityRecords) : null, // localStorage userCelebrityRecords{}
+      userColorRecords: userColorRecords ? JSON.parse(userColorRecords) : null, // localStorage userColorRecords{}
+      userAgeRecords: userAgeRecords ? JSON.parse(userAgeRecords) : null, // localStorage userAgeRecords{}
+    };
     // this.state.dimensions => Bind methods for handleResize regarding this.handleResize
     this.handleResize = this.handleResize.bind(this);
 
@@ -60,50 +74,57 @@ class App extends Component {
     this.inactivityTimer = null;
   }
 
-  // Keep tracking window.innerWidth px
-  handleResize() {
-    this.setState({ dimensions: { width: window.innerWidth } });
-  }
-
   componentDidMount() {
     this.loadUserFromLocalStorage();
     this.resetInactivityTimer();
     // Adding EventListener to window 'resize' events
     window.addEventListener('resize', this.handleResize);
-    // this.state.dimensions => Periodically clean up this.state.dimensions{} in every 30 seconds
+    // this.state.dimensions => Periodically clean up this.state.dimensions{} in every 5 minutes
     this.dimensionsCleanupTimer = setInterval(() => {
       this.setState({ dimensions: { width: window.innerWidth } });
-    }, 30000); // Reset this.state.dimensions{} in every 30 seconds
+    }, 300000); // Reset this.state.dimensions{} in every 5 minutes
   }
 
-  // Keep tracking for user
+  /* Keep tracking for user state variables */
+  // useEffect() hook combining componentDidUpdate & componentWillUnmount
   // Validate users whenever there's a change
   componentDidUpdate(prevProps, prevState) {
     if (this.state.user !== prevState.user) { 
       this.validateUsers();
     }
-  }
+    // ** Storing User's latest route
+    if (this.state.route !== prevState.route) {
+      localStorage.setItem('lastRoute', this.state.route);
+    }
 
-  // useEffect() hook
+    // Check if records have been updated & store them in localStorage
+    if (this.state.userCelebrityRecords !== prevState.userCelebrityRecords) {
+      localStorage.setItem('userCelebrityRecords', JSON.stringify(this.state.userCelebrityRecords));
+    }
+    // Check if records have been updated & store them in localStorage
+    if (this.state.userColorRecords !== prevState.userColorRecords) {
+      localStorage.setItem('userColorRecords', JSON.stringify(this.state.userColorRecords));
+    }
+    // Check if records have been updated & store them in localStorage
+    if (this.state.userAgeRecords !== prevState.userAgeRecords) {
+      localStorage.setItem('userAgeRecords', JSON.stringify(this.state.userAgeRecords));
+    }
+  }
+  
   componentWillUnmount() {
     clearTimeout(this.inactivityTimer);
     window.removeEventListener('resize', this.handleResize);
     // this.state.dimensions => Clear the interval on unmount to avoid memory leak on browser 
     clearInterval(this.dimensionsCleanupTimer);
   }
+
+  // Keep tracking window.innerWidth px
+  handleResize() {
+    this.setState({ dimensions: { width: window.innerWidth } });
+  }
   
   resetUser = () => {
-    // Batch 1
-    // this.resetUser(this.setState.bind(this));
-
-    // Round 1
-    this.setState({
-      user: {},
-      isSignedIn: false,
-      route: 'signin'
-    }, 
-    // Round 2
-    () => {
+    this.setState({ user: {}, isSignedIn: false, route: 'signin'}, () => {
       // this.removeUserFromLocalStorage();
       this.removeUserFromLocalStorage();
       console.log(`\nthis.state.isSignedIn after resetUser:\n`,this.state.isSignedIn, `\n`);//true
@@ -135,7 +156,8 @@ class App extends Component {
         this.setState({ 
           user: JSON.parse(userData), 
           isSignedIn: true,
-          route: 'home'
+          route: localStorage.getItem('lastRoute') || 'home'
+          // ** route: 'home'
         });
       } catch (err) {
         console.error(`\nFailed to parse user data: `, err);
@@ -147,6 +169,8 @@ class App extends Component {
 
   removeUserFromLocalStorage = () => {
     localStorage.removeItem('user');
+    // **
+    localStorage.removeItem('lastRoute');
   }
 
   // For Celebrity detection model
@@ -193,9 +217,26 @@ class App extends Component {
       face_hidden: true,
       color_hidden: true,
       age_hidden: true,
-      responseStatusCode: Number('')
+      responseStatusCode: Number(''),
+      // userCelebrityRecords: null,
+      // userColorRecords: null, // Retrieving User's Color Records from Postgres
+      // userAgeRecords: null
     })
   };
+
+  // reset all User's color & celebrity & age detection records in Frontend
+  resetUserRecords = () => {
+    this.setState({
+      userColorRecords: [],
+      userCelebrityRecords: [],
+      userAgeRecords: []
+    });
+
+    // Also remove these items from localStorage
+    localStorage.removeItem('userColorRecords');
+    localStorage.removeItem('userCelebrityRecords');
+    localStorage.removeItem('userAgeRecords');
+  }
 
   // Everytime any of the Detection Models is activated
   // update this.state.user.entries by 1 through
@@ -217,17 +258,70 @@ class App extends Component {
       })
       .then(response => {
         return response.json()
-      })
-      .then(fetchedEntries => {
-        console.log(`fetched ENTRIES from server: \n ${fetchedEntries}`);
-        console.log(`typeof fetched ENTRIES from server: \n ${typeof fetchedEntries}`);
-         this.setState(Object.assign(this.state.user, {
+    })
+    .then(fetchedEntries => {
+      console.log(`fetched ENTRIES from server: \n ${fetchedEntries}`);
+      console.log(`typeof fetched ENTRIES from server: \n ${typeof fetchedEntries}`);
+
+      this.setState(Object.assign(this.state.user, {
           entries: fetchedEntries
-        }), () => {
-          // console.log(`this.state.user.entries is: ${this.state.user.entries}`);
+      }), () => {
+      // console.log(`this.state.user.entries is: ${this.state.user.entries}`); 
         })
-        })
-      .catch(err => console.log(err))
+      })
+      .catch(err => {
+        console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
+      });
+  }
+
+  // For <SaveColorBtn /> in <ColorRecognition />
+  // Arrow function to send this.state.state_raw_hex_array
+  // to server-side right after setting state for state_raw_hex_array
+  // to avoid delay in server-side
+  loadRawHex = () => {
+    const devFetchRawHexUrl = 'http://localhost:3001/image';
+    const prodFetchRawHexUrl = 'https://ai-recognition-backend.onrender.com/image';
+    
+    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchRawHexUrl : devFetchRawHexUrl;
+
+    /* Sending state user.id && state_raw_hex_array to local server-side */
+    // Fetching live Web Server on Render
+    fetch(fetchUrl, {
+      method: 'put', // PUT (Update) 
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+      id: this.state.user.id,
+      raw_hex: this.state.state_raw_hex_array
+      })
+    })
+    .then(response => response.json()) // string to json
+    .then(fetchedUser => { // entries is coming from server-side response
+    console.log('fetchedUser: ', fetchedUser);
+
+    // Object.assign(target, source)
+    this.setState(Object.assign(this.state.user, {
+      entries: fetchedUser.entries,
+      raw_hex: this.state.state_raw_hex_array
+    }), () => {
+      console.log(`this.state.user.entries is: ${this.state.user.entries}`);
+      console.log(`raw_hex array passed to server-side: ${this.state.state_raw_hex_array}`);
+    })
+    })
+    .catch(err => {
+      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
+    });
+  }
+
+  // To be passed to <CheckRecordsPanel /> in src/components/CheckRecords/CheckRecrodsPanel.jsx
+  onHomeButton = () => {
+    // Reset all state variables to allow proper rendering from Detection Models
+    this.resetState();
+
+    // Reset User's all color & celebrity & age records in Frontend
+    this.resetUserRecords();
+
+    // Change Route to 'home' => Checkout App.js onRouteChange()
+    this.onRouteChange('home');
   }
 
   // ClarifaiAPI Celebrity Face Detection model
@@ -285,9 +379,58 @@ class App extends Component {
         // this.displayCelebrity(this.findCelebrity(response));
         this.displayCelebrity(findCelebrity(response));
         this.setState({ responseStatusCode: response.status.code });
-        })
-      .catch(err => console.log(err));
+      })
+      .catch(err => {
+        console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
+      });
   };
+
+  // Retrieve User's Color Records from Node.js => PostgreSQL
+  onColorRecordsButton = () => {
+    // Reset all state variables to allow proper rendering of side-effects
+    // this.resetState();
+
+    // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
+    this.onRouteChange('colorRecords');
+
+    const devFetchGetUserColorUrl = 'http://localhost:3001/get-user-color';
+    const prodFetchGetUserColorUrl = 'https://ai-recognition-backend.onrender.com/get-user-color';
+
+    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
+
+    const bodyData = JSON.stringify({
+      userId: this.state.user.id
+    });
+
+    console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
+
+    fetch(fetchUrl, {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        userId: this.state.user.id
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log(`\nFetched User's Colors Records obj:\n`, response, `\n`);
+      console.log(`\nFetched User's Colors Records obj:\n`, response.colorData, `\n`);
+      // If there's a response upon fetching Clarifai API
+      // fetch our server-side to update entries count too
+      if (response) { 
+        // this.updateEntries();
+        this.setState({
+          userColorRecords: response.colorData
+        });
+
+      };
+    })
+    .catch((err) => {
+      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`);
+    });
+
+    console.log(`\nsrc/App.js this.state.userColorRecords:\n`, this.state.userColorRecords, `\n`);
+  }
 
   // ClarifaiAPI Color Detection model
   onColorButton = () => {
@@ -331,44 +474,10 @@ class App extends Component {
 
       this.displayColor(findColor(response));
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
+    });
   };
-
-  // For <SaveColorBtn /> in <ColorRecognition />
-  // Arrow function to send this.state.state_raw_hex_array
-  // to server-side right after setting state for state_raw_hex_array
-  // to avoid delay in server-side
-  loadRawHex = () => {
-    const devFetchRawHexUrl = 'http://localhost:3001/image';
-    const prodFetchRawHexUrl = 'https://ai-recognition-backend.onrender.com/image';
-    
-    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchRawHexUrl : devFetchRawHexUrl;
-
-    /* Sending state user.id && state_raw_hex_array to local server-side */
-    // Fetching live Web Server on Render
-    fetch(fetchUrl, {
-      method: 'put', // PUT (Update) 
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-      id: this.state.user.id,
-      raw_hex: this.state.state_raw_hex_array
-      })
-    })
-    .then(response => response.json()) // string to json
-    .then(fetchedUser => { // entries is coming from server-side response
-    console.log('fetchedUser: ', fetchedUser);
-
-    // Object.assign(target, source)
-    this.setState(Object.assign(this.state.user, {
-      entries: fetchedUser.entries,
-      raw_hex: this.state.state_raw_hex_array
-    }), () => {
-      console.log(`this.state.user.entries is: ${this.state.user.entries}`);
-      console.log(`raw_hex array passed to server-side: ${this.state.state_raw_hex_array}`);
-    })
-    })
-    .catch (err => console.log(err))
-  }
   
   // ClarifaiAPI Age Detection model
   onAgeButton = () => {
@@ -418,10 +527,12 @@ class App extends Component {
       };
       this.displayAge(findAge(response));
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
+    });
   };
 
-
+  // **
   // To allow SPA Routing without React Router DOM through onClick={() => onRouteChange(routeInput)}
   onRouteChange = (routeInput) => {
     const callbackName = `onRouteChange`;
@@ -444,6 +555,14 @@ class App extends Component {
         });
         console.log(`\n${callbackName}(home)\n`);
         return;
+      
+      case 'ageRecords':
+        this.setState({
+          route: routeInput,
+          isSignedIn: true
+        });
+        console.log(`\n${callbackName}(ageRecords)\n`);
+        return;
 
       case 'colorRecords':
         this.setState({
@@ -451,6 +570,14 @@ class App extends Component {
           isSignedIn: true
         });
         console.log(`\n${callbackName}(colorRecords)\n`);
+        return;
+
+      case 'celebrityRecords':
+        this.setState({
+          route: routeInput,
+          isSignedIn: true
+        });
+        console.log(`\n${callbackName}(celebrityRecords)\n`);
         return;
       
       // No matter what, still wanna change the route
@@ -489,7 +616,10 @@ class App extends Component {
       isSignedIn,
       responseStatusCode,
       user,
+      userAgeRecords,
+      userCelebrityRecords,
       userColorRecords
+      // userColorRecords
     } = this.state;
 
     const colors_array = colors.map(color => color);
@@ -499,7 +629,7 @@ class App extends Component {
     console.log('\nage_props\n', age_props);
     console.log('\ndateTime:\n', dateTime);
 
-    // Tracking all state variables in render() {...}
+    // // Tracking all state variables in render() {...}
     console.log(`\nthis.state.user: \n`, user, `\n`);
     // console.log(`\nthis.state.user => JSON.parse(user):\n`, JSON.parse(user), `\n`);
     console.log(`\ndefaultRoute:\n${this.defaultRoute}\n`);
@@ -517,7 +647,7 @@ class App extends Component {
     console.log('\nthis.state.color_hidden', color_hidden);
     console.log('\nthis.state.age_hidden', age_hidden);
     console.log('\nthis.state.responseStatusCode:\n', responseStatusCode);
-    console.log(`\nthis.state.dimensions.width:\n`, dimensions.width, `\n`);
+    console.log(`\nthis.state.dimensions.width:\n`, dimensions.width, `px\n`);
     
     // Enhance React Scalability for allowing to add more React routes without React Router DOM
     const routeComponents = {
@@ -532,6 +662,7 @@ class App extends Component {
           celebrityName={celebrity.name}
           face_hidden={face_hidden}
           onInputChange={this.onInputChange}
+          // AI Recognition buttons
           onCelebrityButton={this.onCelebrityButton}
           onColorButton={this.onColorButton}
           onSaveColorButton={this.onSaveColorButton}
@@ -541,7 +672,23 @@ class App extends Component {
           age={age_props}
           age_hidden={age_hidden}
           box={box}
+          // Callback to allow custom onClick methods in Child components
           onRouteChange={this.onRouteChange}
+          // 4 Buttons in <CheckRecordsPanel />
+          // 1. 'Home' page
+          onHomeButton={this.onHomeButton}
+          // 2. 'Celebrity records' page
+          onCelebrityRecordsButton={this.onCelebrityRecordsButton}
+          // Passing userColorRecords to 'Color records' page
+          userCelebrityRecords={userCelebrityRecords}
+          // 3. 'Color records' page
+          onColorRecordsButton={this.onColorRecordsButton}
+          // Passing userColorRecords to 'Color records' page
+          userColorRecords={userColorRecords}
+          // 4. 'Age records' page
+          onAgeRecordsButton={this.onAgeRecordsButton}
+          // Passing userColorRecords to 'Color records' page
+          userAgeRecords={userAgeRecords}
           resetUser={this.resetUser}
           resetState={this.resetState}
         />
@@ -561,12 +708,74 @@ class App extends Component {
           onRouteChange={this.onRouteChange} 
         />
       ),
+      'ageRecords': (
+        <React.Fragment>
+          <CheckRecordsPanel 
+            user={user}
+            isSignedIn={isSignedIn}
+            dimensions={dimensions}
+            onRouteChange={this.onRouteChange}
+            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
+            onHomeButton={this.onHomeButton}
+            onCelebrityRecordsButton={this.onCelebrityRecordsButton}
+            onColorRecordsButton={this.onColorRecordsButton}
+            onAgeRecordsButton={this.onAgeRecordsButton}
+          />
+          <AgeRecords
+            user={user}
+            isSignedIn={isSignedIn}
+            dimensions={dimensions}
+            userAgeRecords={userAgeRecords}
+          />
+        </React.Fragment>
+      ),
       'colorRecords': (
-        <ColorRecords
-          user={user}
-          userColorRecords={userColorRecords}
-          dimensions={dimensions}
-        />
+        <React.Fragment>
+          <CheckRecordsPanel 
+            user={user}
+            isSignedIn={isSignedIn}
+            dimensions={dimensions}
+            onRouteChange={this.onRouteChange}
+            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
+            onHomeButton={this.onHomeButton}
+            onCelebrityRecordsButton={this.onCelebrityRecordsButton}
+            onColorRecordsButton={this.onColorRecordsButton}
+            onAgeRecordsButton={this.onAgeRecordsButton}
+          />
+          <ColorRecords
+            user={user}
+            isSignedIn={isSignedIn}
+            dimensions={dimensions}
+            userColorRecords={userColorRecords}
+          />
+        </React.Fragment>
+      ),
+      'celebrityRecords': (
+        <React.Fragment>
+          <CheckRecordsPanel 
+            user={user}
+            isSignedIn={isSignedIn}
+            dimensions={dimensions}
+            onRouteChange={this.onRouteChange}
+            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
+            onHomeButton={this.onHomeButton}
+            onCelebrityRecordsButton={this.onCelebrityRecordsButton}
+            onColorRecordsButton={this.onColorRecordsButton}
+            onAgeRecordsButton={this.onAgeRecordsButton}
+          />
+          <CelebrityRecords
+            user={user}
+            isSignedIn={isSignedIn}
+            dimensions={dimensions}
+            // this.state.userCelebrityRecords
+            userCelebrityRecords={userCelebrityRecords}
+            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
+            onHomeButton={this.onHomeButton}
+            onCelebrityRecordsButton={this.onCelebrityRecordsButton}
+            onColorRecordsButton={this.onColorRecordsButton}
+            onAgeRecordsButton={this.onAgeRecordsButton}
+          />
+        </React.Fragment>
       )
     }
 

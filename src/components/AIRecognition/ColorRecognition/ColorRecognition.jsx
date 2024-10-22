@@ -8,6 +8,7 @@ import ColorDetails from './ColorDetails/ColorDetails';
 import blobToBase64 from '../../../util/blobToBase64';
 
 // Parent component
+// src/components/Home/Home.jsx
 const ColorRecognition = ( { 
     user,
     name, 
@@ -15,36 +16,47 @@ const ColorRecognition = ( {
     imageUrl, 
     color_props, 
     color_hidden,
+    onRouteChange
 } ) => {
     const [imageBlob, setImageBlob] = useState(''); // Blob { size: Number, type: String, userId: undefined }
     const [resData, setResData] = useState('');
 
+    // Keep tracking response.status.code as a number
+    // Allow to be passed to other/child components
+    // Allow other components to reset latest response.status.code
+    const [responseStatusCode, setResponseStatusCode] = useState();
+
     // Keep monitoring Blob fetched from axios.get(imageUrl, { responseType: 'blob' })
     useEffect(() => {
-        const fetchImage = async() => {
-          const fetchUrl = input;
-    
-          try {
-            const response = await axios.get(fetchUrl, { responseType: 'blob' });
-            console.log(`\nReceived metadata blob response:`, response, `\n`);
-    
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              // useState() to store this.state.imageBlob: response.data
-              setImageBlob(reader.result);
-            };
-            reader.readAsDataURL(response.data);
-            setResData(response.data);
-            console.log(`\nresponse.data:\n$`, response.data, `\n`);
-          } catch (err) {
-            console.error(`\nFailed to get 'blob' via axios.get(${fetchUrl}\nError: ${err}\n`);
-          }
-        };
-        fetchImage();
+        if (input !== '') {
+          const fetchImage = async() => {
+            const fetchUrl = input;
+      
+            try {
+              const response = await axios.get(fetchUrl, { responseType: 'blob' });
+              console.log(`\nReceived metadata blob response:`, response, `\n`);
+      
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                // useState() to store this.state.imageBlob: response.data
+                setImageBlob(reader.result);
+              };
+              reader.readAsDataURL(response.data);
+              setResData(response.data);
+              console.log(`\nresponse.data:\n$`, response.data, `\n`);
+            } catch (err) {
+              console.error(`\nFailed to get 'blob' via axios.get(${fetchUrl}\nError: ${err}\n`);
+            }
+          };
+          fetchImage();
+        }
     }, [input]); // State management array[] to listen on imageUrl
 
-    // Save button to save Color details into PostgreSQL as blob metadata
+    // Save to Account button to save Color details into PostgreSQL as blob metadata
     const saveColor = async () => {
+        // Reset latest response.status.code before next action
+        setResponseStatusCode(undefined);
+
         const callbackName = `src/components/AIRecognition/ColorRecognition/ColorDetails/ColorDetails.jsx\nsaveColor = async () => {...}`;
 
         const color_props_array = color_props;
@@ -55,6 +67,11 @@ const ColorRecognition = ( {
 
         // Assuming resData is the Blob
         const base64Metadata = await blobToBase64(resData);
+
+        if (!base64Metadata) {
+          // If Blob cannot be transformed in base64Metadata => route to 'home' page
+          onRouteChange('home');
+        }
     
         const imageRecord = {
         imageUrl: input,
@@ -99,11 +116,22 @@ const ColorRecognition = ( {
         console.log(`\nColorDetails saveColor response: `, response, `\n`);
         console.log(`\nColorDetails saveColor response.message: `, response.message, `\n`);
         console.log(`\nColorDetails saveColor response.status.code: `, response.status.code);
+
+        // Keep tracking response.status.code
+        setResponseStatusCode(response.status.code);
+        console.log(`\n\nsrc/components/ColorRecognition/ColorRecognition.jsx\nLatest action\nresponse.status.code:\n${responseStatusCode}\n`);
+
         })
         .catch((err) => {
         console.error(`\nError in callbackName:\n`, callbackName, `\n\nError: `, err, `\n`);
         })
         ;
+    }
+
+    // Save to Device button to save Color details into PostgreSQL as blob metadata
+    const saveColorToDevice = async () => {
+      // Reset latest response.status.code before next action
+      setResponseStatusCode(undefined);
     }
 
     const showModal = () => {
@@ -129,7 +157,7 @@ const ColorRecognition = ( {
                 </div>
                 <div className='modal-window'>
                     <h1 class='modal-window--inner'>
-                        Copied!
+                        {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
                     </h1>
                 </div>
             </div>
@@ -138,12 +166,22 @@ const ColorRecognition = ( {
                 <ColorDetails user={user} input={input} color_props={color_props} imageUrl={imageUrl} />        
             </div>
         </div>
+        {/* Save to Account button */}
         <div className="saveBtn u-margin-top-small">
         <button 
           className="saveBtn__p"
           onClick={() => { saveColor(); showModal();} } // ColorDetails.jsx saveColor()
         >
           Save to Account
+        </button>
+        </div>
+        {/* Save to Device button */}
+        <div className="saveBtn u-margin-top-tiny">
+        <button 
+          className="saveBtn__p"
+          onClick={() => { saveColorToDevice(); showModal();} } // ColorDetails.jsx saveColor()
+        >
+          Save to Device
         </button>
         </div>
       </React.Fragment>
