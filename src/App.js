@@ -31,13 +31,13 @@ class App extends Component {
 
     const userData = localStorage.getItem('user');
     const lastRoute = localStorage.getItem('lastRoute');
-    // const defaultRoute = userData ? 'home' : 'signin';
     const defaultRoute = userData? (lastRoute || 'home') : 'signin';
-
+    
     // Load User's records from localStorage, or set to null if not yet stored
     const userColorRecords = localStorage.getItem('userColorRecords');
     const userCelebrityRecords = localStorage.getItem('userCelebrityRecords');
     const userAgeRecords = localStorage.getItem('userAgeRecords');
+    
 
     this.state = {
       input: '', // this.state.input => Users' input imageUrl => Can be used for onClick events
@@ -54,11 +54,8 @@ class App extends Component {
       responseStatusCode: Number(''),
       route: defaultRoute,
       isSignedIn: userData ? true : false,
-      
-      // user: JSON.parse(userData) || {}, // localStorage user{} is stored in JSON.stringified
-      // Retrieving User's records from PostgreSQL
-
-      user: userData ? JSON.parse(userData) : {}, // localStorage user{} is stored in JSON.stringified
+      // isSignedIn: userData && Object.keys(userData).length > 0,
+      user: userData ? JSON.parse(userData) : {},      
 
       userCelebrityRecords: userCelebrityRecords ? JSON.parse(userCelebrityRecords) : null, // localStorage userCelebrityRecords{}
       userColorRecords: userColorRecords ? JSON.parse(userColorRecords) : null, // localStorage userColorRecords{}
@@ -91,6 +88,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.user !== prevState.user) { 
       this.validateUsers();
+      this.updateLocalStorage('user', this.state.user, prevState.user);
     }
     // ** Storing User's latest route
     if (this.state.route !== prevState.route) {
@@ -98,16 +96,31 @@ class App extends Component {
     }
 
     // Check if records have been updated & store them in localStorage
-    if (this.state.userCelebrityRecords !== prevState.userCelebrityRecords) {
-      localStorage.setItem('userCelebrityRecords', JSON.stringify(this.state.userCelebrityRecords));
-    }
+    // if (this.state.userCelebrityRecords !== prevState.userCelebrityRecords) {
+    //   localStorage.setItem('userCelebrityRecords', JSON.stringify(this.state.userCelebrityRecords));
+    // }
+    this.updateLocalStorage('userCelebrityRecords', this.state.userCelebrityRecords, prevState.userCelebrityRecords);
+
     // Check if records have been updated & store them in localStorage
-    if (this.state.userColorRecords !== prevState.userColorRecords) {
-      localStorage.setItem('userColorRecords', JSON.stringify(this.state.userColorRecords));
-    }
+    // if (this.state.userColorRecords !== prevState.userColorRecords) {
+    //   localStorage.setItem('userColorRecords', JSON.stringify(this.state.userColorRecords));
+    // }
+    this.updateLocalStorage('userColorRecords', this.state.userColorRecords, prevState.userColorRecords);
+
     // Check if records have been updated & store them in localStorage
-    if (this.state.userAgeRecords !== prevState.userAgeRecords) {
-      localStorage.setItem('userAgeRecords', JSON.stringify(this.state.userAgeRecords));
+    // if (this.state.userAgeRecords !== prevState.userAgeRecords) {
+    //   localStorage.setItem('userAgeRecords', JSON.stringify(this.state.userAgeRecords));
+    // }
+    this.updateLocalStorage('userAgeRecords', this.state.userAgeRecords, prevState.userAgeRecords);
+  }
+
+  updateLocalStorage(key, newValue, oldValue) {
+    if (newValue !== oldValue) {
+      try {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      } catch (err) {
+        console.error(`\nError updating ${key} in localStorage: `, err, `\n`);
+      }
     }
   }
   
@@ -388,7 +401,7 @@ class App extends Component {
   // Retrieve User's Color Records from Node.js => PostgreSQL
   onColorRecordsButton = async () => {
     // Reset all state variables to allow proper rendering of side-effects
-    // this.resetState();
+    this.resetState();
 
     // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
     this.onRouteChange('colorRecords');
@@ -590,6 +603,32 @@ class App extends Component {
     }
   };
 
+  // src/components/Navigation/Navigation.jsx
+  onSignout = () => {
+    this.setState({
+      celebrity: {},
+      colors: [],
+      age: [],
+    }, 
+    () => this.resetUser(),
+    () => this.removeUserFromLocalStorage(),
+    () => this.resetState(),
+    () => console.log('this.state.celebrity:\n', this.state.celebrity),
+    () => console.log('this.state.colors:\n', this.state.colors),
+    () => console.log('this.state.age:\n', this.state.age),
+    () => this.onRouteChange('signin'));
+    
+    // this.resetUser();
+    // this.removeUserFromLocalStorage();
+    // this.resetState();
+    // this.setState({
+    //   celebrity: {},
+    //   colors: [],
+    //   age: [],
+    // });
+    // this.onRouteChange('signin');
+  }
+
   // To avoid malicious users from breaking in from <Register />
   // If there's no user.id => route to 'signin' page
   validateUsers = () => {
@@ -787,6 +826,8 @@ class App extends Component {
           removeUserFromLocalStorage={this.removeUserFromLocalStorage}
           onRouteChange={this.onRouteChange}
           resetUser={this.resetUser}
+          resetState={this.resetState}
+          onSignout={this.onSignout}
         />
 
         {routeComponents[route] ?? <div>Page not found</div>}

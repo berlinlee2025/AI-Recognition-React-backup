@@ -94,12 +94,11 @@ const ColorRecognition = ( {
             imageDetails: imageDetails 
         });
         console.log(`\nColorRecognition resData:\n`, resData, `\n`);
-        console.log(`\nColorDetails src/App.js user: `, user, `\n`);
-        console.log(`\nColorDetails src/App.js user.id: `, user.id, `\n`);
+        console.log(`\nColorDetails saveColor user.id: `, user.id, `\n`);
         console.log(`\nColorDetails color_props: `, color_props, `\n`);
         console.log(`\nColorDetails input: `, input, `\n`);
-        console.log(`\nColorDetails saveColor imageRecord:\n`, imageRecord, `\n`);
-        console.log(`\nColorDetails saveColor imageDetails:\n`, imageDetails, `\n`);
+        // console.log(`\nColorDetails saveColor imageRecord:\n`, imageRecord, `\n`);
+        // console.log(`\nColorDetails saveColor imageDetails:\n`, imageDetails, `\n`);
         console.log(`\nFetching ${fetchUrl} with bodyData`, bodyData, `\n`);
 
         await fetch(fetchUrl, {
