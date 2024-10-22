@@ -79,7 +79,7 @@ const SlideshowColorRecords = ( {
           
           // Increment the active index
           updateIndex(activeIndex + 1);
-        }, 7200000); // Advance every 2 hours
+        }, 5000); // Advance every 2 hours
     
         // Clear the interval when the component is unmounted
         return () => clearInterval(interval);
