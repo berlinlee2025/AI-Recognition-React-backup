@@ -2,7 +2,7 @@
 // src/App.js
 import React from 'react';
 // import Rank from '../../components/Rank/Rank';
-import CheckRecordsPanel from '../../components/CheckRecords/CheckRecordsPanel';
+import Slideshow from './Slideshow/Slideshow';
 
 
 // Parent component
