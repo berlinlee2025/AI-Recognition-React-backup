@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef } from "react";
 import "./Slideshow.scss";
 import "./ColorTable.scss";
 import { MaterialSymbol } from 'react-material-symbols';
@@ -17,6 +17,7 @@ const SlideshowColorRecords = ( {
     // useState Slideshow officePhotos' index
     const [activeIndex, setActiveIndex] = useState(0);
     const [blobImages, setBlobImages] = useState([]);
+    const indexRef = useRef(activeIndex); // Create a ref to store the current index
 
     // Monitor resolutions
     //console.log(`dimensions.width * 0.8 * 0.5: ${dimensions.width * 0.8 * 0.5}`)
@@ -72,6 +73,10 @@ const SlideshowColorRecords = ( {
         }
         setActiveIndex(newIndex);
     };
+
+    useEffect(() => {
+        indexRef.current = activeIndex;
+    }, [activeIndex]);
 
     // Allow Slideshow officePhotos to jump every 5 seconds
     useEffect(() => {

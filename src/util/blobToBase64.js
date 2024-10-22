@@ -15,6 +15,7 @@ async function blobToBase64(blob) {
         });
     } catch (err) {
         console.error(`\nFailed to convert imageUrl from Blob to Base64\n`);
+        return;
     }
 };
 
