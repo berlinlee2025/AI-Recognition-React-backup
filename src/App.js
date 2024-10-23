@@ -83,9 +83,9 @@ class App extends Component {
     }, 300000); // Reset this.state.dimensions{} in every 5 minutes
 
     // this.state.user => Refresh this.state.user every 3 seconds
-    this.userRefreshInterval = setInterval(() => {
-      this.refreshUserData();
-    }, 3000);
+    // this.userRefreshInterval = setInterval(() => {
+    //   this.refreshUserData();
+    // }, 3000);
   }
 
   refreshUserData() {
