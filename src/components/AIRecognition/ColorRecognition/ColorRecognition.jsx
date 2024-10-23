@@ -6,6 +6,8 @@ import ColorDetails from './ColorDetails/ColorDetails';
 
 // Utility functions
 import blobToBase64 from '../../../util/blobToBase64';
+// 'Save to Device' button
+import saveToDevice from '../../../util/saveToDevice';
 
 // Parent component
 // src/components/Home/Home.jsx
@@ -19,21 +21,24 @@ const ColorRecognition = ( {
     onRouteChange
 } ) => {
     const [imageBlob, setImageBlob] = useState(''); // Blob { size: Number, type: String, userId: undefined }
-    const [resData, setResData] = useState('');
+    const [resData, setResData] = useState(null);
+    // const [htmlToSave, setHtmlToSave] = useState(null);
 
     // Keep tracking response.status.code as a number
     // Allow to be passed to other/child components
     // Allow other components to reset latest response.status.code
     const [responseStatusCode, setResponseStatusCode] = useState();
 
-    // Keep monitoring Blob fetched from axios.get(imageUrl, { responseType: 'blob' })
+    /* 1. Keep monitoring Blob fetched from axios.get(imageUrl, { responseType: 'blob' }) */
     useEffect(() => {
         if (input !== '') {
           const fetchImage = async() => {
             const fetchUrl = input;
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
       
             try {
-              const response = await axios.get(fetchUrl, { responseType: 'blob' });
+              // const response = await axios.get(fetchUrl, { responseType: 'blob' });
+              const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });
               console.log(`\nReceived metadata blob response:`, response, `\n`);
       
               const reader = new FileReader();
@@ -52,7 +57,18 @@ const ColorRecognition = ( {
         }
     }, [input]); // State management array[] to listen on imageUrl
 
-    // Save to Account button to save Color details into PostgreSQL as blob metadata
+    /* 2. Fetching state imageData */
+    // useEffect(() => {
+    //   if (resData) {
+    //     const colorRecognitionHTML = document.querySelector('.color-container').outerHTML;
+    //     // const colorRecognitionHTML = document.querySelector('.color-container');
+    //     setHtmlToSave(colorRecognitionHTML);
+    //   }
+    // }, [resData]); // Listen on this.state.toSave
+
+    const htmlToSave =  document.querySelector('.color-container') ? document.querySelector('.color-container').outerHTML : null;
+
+    /* 1. Save to Account button to save Color details into PostgreSQL as blob metadata */
     const saveColor = async () => {
         // Reset latest response.status.code before next action
         // setResponseStatusCode(undefined);
@@ -127,12 +143,6 @@ const ColorRecognition = ( {
         ;
     }
 
-    // Save to Device button to save Color details into PostgreSQL as blob metadata
-    const saveColorToDevice = async () => {
-      // Reset latest response.status.code before next action
-      // setResponseStatusCode(undefined);
-    }
-
     const showModal = () => {
         // Retrieve DOM element of modal-window pop-up upon users' copy events
         const modal = document.querySelector('.modal-window');
@@ -167,23 +177,24 @@ const ColorRecognition = ( {
         </div>
         {/* Save to Account button */}
         <div className="saveBtn u-margin-top-small">
-        <button 
-          className="saveBtn__p"
-          onClick={() => { saveColor(); showModal();} } // ColorDetails.jsx saveColor()
-        >
-          Save to Account
-        </button>
+          <button 
+            className="saveBtn__p"
+            onClick={() => { saveColor(); showModal();} } // ColorDetails.jsx saveColor()
+          >
+            Save to Account
+          </button>
         </div>
         {/* Save to Device button */}
         <div className="saveBtn u-margin-top-tiny">
-        <button 
-          className="saveBtn__p"
-          onClick={() => { saveColorToDevice(); showModal();} } // ColorDetails.jsx saveColor()
-        >
-          Save to Device
-        </button>
+          <button 
+            className="saveBtn__p"
+            onClick={() => { saveToDevice(htmlToSave); showModal();} } 
+          >
+            Save to Device
+          </button>
         </div>
       </React.Fragment>
     )
-}
+};
+
 export default ColorRecognition;
