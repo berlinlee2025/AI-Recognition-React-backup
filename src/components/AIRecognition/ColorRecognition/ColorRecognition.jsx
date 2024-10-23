@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ColorRecognition.scss';
-import axios from 'axios';
 
 import ColorDetails from './ColorDetails/ColorDetails';
 
+import axios from 'axios';
 // Utility functions
 import blobToBase64 from '../../../util/blobToBase64';
 // 'Save to Device' button
@@ -11,18 +11,16 @@ import saveToDevice from '../../../util/saveToDevice';
 
 // Parent component
 // src/components/Home/Home.jsx
-const ColorRecognition = ( { 
+const ColorRecognition = ({ 
     user,
-    name, 
     input,
     imageUrl, 
     color_props, 
     color_hidden,
     onRouteChange
-} ) => {
+}) => {
     const [imageBlob, setImageBlob] = useState(''); // Blob { size: Number, type: String, userId: undefined }
     const [resData, setResData] = useState(null);
-    // const [htmlToSave, setHtmlToSave] = useState(null);
 
     // Keep tracking response.status.code as a number
     // Allow to be passed to other/child components
@@ -37,7 +35,6 @@ const ColorRecognition = ( {
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
       
             try {
-              // const response = await axios.get(fetchUrl, { responseType: 'blob' });
               const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });
               console.log(`\nReceived metadata blob response:`, response, `\n`);
       
@@ -57,15 +54,7 @@ const ColorRecognition = ( {
         }
     }, [input]); // State management array[] to listen on imageUrl
 
-    /* 2. Fetching state imageData */
-    // useEffect(() => {
-    //   if (resData) {
-    //     const colorRecognitionHTML = document.querySelector('.color-container').outerHTML;
-    //     // const colorRecognitionHTML = document.querySelector('.color-container');
-    //     setHtmlToSave(colorRecognitionHTML);
-    //   }
-    // }, [resData]); // Listen on this.state.toSave
-
+    /* For saving Celebrity record to User's local machine using Puppeteer */
     const htmlToSave =  document.querySelector('.color-container') ? document.querySelector('.color-container').outerHTML : null;
 
     /* 1. Save to Account button to save Color details into PostgreSQL as blob metadata */
@@ -164,16 +153,16 @@ const ColorRecognition = ( {
                         alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
                     />
                 </div>
-                <div className='modal-window'>
-                    <h1 class='modal-window--inner'>
-                        {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
-                    </h1>
-                </div>
             </div>
                
             <div className="col-1-of-2">
                 <ColorDetails user={user} input={input} color_props={color_props} imageUrl={imageUrl} />        
             </div>
+        </div>
+        <div className='modal-window'>
+          <h1 class='modal-window--inner'>
+            {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
+          </h1>
         </div>
         {/* Save to Account button */}
         <div className="saveBtn u-margin-top-small">

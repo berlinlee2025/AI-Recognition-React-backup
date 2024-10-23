@@ -353,6 +353,53 @@ class App extends Component {
     this.onRouteChange('home');
   }
 
+  // Retrieve User's Color Records from Node.js => PostgreSQL
+  onCelebrityRecordsButton = async () => {
+    // Reset all state variables to allow proper rendering of side-effects
+    this.resetState();
+
+    // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
+    this.onRouteChange('celebrityRecords');
+
+    const devFetchGetUserCelebrityUrl = 'http://localhost:3001/get-user-celebrity';
+    const prodFetchGetUserCelebrityUrl = 'https://ai-recognition-backend.onrender.com/get-user-celebrity';
+
+    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserCelebrityUrl : devFetchGetUserCelebrityUrl;
+
+    const bodyData = JSON.stringify({
+      userId: this.state.user.id
+    });
+
+    console.log(`\nonCelebrityRecordsButton is fetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
+
+    await fetch(fetchUrl, {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        userId: this.state.user.id
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log(`\nFetched User's Celebrity Records response:\n`, response, `\n`);
+      console.log(`\nFetched User's Celebrity Records\nresponse.celebrityData`, response.celebrityData, `\n`);
+      // If there's a response upon fetching Clarifai API
+      // fetch our server-side to update entries count too
+      if (response) { 
+        // this.updateEntries();
+        this.setState({
+          userCelebrityRecords: response.celebrityData
+        });
+
+      };
+    })
+    .catch((err) => {
+      console.log(`\nError fetching ${fetchUrl}:\n${err}\n`);
+    });
+
+    console.log(`\nsrc/App.js this.state.userCelebrityRecords:\n`, this.state.userCelebrityRecords, `\n`);
+  }
+
   // ClarifaiAPI Celebrity Face Detection model
   onCelebrityButton = async () => {
     // Reset all state variables to allow proper rendering from Detection Models
