@@ -703,6 +703,7 @@ class App extends Component {
     console.log('\nthis.state.age_hidden', age_hidden);
     console.log('\nthis.state.responseStatusCode:\n', responseStatusCode);
     console.log(`\nthis.state.dimensions.width:\n`, dimensions.width, `px\n`);
+    console.log(`\nthis.state.user.id:\n`, user.id, `\n`);
     
     // Enhance React Scalability for allowing to add more React routes without React Router DOM
     const routeComponents = {
