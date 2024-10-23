@@ -16,6 +16,8 @@ const saveToDevice = async (outerHTML) => {
             responseType: 'arraybuffer'
         });
 
+        console.log(`\nsaveToDevice response.data: `, response.data, `\n`);
+
         const file = new Blob([response.data], { type: 'application/pdf' });
         const fileUrl = window.URL.createObjectURL(file);
         const link = document.createElement('a');
