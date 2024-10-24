@@ -141,49 +141,94 @@ const ColorRecognition = ({
         setTimeout(() => modal.style.opacity=0, 2000)
     }
 
-    return color_hidden ? (
-    <h2>&nbsp;</h2>
-    ) : (<React.Fragment>
-        <div className="color-container row" id="color-container">
-            <div className='color-image__modal-container col-1-of-2'>
-                <div className='color-image-box'> 
-                    <img 
-                        className='color-image'
-                        src={imageUrl}
-                        alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
-                    />
-                </div>
-            </div>
+    if (color_hidden) return;
+
+    return (
+      <React.Fragment>
+          <div className="color-container row" id="color-container">
+              <div className='color-image__modal-container col-1-of-2'>
+                  <div className='color-image-box'> 
+                      <img 
+                          className='color-image'
+                          src={imageUrl}
+                          alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
+                      />
+                  </div>
+              </div>
+                 
+              <div className="col-1-of-2">
+                  <ColorDetails user={user} input={input} color_props={color_props} imageUrl={imageUrl} />        
+              </div>
+          </div>
+          <div className='modal-window'>
+            <h1 class='modal-window--inner'>
+              {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
+            </h1>
+          </div>
+          {/* Save to Account button */}
+          <div className="saveBtn u-margin-top-small">
+            <button 
+              className="saveBtn__p"
+              onClick={() => { saveColor(); showModal();} } // ColorDetails.jsx saveColor()
+            >
+              Save to Account
+            </button>
+          </div>
+          {/* Save to Device button */}
+          <div className="saveBtn u-margin-top-tiny">
+            <button 
+              className="saveBtn__p"
+              onClick={() => { saveToDevice(htmlToSave); showModal();} } 
+            >
+              Save to Device
+            </button>
+          </div>
+        </React.Fragment>
+      )
+
+    // return color_hidden ? (
+    // <p>&nbsp;</p>
+    // ) : (<React.Fragment>
+    //     <div className="color-container row" id="color-container">
+    //         <div className='color-image__modal-container col-1-of-2'>
+    //             <div className='color-image-box'> 
+    //                 <img 
+    //                     className='color-image'
+    //                     src={imageUrl}
+    //                     alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
+    //                 />
+    //             </div>
+    //         </div>
                
-            <div className="col-1-of-2">
-                <ColorDetails user={user} input={input} color_props={color_props} imageUrl={imageUrl} />        
-            </div>
-        </div>
-        <div className='modal-window'>
-          <h1 class='modal-window--inner'>
-            {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
-          </h1>
-        </div>
-        {/* Save to Account button */}
-        <div className="saveBtn u-margin-top-small">
-          <button 
-            className="saveBtn__p"
-            onClick={() => { saveColor(); showModal();} } // ColorDetails.jsx saveColor()
-          >
-            Save to Account
-          </button>
-        </div>
-        {/* Save to Device button */}
-        <div className="saveBtn u-margin-top-tiny">
-          <button 
-            className="saveBtn__p"
-            onClick={() => { saveToDevice(htmlToSave); showModal();} } 
-          >
-            Save to Device
-          </button>
-        </div>
-      </React.Fragment>
-    )
+    //         <div className="col-1-of-2">
+    //             <ColorDetails user={user} input={input} color_props={color_props} imageUrl={imageUrl} />        
+    //         </div>
+    //     </div>
+    //     <div className='modal-window'>
+    //       <h1 class='modal-window--inner'>
+    //         {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
+    //       </h1>
+    //     </div>
+    //     {/* Save to Account button */}
+    //     <div className="saveBtn u-margin-top-small">
+    //       <button 
+    //         className="saveBtn__p"
+    //         onClick={() => { saveColor(); showModal();} } // ColorDetails.jsx saveColor()
+    //       >
+    //         Save to Account
+    //       </button>
+    //     </div>
+    //     {/* Save to Device button */}
+    //     <div className="saveBtn u-margin-top-tiny">
+    //       <button 
+    //         className="saveBtn__p"
+    //         onClick={() => { saveToDevice(htmlToSave); showModal();} } 
+    //       >
+    //         Save to Device
+    //       </button>
+    //     </div>
+    //   </React.Fragment>
+    // )
 };
 
 export default ColorRecognition;

@@ -127,7 +127,7 @@ const FaceRecognition = ({
 
     // if (!celebrityName) return <Loading />;
 
-    if (face_hidden) return <h2>&nbsp;</h2>;
+    if (face_hidden) return;
 
     return (
       <React.Fragment>
