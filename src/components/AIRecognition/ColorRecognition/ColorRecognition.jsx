@@ -133,8 +133,8 @@ const ColorRecognition = ({
     }
 
     const showModal = () => {
-        // Retrieve DOM element of modal-window pop-up upon users' copy events
-        const modal = document.querySelector('.modal-window');
+        // Retrieve DOM element of modal-color pop-up upon users' copy events
+        const modal = document.querySelector('.modal-color');
             
         modal.style.opacity = 1;
        
@@ -160,8 +160,8 @@ const ColorRecognition = ({
                   <ColorDetails user={user} input={input} color_props={color_props} imageUrl={imageUrl} />        
               </div>
           </div>
-          <div className='modal-window'>
-            <h1 class='modal-window--inner'>
+          <div className='modal-color'>
+            <h1 class='modal-color--inner'>
               {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
             </h1>
           </div>
@@ -175,7 +175,7 @@ const ColorRecognition = ({
             </button>
           </div>
           {/* Save to Device button */}
-          <div className="saveBtn u-margin-top-tiny">
+          <div className="saveBtn u-margin-top-tiny u-margin-bottom-small">
             <button 
               className="saveBtn__p"
               onClick={() => { saveToDevice(htmlToSave); showModal();} } 

@@ -48,14 +48,14 @@ export default function CheckRecordsLi( {
       >
         Color records
       </button>
-      {/* <button 
+      <button 
         onClick={onAgeRecordsButton}
         onMouseEnter={useButtonTextRoll(tabs)} 
         data-value="Age records"
         className={`${classes.lk} buttons__btn`}
       >
         Age records
-      </button> */}
+      </button>
     </div>
     </React.Fragment>
     )

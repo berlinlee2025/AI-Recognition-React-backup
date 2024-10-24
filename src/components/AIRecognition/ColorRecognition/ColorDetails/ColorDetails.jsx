@@ -15,8 +15,8 @@ const ColorDetails = ({ user, input, color_props }) => {
   const w3c_name_elements = document.getElementsByClassName('w3c-name');
   const w3c_hex_elements = document.getElementsByClassName('w3c-hex');
 
-  // Retrieve DOM element of modal-window pop-up upon users' copy events
-  const modal = document.querySelector('.modal-window');
+  // Retrieve DOM element of modal-color pop-up upon users' copy events
+  const modal = document.querySelector('.modal-color');
 
   // Allow user to copy values by clicking on it
   for (let i=0; i < length; i++) {

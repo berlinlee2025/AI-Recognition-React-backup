@@ -117,8 +117,8 @@ const FaceRecognition = ({
     }
 
     const showModal = () => {
-      // Retrieve DOM element of modal-window pop-up upon users' copy events
-      const modal = document.querySelector('.modal-window');
+      // Retrieve DOM element of modal-face pop-up upon users' copy events
+      const modal = document.querySelector('.modal-face');
           
       modal.style.opacity = 1;
      
@@ -174,8 +174,8 @@ const FaceRecognition = ({
             </div>
           </div>
 
-          <div className='modal-window'>
-            <h1 class='modal-window--inner'>
+          <div className='modal-face'>
+            <h1 class='modal-face--inner'>
               {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
             </h1>
           </div>
@@ -190,7 +190,7 @@ const FaceRecognition = ({
             </button>
           </div>
           {/* Save to Device button */}
-          <div className="saveBtn u-margin-top-tiny">
+          <div className="saveBtn u-margin-top-tiny  u-margin-bottom-small">
             <button 
               className="saveBtn__p"
               onClick={() => { saveToDevice(htmlToSave); showModal();} } 

@@ -323,44 +323,6 @@ class App extends Component {
       });
   }
 
-  // For <SaveColorBtn /> in <ColorRecognition />
-  // Arrow function to send this.state.state_raw_hex_array
-  // to server-side right after setting state for state_raw_hex_array
-  // to avoid delay in server-side
-  loadRawHex = async () => {
-    const devFetchRawHexUrl = 'http://localhost:3001/image';
-    const prodFetchRawHexUrl = 'https://ai-recognition-backend.onrender.com/image';
-    
-    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchRawHexUrl : devFetchRawHexUrl;
-
-    /* Sending state user.id && state_raw_hex_array to local server-side */
-    // Fetching live Web Server on Render
-    await fetch(fetchUrl, {
-      method: 'put', // PUT (Update) 
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-      id: this.state.user.id,
-      raw_hex: this.state.state_raw_hex_array
-      })
-    })
-    .then(response => response.json()) // string to json
-    .then(fetchedUser => { // entries is coming from server-side response
-    console.log('fetchedUser: ', fetchedUser);
-
-    // Object.assign(target, source)
-    this.setState(Object.assign(this.state.user, {
-      entries: fetchedUser.entries,
-      raw_hex: this.state.state_raw_hex_array
-    }), () => {
-      console.log(`this.state.user.entries is: ${this.state.user.entries}`);
-      console.log(`raw_hex array passed to server-side: ${this.state.state_raw_hex_array}`);
-    })
-    })
-    .catch(err => {
-      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
-    });
-  }
-
   // To be passed to <CheckRecordsPanel /> in src/components/CheckRecords/CheckRecrodsPanel.jsx
   onHomeButton = () => {
     // Reset all state variables to allow proper rendering from Detection Models
@@ -381,8 +343,8 @@ class App extends Component {
     // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
     this.onRouteChange('celebrityRecords');
 
-    const devFetchGetUserCelebrityUrl = 'http://localhost:3001/get-user-celebrity';
-    const prodFetchGetUserCelebrityUrl = 'https://ai-recognition-backend.onrender.com/get-user-celebrity';
+    const devFetchGetUserCelebrityUrl = 'http://localhost:3001/get-user-celebrity-records';
+    const prodFetchGetUserCelebrityUrl = 'https://ai-recognition-backend.onrender.com/get-user-celebrity-records';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserCelebrityUrl : devFetchGetUserCelebrityUrl;
 
@@ -442,8 +404,8 @@ class App extends Component {
     /* From Clarifai API documentation, this API can be consumed as below: */
 
     /* Celebrity Recognition - Fetching local web server for celebrityimage */
-    const devFetchCelebrityImageUrl = 'http://localhost:3001/celebrityimage';
-    const prodFetchCelebrityImageUrl = 'https://ai-recognition-backend.onrender.com/celebrityimage';
+    const devFetchCelebrityImageUrl = 'http://localhost:3001/celebrity-image';
+    const prodFetchCelebrityImageUrl = 'https://ai-recognition-backend.onrender.com/celebrity-image';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchCelebrityImageUrl : devFetchCelebrityImageUrl;
 
@@ -489,8 +451,8 @@ class App extends Component {
     // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
     this.onRouteChange('colorRecords');
 
-    const devFetchGetUserColorUrl = 'http://localhost:3001/get-user-color';
-    const prodFetchGetUserColorUrl = 'https://ai-recognition-backend.onrender.com/get-user-color';
+    const devFetchGetUserColorUrl = 'http://localhost:3001/get-user-color-records';
+    const prodFetchGetUserColorUrl = 'https://ai-recognition-backend.onrender.com/get-user-color-records';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
 
@@ -547,8 +509,8 @@ class App extends Component {
     );
 
     /* Color Recognition - Fetching local Web Server vs live Web Server on Render */
-    const devFetchColorImageUrl = 'http://localhost:3001/colorimage';
-    const prodFetchColorImageUrl = 'https://ai-recognition-backend.onrender.com/colorimage';
+    const devFetchColorImageUrl = 'http://localhost:3001/color-image';
+    const prodFetchColorImageUrl = 'https://ai-recognition-backend.onrender.com/color-image';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchColorImageUrl : devFetchColorImageUrl;
 
@@ -575,6 +537,53 @@ class App extends Component {
     });
   };
   
+  // Retrieve User's Color Records from Node.js => PostgreSQL
+  onAgeRecordsButton = async () => {
+    // Reset all state variables to allow proper rendering of side-effects
+    this.resetState();
+
+    // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
+    this.onRouteChange('ageRecords');
+
+    const devFetchGetUserColorUrl = 'http://localhost:3001/get-user-age-records';
+    const prodFetchGetUserColorUrl = 'https://ai-recognition-backend.onrender.com/get-user-age-records';
+
+    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
+
+    const bodyData = JSON.stringify({
+      userId: this.state.user.id
+    });
+
+    console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
+
+    await fetch(fetchUrl, {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        userId: this.state.user.id
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log(`\nFetched User's Age Records response:\n`, response, `\n`);
+      console.log(`\nFetched User's Age Records response.ageData:\n`, response.ageData, `\n`);
+      // If there's a response upon fetching Clarifai API
+      // fetch our server-side to update entries count too
+      if (response) { 
+        // this.updateEntries();
+        this.setState({
+          userAgeRecords: response.ageData
+        });
+
+      };
+    })
+    .catch((err) => {
+      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`);
+    });
+
+    console.log(`\nsrc/App.js this.state.userAgeRecords:\n`, this.state.userAgeRecords, `\n`);
+  }
+
   // ClarifaiAPI Age Detection model
   onAgeButton = async () => {
     // Reset all state variables to allow proper rendering from Detection Models
@@ -594,8 +603,8 @@ class App extends Component {
     );
 
     /* Age Recognition - Fetching local dev server vs live Web Server on Render */
-    const devFetchAgeUrl = 'http://localhost:3001/ageimage';
-    const prodFetchAgeUrl = 'https://ai-recognition-backend.onrender.com/ageimage';
+    const devFetchAgeUrl = 'http://localhost:3001/age-image';
+    const prodFetchAgeUrl = 'https://ai-recognition-backend.onrender.com/age-image';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchAgeUrl : devFetchAgeUrl;
 

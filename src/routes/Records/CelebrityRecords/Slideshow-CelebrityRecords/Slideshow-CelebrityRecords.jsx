@@ -12,7 +12,7 @@ const SlideshowCelebrityRecords = ( {
     userCelebrityRecords
     } ) => {
     
-    // useState Slideshow officePhotos' index
+    // useState Slideshow Photos' index
     const [activeIndex, setActiveIndex] = useState(0);
     const [blobImages, setBlobImages] = useState([]);
     const indexRef = useRef(activeIndex); // Create a ref to store the current index

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './AgeRecognition.css';
+// import './AgeRecognition.css';
+import './AgeRecognition.scss';
 import axios from 'axios';
 // Utility functions
 import blobToBase64 from '../../../util/blobToBase64';
@@ -63,8 +64,8 @@ const AgeRecognition = ( {
 
         const callbackName = `src/components/AIRecognition/AgeRecognition/AgeRecognition\nsaveAge = async () => {...}`;
         
-        const devSaveAgeUrl = 'http://localhost:3001/save-user-age';
-        const prodSaveAgeUrl = 'https://ai-recognition-backend.onrender.com/save-user-age';
+        const devSaveAgeUrl = 'http://localhost:3001/save-user-age-records';
+        const prodSaveAgeUrl = 'https://ai-recognition-backend.onrender.com/save-user-age-records';
         const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveAgeUrl : devSaveAgeUrl;
 
         // Assuming resData is the Blob
@@ -74,22 +75,20 @@ const AgeRecognition = ( {
           // If Blob cannot be transformed in base64Metadata => route to 'home' page
           onRouteChange('home');
         }
-    
-        const imageRecord = {
-        imageUrl: input,
-        metadata: base64Metadata,
-        dateTime: new Date().toISOString()
-        };
-        
+            
         const bodyData = JSON.stringify({ 
             userId: user.id, 
-            imageRecord: imageRecord, 
-            age: age
+            age: age,
+            imageUrl: input,
+            imageBlob: imageBlob,
+            metadata: base64Metadata,
+            dateTime: new Date().toISOString()
         });
 
         console.log(`\nAgeRecognition resData:\n`, resData, `\n`);
         console.log(`\nAgeRecognition saveAge() user.id: `, user.id, `\n`);
-        console.log(`\nAgeRecognition saveAge(): `, age, `\n`);
+        console.log(`\nAgeRecognition saveAge() age: `, age, `\n`);
+        console.log(`\nAgeRecognition saveAge() typeof age: `, typeof age, `\n`);
         console.log(`\nAgeRecognition input: `, input, `\n`);
         console.log(`\nFetching ${fetchUrl} with bodyData`, bodyData, `\n`);
 
@@ -97,10 +96,13 @@ const AgeRecognition = ( {
         method: 'post', 
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ // sending stringified this.state variables as JSON objects
-            userId: user.id,
-            imageRecord: imageRecord,
-            age: age
-        })
+            userId: user.id, 
+            age: age,
+            imageUrl: input,
+            imageBlob: imageBlob,
+            metadata: base64Metadata,
+            dateTime: new Date().toISOString()
+            })
         })
         .then((response) => response.json())
         .then((response) => {
@@ -117,10 +119,9 @@ const AgeRecognition = ( {
         ;
     }
 
-
     const showModal = () => {
-        // Retrieve DOM element of modal-window pop-up upon users' copy events
-        const modal = document.querySelector('.modal-window');
+        // Retrieve DOM element of modal-age pop-up upon users' copy events
+        const modal = document.querySelector('.modal-age');
             
         modal.style.opacity = 1;
        
@@ -159,17 +160,20 @@ const AgeRecognition = ( {
                     </button>
                 </div>
 
-                <div className='modal-window'>
-                    <h1 class='modal-window--inner'>
+                <div className='modal-age'>
+                    <h1 class='modal-age--inner'>
                         {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
                     </h1>
                 </div>
                 
                 {/* Save to Device button */}
-                <div className="saveBtn u-margin-top-tiny">
+                <div className="saveBtn u-margin-top-tiny u-margin-bottom-small">
                     <button 
                     className="saveBtn__p"
-                    onClick={() => { saveToDevice(htmlToSave); showModal();} } // ColorDetails.jsx saveColor()
+                    onClick={() => { 
+                        saveToDevice(htmlToSave); 
+                        showModal();
+                    } } // ColorDetails.jsx saveColor()
                     >
                         Save to Device
                     </button>
