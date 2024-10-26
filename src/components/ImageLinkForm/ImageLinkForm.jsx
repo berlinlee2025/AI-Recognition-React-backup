@@ -11,7 +11,7 @@ const ImageLinkForm = ({
   onColorButton,
   onAgeButton,
 }) => {
-  const placeholder = `Enter .jpg hyperlink e.g. https://wiki.org/image.jpg`;
+  const placeholder = `Enter hyperlink e.g. https://wiki.org/image`;
   const tabs = document.querySelectorAll('.buttons__btn');
 
   return (

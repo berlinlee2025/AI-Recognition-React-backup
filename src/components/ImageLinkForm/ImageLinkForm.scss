@@ -40,7 +40,8 @@ $gutter-horizontal: 3.75rem;
 .container {
     position: relative;
     margin: 0 auto;
-    padding: 0 2rem;
+    // padding: 0 2rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;

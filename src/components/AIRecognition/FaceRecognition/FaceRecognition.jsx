@@ -8,6 +8,7 @@ import blobToBase64 from '../../../util/blobToBase64';
 import saveToDevice from '../../../util/saveToDevice';
 
 import Loading from '../../Loading/Loading';
+import '../../../sass/base/_utilities.scss';
 
 // Parent component
 // src/components/Home/Home.jsx
@@ -62,8 +63,8 @@ const FaceRecognition = ({
 
       const callbackName = `src/components/AIRecognition/ColorRecognition/ColorDetails/ColorDetails.jsx\nsaveFace = async () => {...}`;
       
-      const devSaveColorUrl = 'http://localhost:3001/save-user-celebrity';
-      const prodSaveColorUrl = 'https://ai-recognition-backend.onrender.com/save-user-celebrity';
+      const devSaveColorUrl = 'http://localhost:3001/records/save-user-celebrity';
+      const prodSaveColorUrl = 'https://ai-recognition-backend.onrender.com/records/save-user-celebrity';
       const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveColorUrl : devSaveColorUrl;
 
       // Assuming resData is the Blob
@@ -131,7 +132,7 @@ const FaceRecognition = ({
 
     return (
       <React.Fragment>
-        <div className="face-recognition">
+        <div className="face-recognition u-margin-top-medium">
           <div className="container">
             <div className="face-inner">
               <div className="image-box">
@@ -139,9 +140,9 @@ const FaceRecognition = ({
                 // id='face-image' is used for DOM manipulation
                 // cannot be edited
                 id='face-image'
-                style={{
-                  marginTop: '5vh'
-                }}
+                // style={{
+                //   marginTop: '5vh'
+                // }}
                 src={imageUrl}
                 alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
                 /> 
@@ -193,7 +194,7 @@ const FaceRecognition = ({
           <div className="saveBtn u-margin-top-tiny  u-margin-bottom-small">
             <button 
               className="saveBtn__p"
-              onClick={() => { saveToDevice(htmlToSave); showModal();} } 
+              onClick={() => { saveToDevice(htmlToSave); setResponseStatusCode(200); showModal();} } 
             >
               Save to Device
             </button>

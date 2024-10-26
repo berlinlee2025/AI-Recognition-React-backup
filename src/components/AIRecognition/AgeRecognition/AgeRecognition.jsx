@@ -31,6 +31,7 @@ const AgeRecognition = ( {
         if (input !== '') {
           const fetchImage = async() => {
             const fetchUrl = input;
+            // Using CORS-anywhere for real-time fetching imageUrl from User's <input >
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
       
             try {
@@ -64,8 +65,8 @@ const AgeRecognition = ( {
 
         const callbackName = `src/components/AIRecognition/AgeRecognition/AgeRecognition\nsaveAge = async () => {...}`;
         
-        const devSaveAgeUrl = 'http://localhost:3001/save-user-age-records';
-        const prodSaveAgeUrl = 'https://ai-recognition-backend.onrender.com/save-user-age-records';
+        const devSaveAgeUrl = 'http://localhost:3001/records/save-user-age';
+        const prodSaveAgeUrl = 'https://ai-recognition-backend.onrender.com/records/save-user-age';
         const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveAgeUrl : devSaveAgeUrl;
 
         // Assuming resData is the Blob
@@ -172,6 +173,7 @@ const AgeRecognition = ( {
                     className="saveBtn__p"
                     onClick={() => { 
                         saveToDevice(htmlToSave); 
+                        setResponseStatusCode(200);
                         showModal();
                     } } // ColorDetails.jsx saveColor()
                     >

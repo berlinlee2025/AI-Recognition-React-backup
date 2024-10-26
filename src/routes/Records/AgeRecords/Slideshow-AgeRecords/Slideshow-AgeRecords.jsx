@@ -4,6 +4,7 @@ import { MaterialSymbol } from 'react-material-symbols';
 import 'react-material-symbols/rounded';
 
 import Loading from "../../../../components/Loading/Loading";
+import '../../../../sass/base/_utilities.scss';
 
 // Parent component
 // 1. src/routes/Records/ColorRecords.jsx
@@ -110,7 +111,7 @@ const SlideshowAgeRecords = ( {
                     
                     <br />
     
-                    <div className="slideshow__btn" 
+                    <div className="slideshow__btn u-margin-bottom-small" 
                         style={{ width: dimensions.width >= mobileBreakpoint ? slideshowWidthGt : slideshowWidthLt }}
                     >
                         <button 

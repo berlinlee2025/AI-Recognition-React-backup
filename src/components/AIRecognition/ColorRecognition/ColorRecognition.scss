@@ -86,6 +86,18 @@ $gutter-horizontal: 3.75rem;
     max-width: 100%;
     max-height: 100%;
     max-width: 142rem;
+
+    .modal-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // align-items: center;
+    }
+
+    // .color-table {
+    //     align-self: center;
+    //     max-width: 350px;
+    // }
 }
 
 .color-image__modal-container {
@@ -93,16 +105,17 @@ $gutter-horizontal: 3.75rem;
 }
 
 .color-image-box {
-    margin: 2rem 1rem;
+    // margin: 2rem 1rem;
     padding-inline: 1% 1%;
     transition: all .2s ease-out;
 }
 
 .color-image {
-    max-width: 100%;
-    min-width: 10rem;
-    max-height: 100%;
-    min-height: 10rem;
+    max-width: 350px;
+    // max-width: 100%;
+    // min-width: 10rem;
+    // max-height: 100%;
+    // min-height: 10rem;
     cursor: pointer;
     transition: 0.5s ease-in-out;
 
@@ -137,6 +150,7 @@ $gutter-horizontal: 3.75rem;
     display: flex;
     flex-flow: row nowrap;
     // margin: 5rem auto;
+    padding: 1rem;
     margin: 0rem auto;
     max-width: 100%;
     max-height: 100%;

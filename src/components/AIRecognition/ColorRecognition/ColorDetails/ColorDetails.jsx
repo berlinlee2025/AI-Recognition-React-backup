@@ -88,7 +88,7 @@ const ColorDetails = ({ user, input, color_props }) => {
                   <tr>
                     <th>Color</th>
                     <th>Raw hex</th>
-                    <th>Raw hex val</th>
+                    <th>Hex val</th>
                     <th>W3C Color</th>
                     <th>W3C Color Name</th>
                     <th>W3C hex</th>

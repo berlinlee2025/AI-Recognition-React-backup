@@ -15,10 +15,10 @@
     padding-inline: 2% 2%;
 }
 
-.color-table {
+/* .color-table {
     width: 48vw;
     padding-right: 2vw;
-}
+} */
 
 .color {
     border-radius: 5px;
@@ -50,7 +50,7 @@
 }
 
 .w3c-name {
-    max-width: 6rem;
+    max-width: 3.5rem;
     min-width: 3rem;
     cursor: pointer;
     transition: all 1s ease-in-out;

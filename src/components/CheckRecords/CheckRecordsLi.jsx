@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classes from './CheckRecords.module.scss';
 // Util
+
 import useButtonTextRoll from '../../util/buttonTextRoll';
 
 // Parent component
