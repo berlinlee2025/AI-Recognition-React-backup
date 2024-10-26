@@ -848,6 +848,7 @@ class App extends Component {
       <div className="App">
         {/* Conditional rendering */}
         <Navigation
+          user={user}
           isSignedIn={isSignedIn}
           // removeUserFromLocalStorage={this.removeUserFromLocalStorage}
           onRouteChange={this.onRouteChange}
