@@ -32,7 +32,8 @@ const ColorRecognition = ({
         if (input !== '') {
           const fetchImage = async() => {
             const fetchUrl = input;
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
       
             try {
               const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });

@@ -32,7 +32,8 @@ const FaceRecognition = ({
     useEffect(() => {
         const fetchImage = async() => {
           const fetchUrl = input;
-          const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+          // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+          const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
     
           try {
             const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });
@@ -201,81 +202,7 @@ const FaceRecognition = ({
           </div>
         </div>
       </React.Fragment>
-    )
+    );
+};
 
-    // return face_hidden ? (
-    // <h2>&nbsp;</h2>
-    // ) : ( 
-    // <React.Fragment>
-    //     <div className="face-recognition">
-    //       <div className="container">
-    //         <div className="face-inner">
-    //           <div className="image-box">
-    //             <img
-    //             // id='face-image' is used for DOM manipulation
-    //             // cannot be edited
-    //             id='face-image'
-    //             style={{
-    //               marginTop: '5vh'
-    //             }}
-    //             src={imageUrl}
-    //             alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
-    //             /> 
-    //           </div>
-              
-    //           <div 
-    //             className={celebrityName ? "bounding-box" : ""}
-    //             style={{
-    //             top: box.topRow,
-    //             right: box.rightCol,
-    //             bottom: box.bottomRow,
-    //             left: box.leftCol,
-    //             }}
-    //           >
-    //           {/* Create a button to show Celebrity name && 
-    //             allow users to google search it for comparison 
-    //             on a new browser window*/}
-    //             <div className="celebrity-container">
-    //               <button 
-    //                 className=
-    //                 {celebrityName ? "celebrity-name": "invisible"}
-    //                 onClick={() => 
-    //                   window.open(`https://www.google.com/search?q=${celebrityName}`, '_blank')}
-    //               >
-    //                 {celebrityName}
-    //               </button>
-    //             </div>
-    //           </div>
-
-    //         </div>
-    //       </div>
-
-    //       <div className='modal-window'>
-    //         <h1 class='modal-window--inner'>
-    //           {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
-    //         </h1>
-    //       </div>
-
-    //       {/* Save to Account button */}
-    //       <div className="saveBtn u-margin-top-small">
-    //         <button 
-    //           className="saveBtn__p"
-    //           onClick={() => { saveCelebrity(); showModal();} } // ColorDetails.jsx saveColor()
-    //         >
-    //           Save to Account
-    //         </button>
-    //       </div>
-    //       {/* Save to Device button */}
-    //       <div className="saveBtn u-margin-top-tiny">
-    //         <button 
-    //           className="saveBtn__p"
-    //           onClick={() => { saveToDevice(htmlToSave); showModal();} } 
-    //         >
-    //           Save to Device
-    //         </button>
-    //       </div>
-    //     </div>
-    // </React.Fragment>
-    // )
-}
 export default FaceRecognition;
