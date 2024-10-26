@@ -23,8 +23,6 @@ import findAge from './util/ai-detection/findAge';
 import calculateFaceLocation from './util/ai-detection/calculateFaceLocation';
 import { returnDateTime } from './util/returnDateTime';
 
-import Cookies from 'js-cookie';
-
 import axios from 'axios';
 
 // const localStorage = window.localStorage;
@@ -66,30 +64,28 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchUserData();
-
     /* Adding EventListener to window 'resize' events */
     window.addEventListener('resize', this.handleResize);
-    
     setInterval(() => {
       this.setState({ dimensions: { width: window.innerWidth } });
-    }, 10000);
+    }, 300000);
   }
 
   /* Session cookie */
-  fetchUserData = () => {
+  fetchUserData = async() => {
     const devUserDataUrl = `http://localhost:3001/api/get-user-data`;
     const prodUserDataUrl = `https://ai-recognition-backend.onrender.com/api/get-user-data`;
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodUserDataUrl : devUserDataUrl;
 
-    axios.get(fetchUrl, { withCredentials: true })
+    await axios.get(fetchUrl, { withCredentials: true })
     .then((response) => {
       if (response.data) {
         this.setState({ 
           user: response.data, 
           isSignedIn: true, 
-          // route: 'home'
         }, () => {
+          this.saveUser(response.data);
           this.onRouteChange('home');
         });
       } 
@@ -100,13 +96,13 @@ class App extends Component {
   }
 
   saveUser = (user) => {
-    this.setState({ user: user });
+    this.setState({ user: user} );
   }
 
   resetUser = () => {
     this.setState({ user: {}, isSignedIn: false, route: 'signin' }, () => {
       // this.removeUserFromLocalStorage();
-      console.log(`\nthis.state.isSignedIn after resetUser:\n`,this.state.isSignedIn, `\n`);//true
+      console.log(`\nthis.state.isSignedIn after resetUser:\n`, this.state.isSignedIn, `\n`);//true
     })
   }
 
@@ -114,22 +110,16 @@ class App extends Component {
   // useEffect() hook combining componentDidUpdate & componentWillUnmount
   // Validate users whenever there's a change
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.user !== prevState.user) { 
-      this.validateUsers();
+    if (this.state.isSignedIn && prevState.user.id !== this.state.user.id) { 
+      // this.validateUsers();
+      console.log(`\nUser ID updated: `, this.state.user.id);
       // this.updateLocalStorage('user', this.state.user, prevState.user);
     }
-
-    /* Storing User's latest route */
-    // if (this.state.lastRoute !== prevState.lastRoute) {
-    //   localStorage.setItem('lastRoute', this.state.lastRoute);
-    // }
   }
   
   componentWillUnmount() {
     // clearTimeout(this.inactivityTimer);
     window.removeEventListener('resize', this.handleResize);
-    /* this.state.dimensions => Clear the interval on unmount to avoid memory leak on browser */
-    // clearInterval(this.dimensionsCleanupTimer);
   }
 
   // Keep tracking window.innerWidth px
@@ -137,12 +127,6 @@ class App extends Component {
     this.setState({ dimensions: { width: window.innerWidth } });
   }
   
-  // resetInactivityTimer = () => {
-  //   clearTimeout(this.inactivityTimer);
-  //   // Force users to sign out after 15 minutes (900000 milli-seconds)
-  //   this.inactivityTimer = setTimeout(this.resetUser, 900000); 
-  // }
-
   // For Celebrity detection model
   displayCelebrity = (celebrity) => {
     this.setState({ celebrity: celebrity }, () =>
@@ -610,30 +594,8 @@ class App extends Component {
 
   // src/components/Navigation/Navigation.jsx
   onSignout = async () => {
-    // this.setState({
-    //   celebrity: {},
-    //   colors: [],
-    //   age: [],
-    //   user: {}
-    // }, () => {
-    //   // After state reset, remove the specific cookies
-    //   // Example: if you know the names of the cookies
-    //   Cookies.remove('userData', { path: '/', secure: process.env.NODE_ENV === 'production' });
+    this.resetState();
 
-    //   // Reset any additional user or app state
-    //   this.resetUser();
-    //   this.resetState();
-
-    //   // Log the updated state for debugging
-    //   console.log('this.state.celebrity:', this.state.celebrity);
-    //   console.log('this.state.colors:', this.state.colors);
-    //   console.log('this.state.age:', this.state.age);
-
-    //   // Change route to 'signin' or any other as necessary
-    //   this.setState({ isSignedIn: false });
-    //   this.onRouteChange('signin');
-    //   }
-    // );
     const devSignoutUrl = `http://localhost:3001/signout`;
     const prodSignoutUrl = `https://ai-recognition-backend.onrender.com/signout`;
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodSignoutUrl : devSignoutUrl;
@@ -698,23 +660,13 @@ class App extends Component {
     console.log('\ndateTime:\n', dateTime);
 
     // // Tracking all state variables in render() {...}
-    console.log(`\nthis.state.user: \n`, user, `\n`);
+    // console.log(`\nthis.state.user: \n`, user, `\n`);
     // console.log(`\nthis.state.user => JSON.parse(user):\n`, JSON.parse(user), `\n`);
-    console.log(`\ndefaultRoute:\n${this.defaultRoute}\n`);
-    console.log(`\n`);
-    console.log('\nthis.state.input: \n', input);
-    console.log('\nthis.state.imageUrl: \n', imageUrl);
-    console.log('\nthis.state.box: \n', box);
-    console.log('\nthis.state.celebrity: \n', celebrity);
-    console.log('\nthis.state.celebrity.name: \n', celebrity.name);
-    console.log('typeof this.state.celebrity.name: \n', typeof celebrity.name);
-    console.log('\nthis.state.colors: \n', colors);
-    console.log('\nthis.state.colors[0]: \n', colors[0]);
-    console.log('\nthis.state.age: \n', age);
-    console.log('\nthis.state.face_hidden', face_hidden);
-    console.log('\nthis.state.color_hidden', color_hidden);
-    console.log('\nthis.state.age_hidden', age_hidden);
-    console.log('\nthis.state.responseStatusCode:\n', responseStatusCode);
+    console.log('\nthis.state.input: \n', input, `\n`);
+    console.log('\nthis.state.face_hidden', face_hidden, `\n`);
+    console.log('\nthis.state.color_hidden', color_hidden, `\n`);
+    console.log('\nthis.state.age_hidden', age_hidden, `\n`);
+    console.log('\nthis.state.responseStatusCode:\n', responseStatusCode, `\n`);
     console.log(`\nthis.state.dimensions.width:\n`, dimensions.width, `px\n`);
     console.log(`\nthis.state.user.id:\n`, user.id, `\n`);
     
@@ -764,12 +716,15 @@ class App extends Component {
       ),
       'signin': (
         <Signin 
+          user={user}
           saveUser={this.saveUser}
           onRouteChange={this.onRouteChange} 
         />
       ),
       'register': (
         <Register 
+          user={user}
+          saveUser={this.saveUser}
           onRouteChange={this.onRouteChange} 
         />
       ),

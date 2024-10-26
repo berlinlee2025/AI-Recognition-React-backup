@@ -32,8 +32,8 @@ const FaceRecognition = ({
     useEffect(() => {
         const fetchImage = async() => {
           const fetchUrl = input;
-          // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-          const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
+          const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+          // const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
     
           try {
             const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });
@@ -80,8 +80,8 @@ const FaceRecognition = ({
           userId: user.id, 
           celebrityName: celebrityName,
           imageUrl: input,
-          imageBlob: imageBlob,
-          metadata: base64Metadata,
+          imageBlob: imageBlob ? imageBlob : '',
+          metadata: base64Metadata ? base64Metadata : '',
           dateTime: new Date().toISOString()
       });
       console.log(`\nFaceRecognition saveCelebrity() resData: `, resData, `\n`);

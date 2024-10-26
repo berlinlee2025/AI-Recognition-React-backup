@@ -270,7 +270,7 @@ class Register extends Component {
 
         // Invoke App.js loadUserFromLocalStorage() passed to this child component as props
         // this.props.loadUserFromLocalStorage();
-
+        this.props.saveUserId(user.id);
         this.props.onRouteChange('home');
 
       } else if (!user.id) {

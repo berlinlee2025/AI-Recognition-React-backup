@@ -62,15 +62,18 @@ class Signin extends Component {
     .then(response => response.json()) // http://localhost:3001/signin server response to parse JSON data user
     .then((user) => {
       if (user.id) { // If the user can be found & user.id exists
-        this.props.saveUser(user);
-        this.props.onRouteChange('home');
+        this.props.onRouteChange('home', () => {
+          this.props.saveUser(user);
+        });
+        console.log(`\n** After Signin src/App.js this.state.user: `, this.props.user, `\n`);
       } 
       else {
-        this.onIncorrect();
+        throw new Error('No user ID returned'); // Handle cases where no user ID is present
       }
     })
     .catch((err) => {
-      console.error(`\nFailed to fetch ${fetchUrl} for signing users in:\n${err}\n`);
+      console.error(`\nError in fetching ${fetchUrl} for signing users in:\n${err}\n`);
+      this.onIncorrect();
     })
   };
 

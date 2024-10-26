@@ -15,7 +15,6 @@ const SlideshowCelebrityRecords = ( {
     
     // useState Slideshow Photos' index
     const [activeIndex, setActiveIndex] = useState(0);
-    const [blobImages, setBlobImages] = useState([]);
     const indexRef = useRef(activeIndex); // Create a ref to store the current index
 
     // Monitor resolutions
@@ -43,20 +42,6 @@ const SlideshowCelebrityRecords = ( {
 
     // Depicting userCelebrityRecords[[{}, {}, {}]]
     const userCelebrityRecordsArray = userCelebrityRecords ? userCelebrityRecords : [];
-
-    // Convert base64 strings to blobs & store them in this.state
-    // useEffect(() => {
-    //     if (userCelebrityRecords) {
-    //         const blobs = userCelebrityRecordsArray.map((record) => {
-    //             // Assuming 'image/jpeg' is MIME type
-    //             const blob = record.image_blob;
-
-    //             return URL.createObjectURL(blob); // Create a URL for the blob for rendering
-    //         });
-
-    //         setBlobImages(blobs);
-    //     }
-    // }, [userCelebrityRecords]); // Depend on userCelebrityRecords to update blobs
 
     // To update Slideshow Photos' index
     const updateIndex = (newIndex) => {
@@ -91,7 +76,6 @@ const SlideshowCelebrityRecords = ( {
     if (!userCelebrityRecordsArray.length) return <Loading />;
 
     console.log(`\nSlideshowCelebrityRecords:\n`, userCelebrityRecordsArray, `\n`);
-    console.log(`\nSlideshowCelebrityRecords blobImages:\n`, blobImages, `\n`);
 
     return (
         <React.Fragment>
@@ -118,7 +102,7 @@ const SlideshowCelebrityRecords = ( {
                                 {userCelebrityRecordsArray[activeIndex].celebrity_name}
                             </h4>
                             <div className="slideshow__inner--celebrity" >
-                                <img className="slideshow__inner--celebrityImg" src={userCelebrityRecordsArray[activeIndex].image_url} alt="celebrity-blob" />
+                                <img className="slideshow__inner--celebrityImg" src={userCelebrityRecordsArray[activeIndex].image_blob} alt="celebrity-blob" />
                             </div>  
                         </div>
                     </div>

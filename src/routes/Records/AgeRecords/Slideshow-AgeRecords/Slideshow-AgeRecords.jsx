@@ -15,7 +15,6 @@ const SlideshowAgeRecords = ( {
     
     // useState Slideshow Photos' index
     const [activeIndex, setActiveIndex] = useState(0);
-    const [blobImages, setBlobImages] = useState([]);
     const indexRef = useRef(activeIndex); // Create a ref to store the current index
 
     // Monitor resolutions
@@ -77,7 +76,6 @@ const SlideshowAgeRecords = ( {
     if (!userAgeRecordsArray.length) return <Loading />;
 
     console.log(`\nSlideshowAgeRecords:\n`, userAgeRecordsArray, `\n`);
-    console.log(`\nSlideshowAgeRecords blobImages:\n`, blobImages, `\n`);
 
     return (
         <React.Fragment>
@@ -104,7 +102,7 @@ const SlideshowAgeRecords = ( {
                                 {userAgeRecordsArray[activeIndex].age}
                             </h4>
                             <div className="age-image" >
-                                <img className="age-image" src={userAgeRecordsArray[activeIndex].image_url} alt="celebrity-blob" />
+                                <img className="age-image" src={userAgeRecordsArray[activeIndex].image_blob} alt="celebrity-blob" />
                             </div>  
                         </div>
                     </div>

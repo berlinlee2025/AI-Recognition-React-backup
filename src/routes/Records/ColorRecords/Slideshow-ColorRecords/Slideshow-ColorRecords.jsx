@@ -8,6 +8,8 @@ import Loading from "../../../../components/Loading/Loading";
 import base64ToBlob from "../../../../util/base64ToBlob";
 import '../../../../sass/base/_utilities.scss';
 
+import TestMetadataBlob from "../../../../components/TestMetadaBlob/TestMetadataBlob";
+
 // Parent component
 // 1. src/routes/Records/ColorRecords.jsx
 const SlideshowColorRecords = ( { 
@@ -17,7 +19,6 @@ const SlideshowColorRecords = ( {
     
     // useState Slideshow Photos' index
     const [activeIndex, setActiveIndex] = useState(0);
-    const [blobImages, setBlobImages] = useState([]);
     const indexRef = useRef(activeIndex); // Create a ref to store the current index
 
     // Monitor resolutions
@@ -45,41 +46,6 @@ const SlideshowColorRecords = ( {
 
     // Flattening userColorRecords[[{}, {}, {}]]
     const userColorRecordsArray = userColorRecords ? userColorRecords.flat() : [];
-
-    // Convert base64 strings to blobs & store them in this.state
-    useEffect(() => {
-        if (userColorRecords) {
-            try {
-                const blobs = userColorRecords.flat().map((record) => {
-                    if (!record.metadata) {
-                        console.error("Missing metadata:", record);
-                        return null;
-                    }
-                    const blob = base64ToBlob(record.metadata, 'image/jpeg');
-                    if (!(blob instanceof Blob)) {
-                        console.error("base64ToBlob did not return a Blob:", blob);
-                        return null;
-                    }
-                    return URL.createObjectURL(blob);
-                }).filter(url => url !== null); // Filter out any nulls due to errors
-    
-                setBlobImages(blobs);
-            } catch (error) {
-                console.error("Error creating blob URLs:", error);
-            }
-        }
-        // if (userColorRecords) {
-        //     const blobs = userColorRecords.flat().map((record) => {
-        //         // Assuming 'image/jpeg' is MIME type
-        //         const blob = base64ToBlob(record.metadata, 'image/jpeg');
-
-        //         return URL.createObjectURL(blob); // Create a URL for the blob for rendering
-        //     });
-
-        //     setBlobImages(blobs);
-        // }
-    }, [userColorRecords]); // Depend on userColorRecords to update blobs
-
 
     // To update Slideshow Photos' index
     const updateIndex = (newIndex) => {
@@ -114,7 +80,7 @@ const SlideshowColorRecords = ( {
     if (!userColorRecordsArray.length) return <Loading />;
 
     console.log(`\nSlideshowColorRecords:\n`, userColorRecordsArray, `\n`);
-    console.log(`\nSlideshowColorRecords blobImages:\n`, blobImages, `\n`);
+    console.log(`\nSlideshowColorRecords:\n`, userColorRecordsArray, `\n`);
 
     return (
     <React.Fragment>
@@ -137,7 +103,7 @@ const SlideshowColorRecords = ( {
                     <p className="slideshow__inner--p">{userColorRecordsArray[activeIndex].date_time}</p>
                     <br/>
                     <div className="color-page">
-                        <img className="color-table-image" src={blobImages[activeIndex]} alt="color-blob" />
+                        <img className="color-table-image" src={userColorRecordsArray[activeIndex].metadata} alt="color-blob" />
                         <div>
                            <table className="color-table">
                             <thead>

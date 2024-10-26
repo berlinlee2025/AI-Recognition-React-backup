@@ -28,7 +28,7 @@ const base64ToBlob = (base64, mime) => {
     }
 
     if (!isValidBase64(base64Data)) {
-        console.error("Invalid base64 data");
+        // console.error("Invalid base64 data");
         return null;  // or throw an error
     }
     
@@ -59,6 +59,6 @@ const base64ToBlob = (base64, mime) => {
     // Create & return a new Blob object, which combines all the byte[] into a single Blob
     // The MIME type is also specified to inform the browser about the type of file the Blob represents
     return new Blob(byteArrays, {type: mime});
-}
+};
 
 export default base64ToBlob;

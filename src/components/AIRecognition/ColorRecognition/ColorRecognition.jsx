@@ -32,8 +32,8 @@ const ColorRecognition = ({
         if (input !== '') {
           const fetchImage = async() => {
             const fetchUrl = input;
-            // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            // const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
       
             try {
               const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });
@@ -96,9 +96,11 @@ const ColorRecognition = ({
         
         const bodyData = JSON.stringify({ 
             userId: user.id, 
+            imageUrl: input,
             imageRecord: imageRecord, 
             imageDetails: imageDetails 
         });
+
         console.log(`\nColorRecognition resData:\n`, resData, `\n`);
         console.log(`\nColorDetails saveColor user.id: `, user.id, `\n`);
         console.log(`\nColorDetails color_props: `, color_props, `\n`);
@@ -112,8 +114,10 @@ const ColorRecognition = ({
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ // sending stringified this.state variables as JSON objects
             userId: user.id,
-            imageRecord: imageRecord,
-            imageDetails: imageDetails
+            imageUrl: input,
+            imageBlob: imageBlob ? imageBlob : '',
+            imageRecord: imageRecord ? imageRecord : {},
+            imageDetails: imageDetails ? imageDetails : {}
         })
         })
         .then((response) => response.json())
