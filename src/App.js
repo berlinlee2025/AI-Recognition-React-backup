@@ -74,6 +74,10 @@ class App extends Component {
     setInterval(() => {
       this.setState({ dimensions: { width: window.innerWidth } });
     }, 300000);
+
+    setInterval(() => {
+      this.validateUsers();
+    }, 900000);
   }
 
   /* Session cookie */
@@ -90,7 +94,7 @@ class App extends Component {
           user: response.data, 
           isSignedIn: true, 
         }, () => {
-          this.saveUser(response.data);
+          // this.saveUser(response.data);
           this.onRouteChange('home');
         });
       } 
@@ -117,7 +121,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.isSignedIn && prevState.user.id !== this.state.user.id) { 
       // this.validateUsers();
-      console.log(`\nUser ID updated: `, this.state.user.id);
+      console.log(`\nUser updated: `, this.state.user.id);
       // this.updateLocalStorage('user', this.state.user, prevState.user);
     }
   }
