@@ -63,12 +63,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // this.fetchUserData();
+    this.fetchUserData();
 
-    setInterval(() => {
-      this.fetchUserData();
-    }, 1000);
-    
+    // setInterval(() => {
+    //   this.fetchUserData();
+    // }, 900000);
+
     /* Adding EventListener to window 'resize' events */
     window.addEventListener('resize', this.handleResize);
     setInterval(() => {
