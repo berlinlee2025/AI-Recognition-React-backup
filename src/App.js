@@ -63,7 +63,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.fetchUserData();
+    // this.fetchUserData();
+
+    setInterval(() => {
+      this.fetchUserData();
+    }, 1000);
+    
     /* Adding EventListener to window 'resize' events */
     window.addEventListener('resize', this.handleResize);
     setInterval(() => {
@@ -553,7 +558,7 @@ class App extends Component {
         this.setState({ 
           ...this.state,
           route: routeInput,
-          isSignedIn: true
+          isSignedIn: true,
         });
         console.log(`\n${callbackName}(home)\n`);
         return;
