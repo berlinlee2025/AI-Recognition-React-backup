@@ -25,13 +25,10 @@ import { returnDateTime } from './util/returnDateTime';
 
 import axios from 'axios';
 
-// const localStorage = window.localStorage;
-
 class App extends Component {
   constructor() {
     super();
-    // const lastRoute = localStorage.getItem('lastRoute') || 'signin';
-        
+           
     this.state = {
       input: '', // this.state.input => Users' input imageUrl => Can be used for onClick events
       imageUrl: '', // this.state.imageUrl should NOT be used for onClick => React circular references
@@ -45,9 +42,8 @@ class App extends Component {
       color_hidden: true,
       age_hidden: true,
       responseStatusCode: Number(''),
-      // route: defaultRoute,
       route: 'signin',
-      // route: lastRoute,
+      
       isSignedIn: false,
       // isSignedIn: userData ? true : false,
 
@@ -63,31 +59,32 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.fetchUserData();
+    const lastRoute = localStorage.getItem('lastRoute');
+    if (lastRoute && this.state.isSignedIn) {
+      this.setState({ route: lastRoute });
+    }
 
-    // setInterval(() => {
-    //   this.fetchUserData();
-    // }, 900000);
+    this.fetchUserData();
 
     /* Adding EventListener to window 'resize' events */
     window.addEventListener('resize', this.handleResize);
     setInterval(() => {
       this.setState({ dimensions: { width: window.innerWidth } });
-    }, 300000);
+    }, 120000); // clear this.state.dimensions[] in every 2 mins
 
     setInterval(() => {
       this.validateUsers();
-    }, 900000);
+    }, 900000); // Validate this.state.user every 15 mins
   }
 
   /* Session cookie */
-  fetchUserData = async() => {
+  fetchUserData = () => {
     const devUserDataUrl = `http://localhost:3001/api/get-user-data`;
     const prodUserDataUrl = `https://ai-recognition-backend.onrender.com/api/get-user-data`;
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodUserDataUrl : devUserDataUrl;
 
-    await axios.get(fetchUrl, { withCredentials: true })
+    axios.get(fetchUrl, { withCredentials: true })
     .then((response) => {
       if (response.data) {
         this.setState({ 
@@ -101,7 +98,8 @@ class App extends Component {
     })
     .catch((err) => {
       console.error(`\nFailed to fetch user data: `, err, `\n`);
-    })
+      this.setState({ isSignedIn: false, route: 'signin' });
+    });
   }
 
   saveUser = (user) => {
@@ -239,12 +237,16 @@ class App extends Component {
 
     // Change Route to 'home' => Checkout App.js onRouteChange()
     this.onRouteChange('home');
+
+    this.setState( { route: 'home' });
   }
 
   // Retrieve User's Color Records from Node.js => PostgreSQL
   onCelebrityRecordsButton = async () => {
     // Reset all state variables to allow proper rendering of side-effects
     this.resetState();
+
+    this.setState( { route: 'celebrityRecords' });
 
     // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
     this.onRouteChange('celebrityRecords');
@@ -543,61 +545,72 @@ class App extends Component {
     });
   };
 
-  // **
-  // To allow SPA Routing without React Router DOM through onClick={() => onRouteChange(routeInput)}
+  // ** To allow SPA Routing without React Router DOM through onClick={() => onRouteChange(routeInput)}
   onRouteChange = (routeInput) => {
     const callbackName = `onRouteChange`;
+
     switch (routeInput) {
-      case 'signout':
-        this.setState({ 
-          ...this.state,
-          route: 'sigin',
-          isSignedIn: false
-        });
-        console.log(`\n${callbackName}(signout)\n`);
-        break;
-      
-      // else if onClick={() => onRouteChange('home')}
-      case 'home':
-        this.setState({ 
-          ...this.state,
-          route: routeInput,
-          isSignedIn: true,
-        });
-        console.log(`\n${callbackName}(home)\n`);
-        return;
-      
-      case 'ageRecords':
-        this.setState({
-          route: routeInput,
-          isSignedIn: true
-        });
-        console.log(`\n${callbackName}(ageRecords)\n`);
-        return;
+        case 'signout':
+          this.setState({ 
+            ...this.state,
+            route: 'signin',
+            // isSignedIn: false
+            isSignedIn: routeInput !== 'signin'
+          }, () => {
+            localStorage.setItem('lastRoute', 'signin');
+          });
+          console.log(`\n${callbackName}(signout)\n`);
+          break;
+        
+        // else if onClick={() => onRouteChange('home')}
+        case 'home':
+          this.setState({ 
+            ...this.state,
+            route: routeInput,
+            isSignedIn: true,
+          }, () => {
+            localStorage.setItem('lastRoute', routeInput);
+          });
+          console.log(`\n${callbackName}(home)\n`);
+          return;
+        
+        case 'ageRecords':
+          this.setState({
+            route: routeInput,
+            isSignedIn: true,
+          }, () => {
+            localStorage.setItem('lastRoute', routeInput);
+          });
+          console.log(`\n${callbackName}(ageRecords)\n`);
+          return;
 
-      case 'colorRecords':
-        this.setState({
-          route: routeInput,
-          isSignedIn: true
-        });
-        console.log(`\n${callbackName}(colorRecords)\n`);
-        return;
+        case 'colorRecords':
+          this.setState({
+            route: routeInput,
+            isSignedIn: true,
+          }, () => {
+            localStorage.setItem('lastRoute', routeInput);
+          });
+          console.log(`\n${callbackName}(colorRecords)\n`);
+          return;
 
-      case 'celebrityRecords':
-        this.setState({
-          route: routeInput,
-          isSignedIn: true
-        });
-        console.log(`\n${callbackName}(celebrityRecords)\n`);
-        return;
-      
-      // No matter what, still wanna change the route
-      default:
-        this.setState({ 
-          ...this.state, 
-          route: routeInput 
-        });
-        return;
+        case 'celebrityRecords':
+          this.setState({
+            route: routeInput,
+            isSignedIn: true,
+          }, () => {
+            localStorage.setItem('lastRoute', routeInput);
+          });
+          console.log(`\n${callbackName}(celebrityRecords)\n`);
+          return;
+        
+        // No matter what, still wanna change the route
+        default:
+          this.setState({ 
+            ...this.state, 
+            route: routeInput,
+          });
+          return;
     }
   };
 
@@ -619,7 +632,8 @@ class App extends Component {
         colors: [],
         age: [],
         user: {},
-        isSignedIn: false
+        isSignedIn: false,
+        route: 'signin'
       }, () => {
         this.onRouteChange('signin')
       });
@@ -627,7 +641,7 @@ class App extends Component {
     .catch((err) => {
       console.error(`Error signing out user: `, err, `\n`);
     })
-  }
+  };
 
   // To avoid malicious users from breaking in from <Register />
   // If there's no user.id => route to 'signin' page
@@ -635,7 +649,7 @@ class App extends Component {
     if (!this.state.user.id) {
       this.onRouteChange('signin');
     }
-  }
+  };
 
   /* Rendering all components */
   render() {
@@ -650,15 +664,14 @@ class App extends Component {
       celebrity,
       dimensions,
       imageUrl,
-      route,
       input,
-      isSignedIn,
       responseStatusCode,
       user,
       userAgeRecords,
       userCelebrityRecords,
-      userColorRecords
-      // userColorRecords
+      userColorRecords,
+      route,
+      isSignedIn
     } = this.state;
 
     const colors_array = colors.map(color => color);
@@ -677,6 +690,7 @@ class App extends Component {
     console.log('\nthis.state.age_hidden', age_hidden, `\n`);
     console.log('\nthis.state.responseStatusCode:\n', responseStatusCode, `\n`);
     console.log(`\nthis.state.dimensions.width:\n`, dimensions.width, `px\n`);
+    console.log(`\nthis.state.route:\n`, route, `\n`);
     console.log(`\nthis.state.user.id:\n`, user.id, `\n`);
     
     // Enhance React Scalability for allowing to add more React routes without React Router DOM
@@ -757,6 +771,7 @@ class App extends Component {
             isSignedIn={isSignedIn}
             dimensions={dimensions}
             userAgeRecords={userAgeRecords}
+            onRouteChange={this.onRouteChange}
           />
         </React.Fragment>
       ),
@@ -778,6 +793,7 @@ class App extends Component {
             isSignedIn={isSignedIn}
             dimensions={dimensions}
             userColorRecords={userColorRecords}
+            onRouteChange={this.onRouteChange}
           />
         </React.Fragment>
       ),
@@ -805,6 +821,7 @@ class App extends Component {
             onCelebrityRecordsButton={this.onCelebrityRecordsButton}
             onColorRecordsButton={this.onColorRecordsButton}
             onAgeRecordsButton={this.onAgeRecordsButton}
+            onRouteChange={this.onRouteChange}
           />
         </React.Fragment>
       )
@@ -827,6 +844,6 @@ class App extends Component {
       </div>
     );
   }
-}
+};
 
 export default App;

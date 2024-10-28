@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // import Slideshow to display ColorRecords
 import SlideshowAgeRecords from './Slideshow-AgeRecords/Slideshow-AgeRecords';
