@@ -5,6 +5,7 @@ import ImageLinkForm from '../../components/ImageLinkForm/ImageLinkForm';
 import FaceRecognition from '../../components/AIRecognition/FaceRecognition/FaceRecognition';
 import ColorRecognition from '../../components/AIRecognition/ColorRecognition/ColorRecognition';
 import AgeRecognition from '../../components/AIRecognition/AgeRecognition/AgeRecognition';
+import Loading from '../../components/Loading/Loading';
 
 // Parent component
 // src/App.js
@@ -49,6 +50,8 @@ const Home = ( {
     useEffect(() => {
         fetchUserData();
     }, []); // Empty dependency[] => this effect runs only once after initial render
+
+    if (!user) return <Loading />;
 
     return (
         <React.Fragment>
