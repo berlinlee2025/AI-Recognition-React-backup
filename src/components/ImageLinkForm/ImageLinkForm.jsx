@@ -18,8 +18,9 @@ const ImageLinkForm = ({
     <div className="container row">
       <div className="link-form">
           <p className="link-form__paragraph">
-            {"This Brain will detect Colors or Celebrity faces in your pictures. Give it a try"}
+            {"This Brain will detect Colors or Celebrity faces in your pictures."}
           </p>
+          <p className="link-form__paragraph">{"Give it a try"}</p>
       </div>
 
       <div className="links">

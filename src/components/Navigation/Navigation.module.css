@@ -24,17 +24,19 @@
 }
 
 .navPara {
-    transition: all .1s ease-out;
     opacity: 1;
     font-size: 1.5rem;
     padding: 1rem;
     color: #fdc6fb;
     text-decoration: none;
     cursor: pointer;
+
+    transition: all .5s ease-in-out;
 }
 
 .navPara:hover {
     color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0.15rem 0.2rem 0 rgba(0,0,0, 0.6);
 }
 
 .navPara:active {

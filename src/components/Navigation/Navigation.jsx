@@ -1,4 +1,5 @@
 import classes from './Navigation.module.css';
+import '../../sass/components/_button.scss';
 import React from 'react';
 
 // Parent component

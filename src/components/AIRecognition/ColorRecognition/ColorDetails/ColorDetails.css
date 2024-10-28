@@ -40,6 +40,10 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
+.hex-val {
+    text-align: left;
+}
+
 .w3c-color {
     border-radius: 5px;
     cursor: pointer;

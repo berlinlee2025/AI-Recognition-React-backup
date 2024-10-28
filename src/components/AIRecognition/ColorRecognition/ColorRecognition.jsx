@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ColorRecognition.scss';
+import '../../../sass/components/_frosted.scss';
 
 import ColorDetails from './ColorDetails/ColorDetails';
 
@@ -152,17 +153,17 @@ const ColorRecognition = ({
     return (
       <React.Fragment>
           <div className="color-container row" id="color-container">
-              <div className='modal-container'>
-                  <div className='color-image-box'> 
+              <div className="modal-container">
+                  <div className="color-image-box frosted"> 
                       <img 
-                          className='color-image'
+                          className="color-image frosted__children"
                           src={imageUrl}
                           alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
                       />
                   </div>
               </div>
                  
-              <div className="color-table col-1-of-2">
+              <div className="color-table">
                   <ColorDetails user={user} input={input} color_props={color_props} imageUrl={imageUrl} />        
               </div>
           </div>

@@ -34,7 +34,6 @@ class Register extends Component {
   onNameChange = (event) => {
     this.setState({ name: event.target.value }, () => {
       this.validateInputs();
-      // console.log('this.state.signInEmail: \n', this.state.signInEmail);
     })
   }
   
@@ -42,7 +41,6 @@ class Register extends Component {
   onEmailChange = (event) => {
     this.setState({ email: event.target.value }, () => {
       this.validateInputs();
-      // console.log('this.state.email: \n', this.state.email);
     })
   }
 
@@ -50,7 +48,6 @@ class Register extends Component {
     const newPassword = event.target.value;
     this.setState({ password: newPassword }, () => {
       this.validateInputs();
-      // console.log('this.state.password: \n', this.state.password);
     })
   }
 
@@ -58,7 +55,6 @@ class Register extends Component {
     const newPasswordConfirm = event.target.value;
     this.setState({ passwordConfirm: newPasswordConfirm }, () => {
       this.validateInputs();
-      // console.log('this.state.passwordConfirm: \n', this.state.passwordConfirm);
     })
   }
 
@@ -93,9 +89,6 @@ class Register extends Component {
           this.setState({
             nameValid: false,
             lockRegister: true
-          }, () => {
-            // console.log(`this.state.nameValid:\n${this.state.nameValid}`);
-            // console.log(`this.state.lockRegister:\n${this.state.lockRegister}`);
           })
         }
 
@@ -105,48 +98,36 @@ class Register extends Component {
         if (emailValidation) {
           this.setState({
             emailValid: true
-          }, () => {
-            // console.log(`this.state.emailValid:\n${this.state.emailValid}`)
           })
         } else {
           this.setState({
             emailValid: false,
             lockRegister: true
-          }, () => {
-            // console.log(`this.state.lockRegister:\n${this.state.lockRegister}`);
-          })
+          });
         }
 
         // Validate whether password && passwordConfirm match up
         if (this.state.password && this.state.passwordConfirm && this.state.password === this.state.passwordConfirm) {
           this.setState({ 
             passwordMatch: true
-          }, () => {
-            // console.log(`this.state.passwordMatch: \n${this.state.passwordMatch}`);
           });
         } else {
           this.setState({
             passwordMatch: false,
             lockRegister: true
-          }, () => {
-            // console.log(`this.state.lockRegister:\n${this.state.lockRegister}`);
-          })
+          });
         }
         
         // Validate whether both password && passwordConfirm length >= 12
         if (this.state.password.length >=12) {
           this.setState({
             password12Char: true
-          }, () => {
-            // console.log(`this.state.password12Char: ${this.state.password12Char}`);
           });
         } else {
           this.setState({
             password12Char: false,
             lockRegister: true
-          }, () => {
-            // console.log(`this.state.lockRegister:\n${this.state.lockRegister}`);
-          })
+          });
         }
 
         // Validate whether both password && passwordConfirm include at least 1 special character
@@ -194,9 +175,7 @@ class Register extends Component {
         } else {
           this.setState({
             lockRegister: true
-          }, () => {
-            // console.log(`this.state.lockRegister:\n${this.state.lockRegister}`);
-          })
+          });
         }
 
         // Validate both password && passwordConfirm are not empty
@@ -233,17 +212,11 @@ class Register extends Component {
 
   // App 'Sign In' button onClick event handler
   onSubmitRegister = (event) => {
-    // Destructuring this.state variables for Registration
     const { name, email, password } = this.state;
 
     // Stop page from refreshing on Signin form submission
     // To allow users re-enter inputs should registration fail
     event.preventDefault();
-
-    /* Send Register info via HTTP POST request to server localhost:3001
-    To avoid Query Strings
-    by fetching our server - localhost:3001/register
-    fetch(url, {method: '', headers: '', body: JSON.stringify({ name: '', email: '', password: ''}) }) */
 
     // Fetching local web server or on Render
     this.devRegisterUrl = 'http://localhost:3001/register';
@@ -317,8 +290,6 @@ class Register extends Component {
       emailRegistered
       } = this.state;
 
-    // tachyons styling for register button
-
     return (
       <div>
         <article className="article"> 
@@ -387,10 +358,6 @@ class Register extends Component {
                   </p>
                 </div>
               </div>
-                   
-              {/* <label className="pa0 ma0 lh-copy f6 pointer">
-                <input type="checkbox" /> Remember me
-              </label> */}
             </fieldset>
 
             <div className="registerBtnBox">

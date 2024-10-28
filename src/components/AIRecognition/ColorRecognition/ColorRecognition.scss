@@ -66,8 +66,7 @@ $gutter-horizontal: 3.75rem;
     
         &:hover {
             transform: translateY(-2px);
-            box-shadow: 0.3rem 0.3rem 1rem #e9ec13,
-            -0.2rem -0.2rem 1rem #ffffff;
+            box-shadow: 0.3rem 0.3rem 1rem #f6f8f8, -2px -2px 1rem #eefa43;
         }
     
         &:active {
@@ -94,10 +93,12 @@ $gutter-horizontal: 3.75rem;
         // align-items: center;
     }
 
-    // .color-table {
-    //     align-self: center;
-    //     max-width: 350px;
-    // }
+    .color-table {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .color-image__modal-container {

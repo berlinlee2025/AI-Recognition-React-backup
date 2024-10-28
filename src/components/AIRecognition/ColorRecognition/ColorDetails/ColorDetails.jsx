@@ -80,64 +80,65 @@ const ColorDetails = ({ user, input, color_props }) => {
       <Loading /> :
       <React.Fragment>
         <div className="color-name">
-          {color_props.map((each) => {
-            return (
-              <React.Fragment>
-              <div className="color-page">
-                <table className="color-table">
-                  <tr>
-                    <th>Color</th>
-                    <th>Raw hex</th>
-                    <th>Hex val</th>
-                    <th>W3C Color</th>
-                    <th>W3C Color Name</th>
-                    <th>W3C hex</th>
-                  </tr>
-                  <tr>
-                    <td>
-                      <input 
-                      type="color" 
-                      value={each.colors.raw_hex} 
-                      className="color"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        className="raw-hex"
-                        value={each.colors.raw_hex}
-                      />
-                    </td>
-                    <td>{each.colors.value}</td>
-                    <td>
-                      <input 
-                        className="w3c-color"
-                        type="color" 
-                        value={each.colors.w3c.hex} 
-                      />
-                    </td>
-                    <td>
-                      <input 
-                        className="w3c-name"
-                        type="text"
-                        value={each.colors.w3c.name}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        className='w3c-hex'
-                        type="text"
-                        value={each.colors.w3c.hex}
-                      />
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              </React.Fragment>
-            );
-          })}
+          <div className="color-page">
+            <table className="color-table">
+              <tr> 
+                <th>Color</th>
+                <th>Raw hex</th>
+                <th>Hex val</th>
+                <th>W3C Color</th>
+                <th>W3C Color Name</th>
+                <th>W3C hex</th>
+              </tr>
+              {color_props.map((each) => {
+                return (
+                  <React.Fragment>
+                      <tr>
+                        <td>
+                          <input 
+                          type="color" 
+                          value={each.colors.raw_hex} 
+                          className="color"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            className="raw-hex"
+                            value={each.colors.raw_hex}
+                          />
+                        </td>
+                        <td className="hex-val">{each.colors.value}</td>
+                        <td>
+                          <input 
+                            className="w3c-color"
+                            type="color" 
+                            value={each.colors.w3c.hex} 
+                          />
+                        </td>
+                        <td>
+                          <input 
+                            className="w3c-name"
+                            type="text"
+                            value={each.colors.w3c.name}
+                          />
+                        </td>
+                        <td>
+                        <input
+                          className='w3c-hex'
+                          type="text"
+                          value={each.colors.w3c.hex}
+                        />
+                      </td>
+                    </tr>
+                  </React.Fragment>
+                );
+              })}
+          </table>
+          </div>
         </div>
       </React.Fragment>
+
   )
 }
 
