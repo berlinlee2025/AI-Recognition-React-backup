@@ -692,6 +692,8 @@ class App extends Component {
           celebrityName={celebrity.name}
           face_hidden={face_hidden}
           onInputChange={this.onInputChange}
+          // User
+          fetchUserData={this.fetchUserData}
           // AI Recognition buttons
           onCelebrityButton={this.onCelebrityButton}
           onColorButton={this.onColorButton}

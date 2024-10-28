@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 // import Rank from '../../components/Rank/Rank';
 import CheckRecordsPanel from '../../components/CheckRecords/CheckRecordsPanel';
 import ImageLinkForm from '../../components/ImageLinkForm/ImageLinkForm';
@@ -12,6 +12,7 @@ const Home = ( {
     isSignedIn,
     user,
     name,
+    fetchUserData,
     entries,
     input,
     imageUrl,
@@ -43,6 +44,11 @@ const Home = ( {
     resetUser,
     resetState 
 } ) => {
+    // const [user, setUser] = useState(user);
+
+    useEffect(() => {
+        fetchUserData();
+    }, []); // Empty dependency[] => this effect runs only once after initial render
 
     return (
         <React.Fragment>
