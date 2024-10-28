@@ -247,7 +247,7 @@ class Register extends Component {
 
     // Fetching local web server or on Render
     this.devRegisterUrl = 'http://localhost:3001/register';
-    this.prodRegisterUrl = 'https://ai-recognition-backend.onrender.com/register';
+    this.prodRegisterUrl = 'https://www.ai-recognition-backend.com/register';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? this.prodRegisterUrl : this.devRegisterUrl;
 

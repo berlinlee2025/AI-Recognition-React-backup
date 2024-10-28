@@ -45,7 +45,7 @@ class Signin extends Component {
     event.preventDefault(); // Stop page from refreshing on Signin form submission
 
     this.devSigninUrl = 'http://localhost:3001/signin';
-    this.prodSigninUrl = 'https://ai-recognition-backend.onrender.com/signin';
+    this.prodSigninUrl = 'https://www.ai-recognition-backend.com/signin';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? this.prodSigninUrl : this.devSigninUrl;
 
