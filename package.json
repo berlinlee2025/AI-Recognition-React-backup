@@ -20,7 +20,7 @@
     "sass": "^1.64.2",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "https://www.ai-recognition-frontend.com",
+  "proxy": "https://www.ai-recognition-backend.com",
   "scripts": {
     "start": "cross-env PORT=3000 react-scripts start",
     "build": "react-scripts build",
