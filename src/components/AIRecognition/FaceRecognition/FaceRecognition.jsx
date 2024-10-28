@@ -33,7 +33,7 @@ const FaceRecognition = ({
         const fetchImage = async() => {
           const fetchUrl = input;
           const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-          // const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
+          // const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://www.ai-recognition-backend.com' : 'http://localhost:3001';
     
           try {
             const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });
@@ -65,7 +65,7 @@ const FaceRecognition = ({
       const callbackName = `src/components/AIRecognition/ColorRecognition/ColorDetails/ColorDetails.jsx\nsaveFace = async () => {...}`;
       
       const devSaveColorUrl = 'http://localhost:3001/records/save-user-celebrity';
-      const prodSaveColorUrl = 'https://ai-recognition-backend.onrender.com/records/save-user-celebrity';
+      const prodSaveColorUrl = 'https://www.ai-recognition-backend.com/records/save-user-celebrity';
       const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveColorUrl : devSaveColorUrl;
 
       // Assuming resData is the Blob

@@ -33,7 +33,7 @@ const ColorRecognition = ({
           const fetchImage = async() => {
             const fetchUrl = input;
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            // const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://ai-recognition-backend.onrender.com' : 'http://localhost:3001';
+            // const proxyUrl = process.env.NODE_ENV === 'production' ? 'https://www.ai-recognition-backend.com' : 'http://localhost:3001';
       
             try {
               const response = await axios.get(`${proxyUrl}${fetchUrl}`, { responseType: 'blob' });
@@ -68,7 +68,7 @@ const ColorRecognition = ({
         const color_props_array = color_props;
         
         const devSaveColorUrl = 'http://localhost:3001/records/save-user-color';
-        const prodSaveColorUrl = 'https://ai-recognition-backend.onrender.com/records/save-user-color';
+        const prodSaveColorUrl = 'https://www.ai-recognition-backend.com/records/save-user-color';
         const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveColorUrl : devSaveColorUrl;
 
         // Assuming resData is the Blob
