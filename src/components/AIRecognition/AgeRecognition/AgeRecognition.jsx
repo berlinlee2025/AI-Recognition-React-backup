@@ -27,6 +27,7 @@ const AgeRecognition = ( {
     const [responseStatusCode, setResponseStatusCode] = useState();
 
     // Looking up for Users' inputs images
+    // Making imageUrl Blob available before 'saveAge' button is clicked for fetching imageBlob to Node.js server
     useEffect(() => {
         if (input !== '') {
           const fetchImage = async() => {

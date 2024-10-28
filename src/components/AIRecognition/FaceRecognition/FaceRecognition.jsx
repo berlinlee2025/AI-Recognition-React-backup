@@ -28,7 +28,8 @@ const FaceRecognition = ({
     // Allow other components to reset latest response.status.code
     const [responseStatusCode, setResponseStatusCode] = useState();
 
-    // Keep monitoring Blob fetched from axios.get(imageUrl, { responseType: 'blob' })
+    // Looking up for Users' inputs images
+    // Making imageUrl Blob available before 'saveCelebrity' button is clicked for fetching imageBlob to Node.js server
     useEffect(() => {
         const fetchImage = async() => {
           const fetchUrl = input;

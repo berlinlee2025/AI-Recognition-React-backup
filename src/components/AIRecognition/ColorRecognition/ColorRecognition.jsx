@@ -27,7 +27,8 @@ const ColorRecognition = ({
     // Allow other components to reset latest response.status.code
     const [responseStatusCode, setResponseStatusCode] = useState();
 
-    /* 1. Keep monitoring Blob fetched from axios.get(imageUrl, { responseType: 'blob' }) */
+    // Looking up for Users' inputs images
+    // Making imageUrl Blob available before 'saveColor' button is clicked for fetching imageBlob to Node.js server
     useEffect(() => {
         if (input !== '') {
           const fetchImage = async() => {
