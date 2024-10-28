@@ -51,7 +51,7 @@ class Signin extends Component {
 
     // Fetching http://localhost:3001/signin to retrieve user
     fetch(fetchUrl, {
-      method: 'post', // Post (Create) to avoid Query Strings
+      method: 'GET', // Post (Create) to avoid Query Strings
       headers: {'Content-Type': 'application/json'},
       credentials: 'include', // Include credentials to handle cookies
       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
