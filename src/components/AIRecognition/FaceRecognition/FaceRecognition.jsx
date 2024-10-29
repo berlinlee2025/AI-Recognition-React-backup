@@ -153,10 +153,10 @@ const FaceRecognition = ({
               <div 
                 className={celebrityName ? "bounding-box" : ""}
                 style={{
-                top: box.topRow,
-                right: box.rightCol,
-                bottom: box.bottomRow,
-                left: box.leftCol,
+                top: box ? box.topRow : undefined,
+                right: box ? box.rightCol : undefined,
+                bottom: box ? box.bottomRow : undefined,
+                left: box ? box.leftCol : undefined,
                 }}
               >
               {/* Create a button to show Celebrity name && 

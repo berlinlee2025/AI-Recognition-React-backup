@@ -11,7 +11,9 @@ import PasswordConfirm from '../components/passwordConfirm/PasswordConfirm';
 class Register extends Component {
   // class Register to inherit React class Component
   constructor(props) {
+
     super(props); // Inheriting all React class Components attributes & methods()
+    
     this.state = {
       name: '',
       nameValid: false,
@@ -27,7 +29,30 @@ class Register extends Component {
       emailRegistered: false
     }
   }
-  
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.route === 'home' && prevProps.route !== 'home') {
+      this.props.fetchUserData();
+    }
+
+    // To keep tracking real-time users' input validations
+    if (
+      this.state.name !== prevState.name ||
+      this.state.nameValid !== prevState.nameValid ||
+      this.state.email !== prevState.email ||
+      this.state.emailValid !== prevState.emailValid ||
+      this.state.password !== prevState.password || 
+      this.state.passwordConfirm !== prevState.passwordConfirm ||
+      this.state.passwordMatch !== prevState.passwordMatch || 
+      this.state.password.length !== prevState.password.length ||
+      this.state.password12Char !== prevState.password12Char ||
+      this.state.password1SpecialChar !== prevState.password1SpecialChar ||
+      this.state.passwordNotEmpty !== prevState.passwordNotEmpty
+    ) {
+      this.validateInputs();
+    }
+  }
+    
   //////// Smart component functions 
   // Listens to onChange events of name <input>
   // Trigger this.validateInputs() whenever there's any changes
@@ -72,7 +97,17 @@ class Register extends Component {
       password1SpecialChar: false,
       passwordMatch: false,
       passwordNotEmpty: false
-    })
+    });
+
+    // Clear off previous user inputs
+    const nameInput = document.querySelector('#name');
+    const emailInput = document.querySelector('#email');
+    const passwordInput = document.querySelector('#password');
+    const passwordConfirmInput = document.querySelector('#passwordConfirm');
+    nameInput.value = '';
+    emailInput.value = '';
+    passwordInput.value = '';
+    passwordConfirmInput.value = '';
   }
 
   // To validate users' inputs in <Register />
@@ -148,15 +183,11 @@ class Register extends Component {
         if (anySpecialChar.includes(true) ) {
           this.setState({
             password1SpecialChar: true
-          }, () => {
-            // console.log(`this.state.password1SpecialChar: ${this.state.password1SpecialChar}`);
           })
         } else {
           this.setState({
             password1SpecialChar: false,
             lockRegister: true
-          }, () => {
-            // console.log(`this.state.lockRegister:\n${this.state.lockRegister}`);
           })
         }
 
@@ -190,29 +221,8 @@ class Register extends Component {
         }
   };
    
-  componentDidUpdate(prevProps, prevState) {
-      // To keep tracking real-time users' input validations
-      if (
-        this.state.name !== prevState.name ||
-        this.state.nameValid !== prevState.nameValid ||
-        this.state.email !== prevState.email ||
-        this.state.emailValid !== prevState.emailValid ||
-        this.state.password !== prevState.password || 
-        this.state.passwordConfirm !== prevState.passwordConfirm ||
-        this.state.passwordMatch !== prevState.passwordMatch || 
-        this.state.password.length !== prevState.password.length ||
-        this.state.password12Char !== prevState.password12Char ||
-        this.state.password1SpecialChar !== prevState.password1SpecialChar ||
-        this.state.passwordNotEmpty !== prevState.passwordNotEmpty
-      ) {
-        this.validateInputs();
-      }
-  }
-
-
-  // App 'Sign In' button onClick event handler
+  // App 'Register' button onClick event handler
   onSubmitRegister = (event) => {
-    const { name, email, password } = this.state;
 
     // Stop page from refreshing on Signin form submission
     // To allow users re-enter inputs should registration fail
@@ -228,25 +238,22 @@ class Register extends Component {
       method: 'post', // to create
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ // stringifying this.state variables before fetching
-        name: name,
-        email: email,
-        password: password
-      })
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password
+      }),
+      credentials: 'include' // Frontend to receive Cookies from Node backend
     })
     .then(response => response.json()) // res.json() to parse data
-    .then(user => { // data passing in as user with props
+    .then((user) => { // data passing in as user with props
       console.log('onRegisterSignIn - user: \n', user);
+
       if (user.id) { /* If we get a user with props => route to 'home'; this.props coming from App.js; Parent App.js front-end will handle user features */
-
-        // Invoke App.js saveUserToLocalStorage() passed to this child component as props
-        // this.props.saveUserToLocalStorage(user);
-
-        // Invoke App.js loadUserFromLocalStorage() passed to this child component as props
-        // this.props.loadUserFromLocalStorage();
         this.props.saveUser(user);
-        this.props.onRouteChange('home');
+        this.props.fetchUserData();
+        this.props.onRouteChange('home'); 
 
-      } else if (!user.id) {
+      } else {
         this.props.onRouteChange('register');
         
         // If users registered with existed emails
@@ -255,21 +262,12 @@ class Register extends Component {
           email: '',
           password: '',
           passwordConfirm: ''
-        })
-
+        });
         this.resetInputs();
-
-        // Clear off previous user inputs
-        const nameInput = document.querySelector('#name');
-        const emailInput = document.querySelector('#email');
-        const passwordInput = document.querySelector('#password');
-        const passwordConfirmInput = document.querySelector('#passwordConfirm');
-        nameInput.value = '';
-        emailInput.value = '';
-        passwordInput.value = '';
-        passwordConfirmInput.value = '';
-        
       }
+    })
+    .catch((err) => {
+      console.error(`\nFailed to register user `, err, `\n`);
     })
   }
 

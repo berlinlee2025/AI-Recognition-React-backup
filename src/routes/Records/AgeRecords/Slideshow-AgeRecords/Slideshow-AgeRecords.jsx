@@ -7,7 +7,7 @@ import Loading from "../../../../components/Loading/Loading";
 import '../../../../sass/base/_utilities.scss';
 
 // Parent component
-// 1. src/routes/Records/ColorRecords.jsx
+// 1. src/routes/Records/AgeRecords.jsx
 const SlideshowAgeRecords = ( { 
     dimensions,
     userAgeRecords
@@ -28,10 +28,10 @@ const SlideshowAgeRecords = ( {
 
     const slideshowWidthGt = '514px';
     // For window.inner.width < 
-    const slideshowWidthLt = Math.floor(dimensions.width*0.879);
+    const slideshowWidthLt = Math.floor(dimensions?.width*0.879);
     //console.log(`slideshowWidth: ${slideshowWidth}`);
     
-    const slideshowHeightGt = Math.floor(dimensions.width * 0.25);
+    const slideshowHeightGt = Math.floor(dimensions?.width * 0.25);
     const slideshowHeightLt = Math.floor(slideshowWidthLt * 2.2);
 
     const btnParentWidthGt = Math.floor(slideshowWidthGt * 0.12);

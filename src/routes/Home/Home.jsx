@@ -48,9 +48,12 @@ const Home = ( {
     // const [user, setUser] = useState(user);
 
     // Making userData available before <FaceRecognition /> <ColorRecognition /> <AgeRecognition /> needing user.id for fetching data to Node.js server
-    useEffect(() => {
-        fetchUserData();
-    }, []); // Empty dependency[] => this effect runs only once after initial render
+    
+    /* class component src/App.js only */
+    // useEffect(() => {
+    //     fetchUserData();
+    // }, []); 
+    // Empty dependency[] => this effect runs only once after initial render
 
     if (!user) return <Loading />;
 

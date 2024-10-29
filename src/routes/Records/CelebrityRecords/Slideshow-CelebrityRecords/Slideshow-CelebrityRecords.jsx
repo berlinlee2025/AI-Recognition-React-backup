@@ -17,18 +17,13 @@ const SlideshowCelebrityRecords = ( {
     const [activeIndex, setActiveIndex] = useState(0);
     const indexRef = useRef(activeIndex); // Create a ref to store the current index
 
-    // Monitor resolutions
-    //console.log(`dimensions.width * 0.8 * 0.5: ${dimensions.width * 0.8 * 0.5}`)
-    // For window.inner.width >= 
-    //const slideshowWidthGt = Math.floor(dimensions.width*0.435);
-
     // Declare Mobile breakpoint
     const desktopBreakpoint = 1280;
     const mobileBreakpoint = 600;
 
     const slideshowWidthGt = '514px';
     // For window.inner.width < 
-    const slideshowWidthLt = Math.floor(dimensions.width*0.879);
+    const slideshowWidthLt = Math.floor(dimensions.width * 0.879);
     //console.log(`slideshowWidth: ${slideshowWidth}`);
     
     const slideshowHeightGt = Math.floor(dimensions.width * 0.25);
