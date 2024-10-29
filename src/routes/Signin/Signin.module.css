@@ -14,6 +14,8 @@
 
 @media (max-width: 1250px) {
     .article {
+        box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
+            0.025rem 0.025rem 0.025rem #ffffff;
         transform: scale(1.25);
     }
 }
@@ -43,7 +45,8 @@
 
 .article .main {
     padding: 2rem;
-    color: rgba(0, 0, 0, 0.8);
+    /* color: rgba(0, 0, 0, 0.8); */
+    color: rgba(255,255,255, 0.8);
     display: block;
 }
 
@@ -111,6 +114,9 @@
 }
 
 .signinBtn {
+    box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
+            0.025rem 0.025rem 0.025rem #ffffff;
+    color: rgba(255,255,255, 0.8);
     -moz-osx-font-smoothing: grayscale;
     backface-visibility: hidden;
     transform: translateZ(0);

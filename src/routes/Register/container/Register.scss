@@ -20,6 +20,9 @@
     &__main {
         .measure {
             padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
+            0.025rem 0.025rem 0.025rem #ffffff;
 
             .fieldset {
                 max-width: 100%;
@@ -27,11 +30,11 @@
 
                 .register {
                     box-sizing: border-box;
-                    color: rgba(0, 0, 0, 0.8);
+                    color: rgba(255,255,255, 0.8);
+                    // color: rgba(0, 0, 0, 0.8);
                     font-size: 3rem;
                     font-weight: 600;
-                    margin-left: 0;
-                    margin-right: 0;
+                    margin: 0 auto;
                     padding-left: 0;
                     padding-right: 0;    
                     max-width: 100%;
@@ -43,6 +46,7 @@
                     flex-flow: column nowrap;
                     position: relative;
                     left: 5%;
+                    color: rgba(255,255,255, 0.8);
 
                     .hint-box {
                         .hint {
@@ -56,8 +60,9 @@
   }
 
   .registerBtnBox {
+    color: rgba(255,255,255, 0.8);
     box-sizing: border-box;
-    color: rgba(0, 0, 0, 0.8);
+    // color: rgba(0, 0, 0, 0.8);
     font-size: 3rem;
     font-weight: 600;
     margin: 0 auto;
@@ -90,13 +95,18 @@
 
   .registerBtnOK {
     cursor: pointer;
+    color: rgba(255,255,255, 0.8);
     transition: all .1s ease-in;
     box-shadow: 0.3rem 0.3rem 1rem #f6f8f8, -2px -2px 1rem #eefa43;
+    // box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
+    //         0.025rem 0.025rem 0.025rem #ffffff;
+    transition: all 0.5s ease-in-out;
   }
 
   .registerBtnOK:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
   }
   .registerBtnOK:active {
-    transform: translateY(-1px);
+    transform: translateY(0px);
+    box-shadow: 0rem 0rem 0rem 0rem #93e9fa, 0rem 0rem 0rem #ffffff;
   }

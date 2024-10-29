@@ -10,7 +10,7 @@ const Logo = () => {
         className="Tilt" 
         options={{ max: 55 }} 
         style={{ 
-          height: "150px", width: "150px", backgroundColor: "purple" 
+          height: "150px", width: "150px" 
           }}
       >
         <div className="Tilt-inner">

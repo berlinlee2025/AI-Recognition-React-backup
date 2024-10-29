@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.scss';
 
 // Top Navigation panel
 import Navigation from './components/Navigation/Navigation';
@@ -828,7 +828,7 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
+      <div className="App star">
         {/* Conditional rendering */}
         <Navigation
           user={user}

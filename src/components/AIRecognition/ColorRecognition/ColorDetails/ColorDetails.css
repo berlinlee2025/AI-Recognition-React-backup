@@ -7,6 +7,7 @@
 }
 
 .color-page {
+    color: rgba(252, 252, 252, 0.8);
     min-width: 48vw;
     max-width: 60vw;
     width: 100%;

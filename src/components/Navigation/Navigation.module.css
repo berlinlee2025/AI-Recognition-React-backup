@@ -35,10 +35,11 @@
 }
 
 .navPara:hover {
-    color: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0.15rem 0.2rem 0 rgba(0,0,0, 0.6);
+    color: rgba(216, 191, 216, 0.7);
+    scale: 1.05;
 }
 
 .navPara:active {
     color: rgba(0, 0, 0, 0.5);
+    scale: 1.0;
 }

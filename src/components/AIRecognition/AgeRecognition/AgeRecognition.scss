@@ -58,11 +58,14 @@
     
     
     &__p {
+        box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
+            0.025rem 0.025rem 0.025rem #ffffff;
         border-radius: 0.5rem;
         -moz-osx-font-smoothing: grayscale;
         backface-visibility: hidden;
         font-size: calc(1rem);
-        background-color: #a463f2;
+        // background-color: #a463f2;
+        background: transparent;
         color: #fff;
         min-width: 5rem;
         max-width: 6rem;

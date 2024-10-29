@@ -16,6 +16,9 @@
 
 .Tilt-inner {
     padding: 1rem;
+    &:hover {
+        box-shadow: 0.3rem 0.3rem 1rem #f6f8f8, -2px -2px 1rem #eefa43;
+    }
 }
 
 .logo {
