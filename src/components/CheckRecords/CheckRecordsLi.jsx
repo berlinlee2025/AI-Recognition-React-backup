@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import classes from './CheckRecords.module.scss';
 // Util
 
@@ -7,9 +7,6 @@ import useButtonTextRoll from '../../util/buttonTextRoll';
 // Parent component
 // src/components/CheckRecords/CheckRecordsPanel.jsx
 export default function CheckRecordsLi( {
-  user, 
-  dimensions,
-  onRouteChange,
   // 1. 'Home' page
   onHomeButton,
   // 2. 'Celebrity records' page

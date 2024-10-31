@@ -1,19 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 // import Slideshow to display ColorRecords
 import SlideshowAgeRecords from './Slideshow-AgeRecords/Slideshow-AgeRecords';
 import "../records.scss";
 
+import { UserContext } from '../../../shared/context/user-context';
+
 // Parent component
 // src/App.js
 // Child component
 // src/components/Records/AgeRecords/Slideshow-AgeRecords/Slideshow-AgeRecords.jsx
-const AgeRecords = ( {
-    user,
-    isSignedIn,
-    dimensions,
-    userAgeRecords
-} ) => {
+const AgeRecords = ({dimensions, userAgeRecords}) => {
+    const userContext = useContext(UserContext);
     
     return (
         <React.Fragment>
@@ -21,8 +19,8 @@ const AgeRecords = ( {
             <div className="container frosted">
             <h1 className="recordsHeading frosted__children">Age Records</h1>
             <SlideshowAgeRecords 
-                user={user} 
-                isSignedIn={isSignedIn} 
+                user={userContext.user} 
+                isSignedIn={userContext.isSignedIn} 
                 dimensions={dimensions}
                 // User's Age Records
                 userAgeRecords={userAgeRecords}

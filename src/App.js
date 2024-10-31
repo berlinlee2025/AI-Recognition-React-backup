@@ -707,11 +707,6 @@ const App = () => {
           }}
         >
           <Home
-            // user={user}
-            // isSignedIn={isSignedIn}
-            // saveUser={saveUser}
-            // onRouteChange={onRouteChange}
-
             name={user?.name}
             entries={user?.entries}
             input={input}
@@ -719,12 +714,12 @@ const App = () => {
             celebrityName={celebrity?.name}
             face_hidden={face_hidden}
             onInputChange={onInputChange}
-            // User
-            fetchUserData={fetchUserData}
+
             // AI Recognition buttons
             onCelebrityButton={onCelebrityButton}
             onColorButton={onColorButton}
             onAgeButton={onAgeButton}
+
             color_props={colors_array}
             color_hidden={color_hidden}
             age={age_props}
@@ -762,78 +757,98 @@ const App = () => {
             fetchUserData: fetchUserData
           }}
         >
-          <Signin 
-          // user={user}
-          // saveUser={saveUser}
-          // onRouteChange={onRouteChange} 
-          />
+          <Signin />
         </UserContext.Provider>
       ),
       'register': renderRoute(
-        <Register 
-          user={user}
-          saveUser={saveUser}
-          onRouteChange={onRouteChange}
-          fetchUserData={fetchUserData} 
-        />
+        <UserContext.Provider 
+        value={{ 
+          user: user,
+          isSignedIn: isSignedIn,
+          saveUser: saveUser,
+          resetUser: resetUser,
+          onRouteChange: onRouteChange,
+          fetchUserData: fetchUserData
+        }}
+        >
+          <Register 
+            route={route}
+            user={user}
+            saveUser={saveUser}
+            onRouteChange={onRouteChange}
+            fetchUserData={fetchUserData} 
+          />
+        </UserContext.Provider>
       ),
       'ageRecords': renderRoute(
         <React.Fragment>
-          <CheckRecordsPanel 
-            user={user}
-            isSignedIn={isSignedIn}
-            onRouteChange={onRouteChange}
-
-            dimensions={dimensions}
-            
-            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
-            onHomeButton={onHomeButton}
-            onCelebrityRecordsButton={onCelebrityRecordsButton}
-            onColorRecordsButton={onColorRecordsButton}
-            onAgeRecordsButton={onAgeRecordsButton}
-          />
-          <AgeRecords
-            user={user}
-            isSignedIn={isSignedIn}
-            onRouteChange={onRouteChange}
-
-            dimensions={dimensions}
-            userAgeRecords={userAgeRecords}
-          />
+          <UserContext.Provider 
+          value={{ 
+            user: user,
+            isSignedIn: isSignedIn,
+            saveUser: saveUser,
+            resetUser: resetUser,
+            onRouteChange: onRouteChange,
+            fetchUserData: fetchUserData
+          }}
+          >
+            <CheckRecordsPanel 
+              dimensions={dimensions}
+              
+              // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
+              onHomeButton={onHomeButton}
+              onCelebrityRecordsButton={onCelebrityRecordsButton}
+              onColorRecordsButton={onColorRecordsButton}
+              onAgeRecordsButton={onAgeRecordsButton}
+            />
+            <AgeRecords
+              dimensions={dimensions}
+              userAgeRecords={userAgeRecords}
+            />
+          </UserContext.Provider>
         </React.Fragment>
       ),
       'colorRecords': renderRoute(
         <React.Fragment>
-          <CheckRecordsPanel 
-            user={user}
-            isSignedIn={isSignedIn}
-            onRouteChange={onRouteChange}
-
-            dimensions={dimensions}
-            
-            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
-            onHomeButton={onHomeButton}
-            onCelebrityRecordsButton={onCelebrityRecordsButton}
-            onColorRecordsButton={onColorRecordsButton}
-            onAgeRecordsButton={onAgeRecordsButton}
-          />
-          <ColorRecords
-            user={user}
-            isSignedIn={isSignedIn}
-            onRouteChange={onRouteChange}
-
-            dimensions={dimensions}
-            userColorRecords={userColorRecords}
-          />
+          <UserContext.Provider 
+          value={{ 
+            user: user,
+            isSignedIn: isSignedIn,
+            saveUser: saveUser,
+            resetUser: resetUser,
+            onRouteChange: onRouteChange,
+            fetchUserData: fetchUserData
+          }}
+          >
+            <CheckRecordsPanel 
+              dimensions={dimensions}
+              
+              // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
+              onHomeButton={onHomeButton}
+              onCelebrityRecordsButton={onCelebrityRecordsButton}
+              onColorRecordsButton={onColorRecordsButton}
+              onAgeRecordsButton={onAgeRecordsButton}
+            />
+            <ColorRecords
+              dimensions={dimensions}
+              userColorRecords={userColorRecords}
+            />
+          </UserContext.Provider>
         </React.Fragment>
       ),
       'celebrityRecords': renderRoute(
         <React.Fragment>
-          <CheckRecordsPanel 
-            user={user}
-            isSignedIn={isSignedIn}
-            onRouteChange={onRouteChange}
-
+          <UserContext.Provider 
+          value={{ 
+            user: user,
+            isSignedIn: isSignedIn,
+            saveUser: saveUser,
+            resetUser: resetUser,
+            onRouteChange: onRouteChange,
+            fetchUserData: fetchUserData
+          }}
+          >
+            <CheckRecordsPanel 
             dimensions={dimensions}
             
             // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
@@ -841,22 +856,19 @@ const App = () => {
             onCelebrityRecordsButton={onCelebrityRecordsButton}
             onColorRecordsButton={onColorRecordsButton}
             onAgeRecordsButton={onAgeRecordsButton}
-          />
-          <CelebrityRecords
-            user={user}
-            isSignedIn={isSignedIn}
-            onRouteChange={onRouteChange}
-
-            dimensions={dimensions}
-            
-            // state.userCelebrityRecords
-            userCelebrityRecords={userCelebrityRecords}
-            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
-            onHomeButton={onHomeButton}
-            onCelebrityRecordsButton={onCelebrityRecordsButton}
-            onColorRecordsButton={onColorRecordsButton}
-            onAgeRecordsButton={onAgeRecordsButton}
-          />
+            />
+            <CelebrityRecords
+              dimensions={dimensions}
+              
+              // state.userCelebrityRecords
+              userCelebrityRecords={userCelebrityRecords}
+              // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
+              onHomeButton={onHomeButton}
+              onCelebrityRecordsButton={onCelebrityRecordsButton}
+              onColorRecordsButton={onColorRecordsButton}
+              onAgeRecordsButton={onAgeRecordsButton}
+            />
+          </UserContext.Provider>
         </React.Fragment>
       )
     }
@@ -867,9 +879,9 @@ const App = () => {
         <Navigation
           user={user}
           isSignedIn={isSignedIn}
-          // removeUserFromLocalStorage={removeUserFromLocalStorage}
           onRouteChange={onRouteChange}
           resetUser={resetUser}
+
           resetState={resetState}
           onSignout={onSignout}
         />

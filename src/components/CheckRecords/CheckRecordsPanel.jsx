@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import classes from "./CheckRecords.module.scss";
 import '../../sass/base/_utilities.scss';
 
@@ -7,27 +7,29 @@ import Logo from "../Logo/Logo";
 import { FaList } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 
+import { UserContext } from "../../shared/context/user-context";
+
 // Parent components
 // 1. src/routes/Home.jsx
 // Child components
 // 2. src/components/CheckRecords/CheckRecordsLi.jsx
 const CheckRecordsPanel = ({ 
-  user, 
-  isSignedIn, 
-  onRouteChange,
   // 1. 'Home' page
   onHomeButton,
   // 2. 'Celebrity records' page
   onCelebrityRecordsButton,
-  userCelebrityRecords,
   // 3. 'Color records' page
   onColorRecordsButton,
-  userColorRecords,
   // 4. 'Age records' page
-  onAgeRecordsButton,    
+  onAgeRecordsButton, 
+
+  userCelebrityRecords,
+  userColorRecords,   
   userAgeRecords,
   resetState 
 }) => {
+  const userContext = useContext(UserContext);
+
   // Keep monitor resolution changes
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -100,23 +102,23 @@ const CheckRecordsPanel = ({
             }}
           />
         </div>
-        <CheckRecordsLi
-          user={user}
-          fontGt={fontGt}
-          fontLt={fontLt}
-          dimensions={dimensions}
-          // 1. 'Home' page
-          onHomeButton={onHomeButton}
-          // 2. 'Celebrity records' page
-          onCelebrityRecordsButton={onCelebrityRecordsButton}
-          // 3. 'Color records' page
-          userColorRecords={userColorRecords}
-          onColorRecordsButton={onColorRecordsButton}
-          // 4. 'Age records' page
-          userAgeRecords={userAgeRecords}
-          onAgeRecordsButton={onAgeRecordsButton}
-          resetState={resetState}
-        />
+          <CheckRecordsLi
+            user={userContext.user}
+            fontGt={fontGt}
+            fontLt={fontLt}
+            dimensions={dimensions}
+            // 1. 'Home' page
+            onHomeButton={onHomeButton}
+            // 2. 'Celebrity records' page
+            onCelebrityRecordsButton={onCelebrityRecordsButton}
+            // 3. 'Color records' page
+            userColorRecords={userColorRecords}
+            onColorRecordsButton={onColorRecordsButton}
+            // 4. 'Age records' page
+            userAgeRecords={userAgeRecords}
+            onAgeRecordsButton={onAgeRecordsButton}
+            resetState={resetState}
+          />
       </div>
     );
   }
@@ -125,10 +127,6 @@ const CheckRecordsPanel = ({
     return (
       <div
         className={`${classes.navHideList} u-margin-bottom-small`}
-        // style={{
-        //   marginBottom: dimensions.width < mobileBreakpoint ? 
-        //     navListMarginBottomLt : navListMarginBottomGt
-        // }}
       >
         <div style={{marginLeft: "4%"}}>
           <Logo className={classes.logo} value="Smart Brain" />
@@ -170,7 +168,7 @@ const CheckRecordsPanel = ({
         <div className={`${classes.nav}`}>
           <ul className={`${classes.ls} ${classes.frosted}`}>
             <CheckRecordsLi
-              user={user}
+              user={userContext.user}
               fontGt={fontGt}
               fontLt={fontLt}
               dimensions={dimensions}
@@ -194,7 +192,7 @@ const CheckRecordsPanel = ({
   }
 
   return (
-    isSignedIn
+    userContext.isSignedIn
       ? (dimensions.width > mobileBreakpoint 
          ? <NavGt860 /> 
          : <NavLt860 />)
