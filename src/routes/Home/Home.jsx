@@ -6,6 +6,7 @@ import FaceRecognition from '../../components/AIRecognition/FaceRecognition/Face
 import ColorRecognition from '../../components/AIRecognition/ColorRecognition/ColorRecognition';
 import AgeRecognition from '../../components/AIRecognition/AgeRecognition/AgeRecognition';
 import Loading from '../../components/Loading/Loading';
+import Signin from '../Signin/Signin';
 
 import { UserContext } from "../../shared/context/user-context";
 
@@ -46,12 +47,12 @@ const Home = ( {
 
     // Making userData available before <FaceRecognition /> <ColorRecognition /> <AgeRecognition /> needing user.id for fetching data to Node.js server
     
-    /* class component src/App.js only */
+    /* onMount to DOM tree of <Home /> once only */
     useEffect(() => {
         console.log(`\ncomponent Home.jsx is mounted!\n`);
+        userContext.onRouteChange('home');
     }, []); 
 
-    if (!userContext.user) return <Loading />;
 
     return (
         <React.Fragment>

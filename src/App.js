@@ -27,6 +27,9 @@ import axios from 'axios';
 // Context API
 import { UserContext } from './shared/context/user-context';
 
+/* document.cookie 'connect.sid' only becomes available after a user has successfully signed in */
+const documentCookie = document.cookie;
+
 const App = () => {
 
   const [state, setState] = useState({
@@ -42,7 +45,8 @@ const App = () => {
       color_hidden: true,
       age_hidden: true,
       responseStatusCode: Number(''),
-      route: 'signin',
+      route: documentCookie ? 'home' : 'signin',
+      // route: lastRoute ? lastRoute : 'signin',
 
       user: {},
       isSignedIn: false,
@@ -78,6 +82,7 @@ const App = () => {
   /* Mount state.user on React app start 
   Mount state.dimensions on React app start */
   useEffect(() => {
+    // on React app starts => check localStorage
     fetchUserData();
 
     setState(prevState => ({
@@ -96,8 +101,10 @@ const App = () => {
     console.log('\nstate.responseStatusCode:\n', state.responseStatusCode, `\n`);
     console.log(`\nstate.route:\n`, state.route, `\n`);
     console.log(`\nstate.user:\n`, state.user, `\n`);
+    console.log(`\nstate.isSignedIn:\n`, state.isSignedIn, `\n`);
     
-  }, [state.input, state.face_hidden, state.color_hidden, state.age_hidden, state.responseStatusCode, state.route, state.user]);
+  }, [state.input, state.face_hidden, state.color_hidden, state.age_hidden, state.responseStatusCode, state.route, state.user, state.isSignedIn]);
+
   
   /** user-context **/
 
@@ -107,7 +114,9 @@ const App = () => {
     setState(prevState => ({
       ...prevState,
       user: user
-    }))
+    })
+    );
+    console.log(`\nsrc/App.js saveUser() - state.user:\n`, state.user, `\n`);
   }, []);
 
   // ** src/shared/context/user-context.js
@@ -181,7 +190,9 @@ const App = () => {
     .catch((err) => {
       console.error(`\nFailed to fetch user data: `, err, `\n`);
       setState(prevState => ({ 
-        ...prevState, isSignedIn: false, route: 'signin' 
+        ...prevState, 
+        isSignedIn: false, 
+        route: 'signin' 
       }));
     });
   }, []);
@@ -646,6 +657,8 @@ const App = () => {
         route: 'signin'
       })
       );
+      // Remove 'lastRoute' from localStorage when user signs out
+      localStorage.removeItem('lastRoute');
       onRouteChange('signin')
     })
     .catch((err) => {
@@ -688,9 +701,27 @@ const App = () => {
 
     const dateTime = returnDateTime();
     console.log('\ndateTime:\n', dateTime, `\n`);
+    console.log(`\nstate.user: `, state.user, `\n`);
+    console.log(`\nstate.route: `, state.route, `\n`);
     
     const renderRoute = (component) => {
-      return user ? component : <Signin onRouteChange={onRouteChange} saveUser={saveUser} />;
+      return user ? 
+      component 
+      : 
+      <UserContext.Provider 
+          value={{ 
+            user: user,
+            isSignedIn: isSignedIn,
+            saveUser: saveUser,
+            resetUser: resetUser,
+            onRouteChange: onRouteChange,
+            fetchUserData: fetchUserData,
+            resetState: resetState,
+            onSignout: onSignout
+          }}
+      >
+        <Signin />
+      </UserContext.Provider>;
     }
 
     // Enhance React Scalability for allowing to add more React routes without React Router DOM

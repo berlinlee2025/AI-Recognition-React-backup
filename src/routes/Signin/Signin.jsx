@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import classes from './Signin.module.css';
 import '../../sass/base/_utilities.scss';
 
+import Home from "../Home/Home";
 import { UserContext } from "../../shared/context/user-context";
 
 // Parent component
@@ -65,10 +66,10 @@ const Signin = () => {
     })
     .then(response => response.json()) // http://localhost:3001/signin server response to parse JSON data user
     .then((user) => {
-      if (user.id) { // If the user can be found & user.id exists
+      if (user.id) { // If the user can be found & user.id exists in Postgres
+        
         userContext.saveUser(user);
         userContext.onRouteChange('home');
-        console.log(`\n** After Signin src/App.js user: `, userContext.user, `\n`);
       } 
       else {
         throw new Error('No user ID returned'); // Handle cases where no user ID is present
@@ -81,6 +82,7 @@ const Signin = () => {
   };
 
   return (
+    <React.Fragment>
     <div className="signin u-margin-bottom-medium">
       <article className={`${classes.article}`} >
       <main className={`${classes.main}`}>
@@ -147,6 +149,7 @@ const Signin = () => {
       </main>
       </article>
     </div>
+    </React.Fragment>
   )
 };
 

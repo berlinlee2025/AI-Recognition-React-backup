@@ -76,7 +76,7 @@ const ColorDetails = ({ user, input, color_props }) => {
   };
 
   return (
-    !color_props.length > 0 ? 
+    !color_props?.length > 0 ? 
       <Loading /> :
       <React.Fragment>
         <div className="color-name">

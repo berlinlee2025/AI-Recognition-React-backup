@@ -22,7 +22,7 @@ const Navigation = () => {
                 className={`${classes.navPara}`}
                 onClick={userContext.onSignout} 
                 >
-                Sign Out
+                    Sign Out
                 </p>
             </nav>
         </div>
