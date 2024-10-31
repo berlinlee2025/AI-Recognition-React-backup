@@ -28,7 +28,7 @@ import axios from 'axios';
 import { UserContext } from './shared/context/user-context';
 
 /* document.cookie 'connect.sid' only becomes available after a user has successfully signed in */
-const documentCookie = document.cookie;
+// const documentCookie = document.cookie;
 
 const App = () => {
 
@@ -45,8 +45,11 @@ const App = () => {
       color_hidden: true,
       age_hidden: true,
       responseStatusCode: Number(''),
-      route: documentCookie ? 'home' : 'signin',
-      // route: lastRoute ? lastRoute : 'signin',
+      // route: documentCookie ? 'home' : 'signin',
+
+      /** if user is signed in => retrieve his/her lastRoute
+      otherwise => route to 'signin' page **/
+      route: localStorage.getItem('lastRoute') || (document.cookie ? 'home' : 'signin'),
 
       user: {},
       isSignedIn: false,
@@ -56,19 +59,14 @@ const App = () => {
       userAgeRecords: [],
   });
 
-  /* Listen to changes in state.isSignedIn for any updates */
+  /* Listen to changes in state.isSignedIn for any updates needing re-mount */
   useEffect(() => {
     const handleResize = () => {
       setState(prevState => ({ ...prevState, dimensions: { width: window.innerWidth } }));
     };
-
-    const lastRoute = localStorage.getItem('lastRoute');
-    if (lastRoute && state.isSignedIn) {
-      setState(prevState => ({ ...prevState, route: lastRoute }));
-    }
-
-    window.addEventListener('resize', handleResize);
-
+    
+    window.addEventListener('resize', handleResize);  
+    
     const interval = setInterval(() => {
       setState(prevState => ({ ...prevState, dimensions: { width: window.innerWidth } }));
     }, 120000);
@@ -79,17 +77,13 @@ const App = () => {
     };
   }, [state.isSignedIn]);
 
-  /* Mount state.user on React app start 
-  Mount state.dimensions on React app start */
+  /* Mount 'lastRoute' to localStorage
+  Listen on changes in 'state.route', 'state.isSignedIn' */
   useEffect(() => {
-    // on React app starts => check localStorage
-    fetchUserData();
-
-    setState(prevState => ({
-      ...prevState,
-      dimensions: { width: window.innerWidth }
-    }))
-  }, []);
+    if (state.isSignedIn) {
+      localStorage.setItem('lastRoute', state.route);
+    }
+  }, [state.route, state.isSignedIn]);
 
   /* Listening to changes to any of below => console log them */
   useEffect(() => {
@@ -195,6 +189,10 @@ const App = () => {
         route: 'signin' 
       }));
     });
+  }, []);
+
+  useEffect(() => {
+    fetchUserData();
   }, []);
 
   /** user-context **/
