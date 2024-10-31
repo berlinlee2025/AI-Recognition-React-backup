@@ -6,5 +6,6 @@ export const UserContext = createContext({
     saveUser: () => {},
     resetUser: () => {},
     onRouteChange: () => {},
-    fetchUserData: () => {}
+    fetchUserData: () => {},
+    resetState: () => {}
 });

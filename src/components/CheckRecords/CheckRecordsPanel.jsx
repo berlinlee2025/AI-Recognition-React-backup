@@ -104,9 +104,11 @@ const CheckRecordsPanel = ({
         </div>
           <CheckRecordsLi
             user={userContext.user}
+
             fontGt={fontGt}
             fontLt={fontLt}
             dimensions={dimensions}
+            
             // 1. 'Home' page
             onHomeButton={onHomeButton}
             // 2. 'Celebrity records' page

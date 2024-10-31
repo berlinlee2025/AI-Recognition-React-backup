@@ -6,19 +6,20 @@ import { UserContext } from "../../shared/context/user-context";
 
 // Parent component
 // src/App.js
-const Signin = ({
-  user,
-  isSignedIn,
-  saveUser,
-  resetUser,
-  onRouteChange
-}) => {
+const Signin = () => {
   const userContext = useContext(UserContext);
 
   const [ signInEmail, setSignInEmail ] = useState('');
   const [ signInPassword, setSignInPassword ] = useState('');
   const [ lockSignIn, setLockSignin ] = useState(true);
   const [ hint, setHint ] = useState('');
+
+  useEffect(() => {
+    console.log(`\ncomponent Signin.jsx is mounted!\n`);
+
+    userContext.saveUser(userContext.user);
+    userContext.onRouteChange('home');
+  }, []);
 
   useEffect(() => {
     const validateInputs = () => {
@@ -68,7 +69,8 @@ const Signin = ({
     .then(response => response.json()) // http://localhost:3001/signin server response to parse JSON data user
     .then((user) => {
       if (user.id) { // If the user can be found & user.id exists
-        userContext.onRouteChange('home', () => userContext.saveUser(user));
+        userContext.saveUser(user);
+        userContext.onRouteChange('home');
         console.log(`\n** After Signin src/App.js user: `, userContext.user, `\n`);
       } 
       else {

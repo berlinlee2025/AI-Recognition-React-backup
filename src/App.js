@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import './App.scss';
 
 // Top Navigation panel
@@ -28,7 +28,6 @@ import axios from 'axios';
 import { UserContext } from './shared/context/user-context';
 
 const App = () => {
-  // const [isSignedIn, setIsSignedIn] = useState(false);
 
   const [state, setState] = useState({
     input: '', // this.state.input => Users' input imageUrl => Can be used for onClick events
@@ -81,6 +80,7 @@ const App = () => {
   Mount state.dimensions on React app start */
   useEffect(() => {
     fetchUserData();
+
     setState(prevState => ({
       ...prevState,
       dimensions: { width: window.innerWidth }
@@ -97,6 +97,7 @@ const App = () => {
     console.log('\nstate.responseStatusCode:\n', state.responseStatusCode, `\n`);
     console.log(`\nstate.route:\n`, state.route, `\n`);
     console.log(`\nstate.user:\n`, state.user, `\n`);
+    
   }, [state.input, state.face_hidden, state.color_hidden, state.age_hidden, state.responseStatusCode, state.route, state.user]);
   
   /** user-context **/
@@ -876,15 +877,19 @@ const App = () => {
     return (
       <div className="App star">
         {/* Conditional rendering */}
-        <Navigation
-          user={user}
-          isSignedIn={isSignedIn}
-          onRouteChange={onRouteChange}
-          resetUser={resetUser}
-
-          resetState={resetState}
-          onSignout={onSignout}
-        />
+        <UserContext.Provider 
+          value={{ 
+            user: user,
+            isSignedIn: isSignedIn,
+            saveUser: saveUser,
+            resetUser: resetUser,
+            onRouteChange: onRouteChange,
+            fetchUserData: fetchUserData,
+            resetState: resetState
+          }}
+        >
+          <Navigation onSignout={onSignout} />
+        </UserContext.Provider>
 
         {routeComponents[route] ?? <div>Page not found</div>}
       </div>

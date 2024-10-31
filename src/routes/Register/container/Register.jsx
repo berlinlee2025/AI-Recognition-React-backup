@@ -175,6 +175,8 @@ const Register = (props) => {
     };
 
     validateInputs();
+    console.log(`\nstate.name: ${state.name}\nstate.email: ${state.email}\nstate.password: ${state.password}\nstate.passwordConfirm: ${state.passwordConfirm}\n`);
+    
   }, [state.name, state.nameValid, state.email, state.emailValid, state.password, state.passwordConfirm, state.passwordMatch, state.password.length, state.password12Char, state.password1SpecialChar, state.passwordNotEmpty]);
     
   const validateInputs = () => {    
@@ -320,8 +322,9 @@ const Register = (props) => {
     setState(prevState => ({ 
       ...prevState,
       name: event.target.value 
-    }), () => validateInputs()
+    })
     );
+    validateInputs()
   }
   
   // Listens to onChange events of email && password <input>
@@ -329,8 +332,9 @@ const Register = (props) => {
     setState(prevState => ({ 
       ...prevState, 
       email: event.target.value 
-    }), () => validateInputs()
+    })
     );
+    validateInputs();
   }
 
   const onPasswordChange = (event) => {
@@ -338,8 +342,9 @@ const Register = (props) => {
     setState(prevState => ({ 
       ...prevState,
       password: newPassword 
-    }), () => validateInputs()
+    })
     );
+    validateInputs();
   }
 
   const onPasswordConfirmChange = (event) => {
@@ -347,8 +352,9 @@ const Register = (props) => {
     setState(prevState => ({ 
       ...prevState,
       passwordConfirm: newPasswordConfirm 
-    }), () => validateInputs()
+    })
     );
+    validateInputs();
   }
 
   // If users fail to register => Clear inputs
