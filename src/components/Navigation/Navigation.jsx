@@ -6,9 +6,7 @@ import { UserContext } from '../../shared/context/user-context';
 
 // Parent component
 // src/App.js
-const Navigation = ( { 
-    onSignout
-}) => {
+const Navigation = () => {
     const userContext = useContext(UserContext);
     
     return (
@@ -22,7 +20,7 @@ const Navigation = ( {
             {/* If 'Sign Out' is clicked, nav to 'signin' page */}
                 <p 
                 className={`${classes.navPara}`}
-                onClick={onSignout} 
+                onClick={userContext.onSignout} 
                 >
                 Sign Out
                 </p>

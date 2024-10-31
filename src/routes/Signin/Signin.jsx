@@ -16,9 +16,6 @@ const Signin = () => {
 
   useEffect(() => {
     console.log(`\ncomponent Signin.jsx is mounted!\n`);
-
-    userContext.saveUser(userContext.user);
-    userContext.onRouteChange('home');
   }, []);
 
   useEffect(() => {

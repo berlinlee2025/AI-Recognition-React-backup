@@ -72,7 +72,6 @@ const App = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       clearInterval(interval);
-      // clearInterval(validationInterval);
     };
   }, [state.isSignedIn]);
 
@@ -625,7 +624,7 @@ const App = () => {
   };
 
   // src/components/Navigation/Navigation.jsx
-  const onSignout = async () => {
+  const onSignout = useCallback(async () => {
     resetState();
 
     const devSignoutUrl = `http://localhost:3001/signout`;
@@ -652,7 +651,7 @@ const App = () => {
     .catch((err) => {
       console.error(`Error signing out user: `, err, `\n`);
     })
-  };
+  }, [onRouteChange]);
 
   // To avoid malicious users from breaking in from <Register />
   // If there's no user.id => route to 'signin' page
@@ -885,10 +884,11 @@ const App = () => {
             resetUser: resetUser,
             onRouteChange: onRouteChange,
             fetchUserData: fetchUserData,
-            resetState: resetState
+            resetState: resetState,
+            onSignout: onSignout
           }}
         >
-          <Navigation onSignout={onSignout} />
+          <Navigation />
         </UserContext.Provider>
 
         {routeComponents[route] ?? <div>Page not found</div>}

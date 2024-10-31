@@ -43,19 +43,13 @@ const Home = ( {
     resetState 
 } ) => {
     const userContext = useContext(UserContext);
-    // const [user, setUser] = useState(user);
 
     // Making userData available before <FaceRecognition /> <ColorRecognition /> <AgeRecognition /> needing user.id for fetching data to Node.js server
     
     /* class component src/App.js only */
     useEffect(() => {
         console.log(`\ncomponent Home.jsx is mounted!\n`);
-        
-        userContext.fetchUserData();
-        userContext.onRouteChange('home');
-        userContext.saveUser(userContext.user);
     }, []); 
-    // Empty dependency[] => this effect runs only once after initial render
 
     if (!userContext.user) return <Loading />;
 
