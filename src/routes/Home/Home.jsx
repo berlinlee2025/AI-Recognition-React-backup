@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // import Rank from '../../components/Rank/Rank';
 import CheckRecordsPanel from '../../components/CheckRecords/CheckRecordsPanel';
 import ImageLinkForm from '../../components/ImageLinkForm/ImageLinkForm';
@@ -7,13 +7,12 @@ import ColorRecognition from '../../components/AIRecognition/ColorRecognition/Co
 import AgeRecognition from '../../components/AIRecognition/AgeRecognition/AgeRecognition';
 import Loading from '../../components/Loading/Loading';
 
+import { UserContext } from "../../shared/context/user-context";
+
 // Parent component
 // src/App.js
 const Home = ( {
-    isSignedIn,
-    user,
     name,
-    fetchUserData,
     entries,
     input,
     imageUrl,
@@ -29,6 +28,7 @@ const Home = ( {
     age,
     age_hidden,
     box,
+    
     // 1. 'Home' page
     onHomeButton,
     // 2. 'Celebrity records' page
@@ -40,11 +40,9 @@ const Home = ( {
     // 4. 'Age records' page
     onAgeRecordsButton,    
     userAgeRecords,
-    // Callback function passed from src/App.js to allow custom onClick routing methods
-    onRouteChange,
-    resetUser,
     resetState 
 } ) => {
+    const userContext = useContext(UserContext);
     // const [user, setUser] = useState(user);
 
     // Making userData available before <FaceRecognition /> <ColorRecognition /> <AgeRecognition /> needing user.id for fetching data to Node.js server
@@ -55,20 +53,16 @@ const Home = ( {
     // }, []); 
     // Empty dependency[] => this effect runs only once after initial render
 
-    if (!user) return <Loading />;
+    if (!userContext.user) return <Loading />;
 
     return (
         <React.Fragment>
-            {/* <Logo /> */}
-            {/* <Rank 
-            name={name}
-            entries={entries}
-            /> */}
             <CheckRecordsPanel 
-                user={user} 
-                isSignedIn={isSignedIn} 
-                onRouteChange={onRouteChange}
-                resetState={resetState}
+                user={userContext.user} 
+                isSignedIn={userContext.isSignedIn}
+                resetState={resetState} 
+                onRouteChange={userContext.onRouteChange}
+
                 // 1. 'Home' page
                 onHomeButton={onHomeButton}
                 // 2. 'Celebrity records' page
@@ -91,31 +85,34 @@ const Home = ( {
                 age_hidden={age_hidden}
             />
             <FaceRecognition
-                user={user}
-                box={box}
+                user={userContext.user}
+                onRouteChange={userContext.onRouteChange}
+
                 input={input}
                 imageUrl={imageUrl}
+                box={box}
                 celebrityName={celebrityName}
                 face_hidden={face_hidden}
-                onRouteChange={onRouteChange}
             />
             <ColorRecognition
-                user={user}
+                user={userContext.user}
+                onRouteChange={userContext.onRouteChange}
+
                 input={input}
                 imageUrl={imageUrl}
                 color_props={color_props}
                 color_hidden={color_hidden}
                 name={name}
                 // onSaveColorButton={onSaveColorButton}
-                onRouteChange={onRouteChange}
             />
             <AgeRecognition
-                user={user}
+                user={userContext.user}
+                onRouteChange={userContext.onRouteChange}
+
                 age={age}
                 input={input}
                 imageUrl={imageUrl}
                 age_hidden={age_hidden}
-                onRouteChange={onRouteChange}
             />
         </React.Fragment>
     )

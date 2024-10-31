@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useCallback } from 'react';
 import './App.scss';
 
 // Top Navigation panel
@@ -22,10 +22,14 @@ import findColor from './util/ai-detection/findColor';
 import findAge from './util/ai-detection/findAge';
 import calculateFaceLocation from './util/ai-detection/calculateFaceLocation';
 import { returnDateTime } from './util/returnDateTime';
-
 import axios from 'axios';
 
+// Context API
+import { UserContext } from './shared/context/user-context';
+
 const App = () => {
+  // const [isSignedIn, setIsSignedIn] = useState(false);
+
   const [state, setState] = useState({
     input: '', // this.state.input => Users' input imageUrl => Can be used for onClick events
       imageUrl: '', // this.state.imageUrl should NOT be used for onClick => React circular references
@@ -40,11 +44,10 @@ const App = () => {
       age_hidden: true,
       responseStatusCode: Number(''),
       route: 'signin',
-      
-      isSignedIn: false,
-      // isSignedIn: userData ? true : false,
 
       user: {},
+      isSignedIn: false,
+
       userCelebrityRecords: [],
       userColorRecords: [],
       userAgeRecords: [],
@@ -96,8 +99,70 @@ const App = () => {
     console.log(`\nstate.user:\n`, state.user, `\n`);
   }, [state.input, state.face_hidden, state.color_hidden, state.age_hidden, state.responseStatusCode, state.route, state.user]);
   
+  /** user-context **/
+
+  // ** src/shared/context/user-context.js
+  // useCallback means when this saveUser callback is invoked, it never gets recreated
+  const saveUser = useCallback((user) => {
+    setState(prevState => ({
+      ...prevState,
+      user: user
+    }))
+  }, []);
+
+  // ** src/shared/context/user-context.js
+  const resetUser = useCallback(() => {
+    setState(prevState => ({ 
+      ...prevState,
+      user: {}, 
+      isSignedIn: false, 
+      route: 'signin' 
+    })
+    );
+  }, []);
+
+  // ** src/shared/context/user-context.js
+  const onRouteChange = useCallback((routeInput) => {
+    const callbackName = `onRouteChange`;
+
+    switch (routeInput) {
+        case 'signout':
+          setState(prevState => ({ 
+            ...prevState,
+            route: 'signin',
+            isSignedIn: routeInput !== 'signin'
+          })
+          );
+          console.log(`\n${callbackName}(signout)\n`);
+          break;
+        
+        // else if onClick={() => onRouteChange('home')}
+        case 'home':
+        case 'ageRecords':
+        case 'colorRecords':
+        case 'celebrityRecords':
+          setState(prevState => ({
+            ...prevState,
+            route: routeInput,
+            isSignedIn: true,
+          })
+          );
+          return;
+        
+        // No matter what, still wanna change the route
+        default:
+          setState(prevState => ({ 
+            ...prevState, 
+            route: routeInput,
+          })
+        );
+          return;
+    }
+  }, []);
+
+  // ** src/shared/context/user-context.js
   /* Session cookie */
-  const fetchUserData = () => {
+  const fetchUserData = useCallback(() => {
     const devUserDataUrl = `http://localhost:3001/api/get-user-data`;
     const prodUserDataUrl = `https://www.ai-recognition-backend.com/api/get-user-data`;
 
@@ -119,24 +184,9 @@ const App = () => {
         ...prevState, isSignedIn: false, route: 'signin' 
       }));
     });
-  }
+  }, []);
 
-  const saveUser = (user) => {
-    setState(prevState => ({
-      ...prevState,
-      user: user
-    }))
-  }
-
-  const resetUser = () => {
-    setState(prevState => ({ 
-      ...prevState,
-      user: {}, 
-      isSignedIn: false, 
-      route: 'signin' 
-    })
-    );
-  }
+  /** user-context **/
   
   // For Celebrity detection model
   const displayCelebrity = (celebrity) => {
@@ -573,45 +623,6 @@ const App = () => {
     });
   };
 
-  // ** To allow SPA Routing without React Router DOM through onClick={() => onRouteChange(routeInput)}
-  const onRouteChange = (routeInput) => {
-    const callbackName = `onRouteChange`;
-
-    switch (routeInput) {
-        case 'signout':
-          setState(prevState => ({ 
-            ...prevState,
-            route: 'signin',
-            isSignedIn: routeInput !== 'signin'
-          })
-          );
-          console.log(`\n${callbackName}(signout)\n`);
-          break;
-        
-        // else if onClick={() => onRouteChange('home')}
-        case 'home':
-        case 'ageRecords':
-        case 'colorRecords':
-        case 'celebrityRecords':
-          setState(prevState => ({
-            ...prevState,
-            route: routeInput,
-            isSignedIn: true,
-          })
-          );
-          return;
-        
-        // No matter what, still wanna change the route
-        default:
-          setState(prevState => ({ 
-            ...prevState, 
-            route: routeInput,
-          })
-        );
-          return;
-    }
-  };
-
   // src/components/Navigation/Navigation.jsx
   const onSignout = async () => {
     resetState();
@@ -685,54 +696,78 @@ const App = () => {
     // Enhance React Scalability for allowing to add more React routes without React Router DOM
     const routeComponents = {
       'home': renderRoute(
-        <Home
-          isSignedIn={isSignedIn}
-          user={user}
-          name={user?.name}
-          entries={user?.entries}
-          input={input}
-          imageUrl={imageUrl}
-          celebrityName={celebrity?.name}
-          face_hidden={face_hidden}
-          onInputChange={onInputChange}
-          // User
-          fetchUserData={fetchUserData}
-          // AI Recognition buttons
-          onCelebrityButton={onCelebrityButton}
-          onColorButton={onColorButton}
-          onAgeButton={onAgeButton}
-          color_props={colors_array}
-          color_hidden={color_hidden}
-          age={age_props}
-          age_hidden={age_hidden}
-          box={box}
-          // Callback to allow custom onClick methods in Child components
-          onRouteChange={onRouteChange}
-          // 4 Buttons in <CheckRecordsPanel />
-          // 1. 'Home' page
-          onHomeButton={onHomeButton}
-          // 2. 'Celebrity records' page
-          onCelebrityRecordsButton={onCelebrityRecordsButton}
-          // Passing userColorRecords to 'Color records' page
-          userCelebrityRecords={userCelebrityRecords}
-          // 3. 'Color records' page
-          onColorRecordsButton={onColorRecordsButton}
-          // Passing userColorRecords to 'Color records' page
-          userColorRecords={userColorRecords}
-          // 4. 'Age records' page
-          onAgeRecordsButton={onAgeRecordsButton}
-          // Passing userColorRecords to 'Color records' page
-          userAgeRecords={userAgeRecords}
-          resetUser={resetUser}
-          resetState={resetState}
-        />
+        <UserContext.Provider 
+          value={{ 
+            user: user,
+            isSignedIn: isSignedIn,
+            saveUser: saveUser,
+            resetUser: resetUser,
+            onRouteChange: onRouteChange,
+            fetchUserData: fetchUserData
+          }}
+        >
+          <Home
+            // user={user}
+            // isSignedIn={isSignedIn}
+            // saveUser={saveUser}
+            // onRouteChange={onRouteChange}
+
+            name={user?.name}
+            entries={user?.entries}
+            input={input}
+            imageUrl={imageUrl}
+            celebrityName={celebrity?.name}
+            face_hidden={face_hidden}
+            onInputChange={onInputChange}
+            // User
+            fetchUserData={fetchUserData}
+            // AI Recognition buttons
+            onCelebrityButton={onCelebrityButton}
+            onColorButton={onColorButton}
+            onAgeButton={onAgeButton}
+            color_props={colors_array}
+            color_hidden={color_hidden}
+            age={age_props}
+            age_hidden={age_hidden}
+            box={box}
+
+            // 4 Buttons in <CheckRecordsPanel />
+            // 1. 'Home' page
+            onHomeButton={onHomeButton}
+            // 2. 'Celebrity records' page
+            onCelebrityRecordsButton={onCelebrityRecordsButton}
+            // Passing userColorRecords to 'Color records' page
+            userCelebrityRecords={userCelebrityRecords}
+            // 3. 'Color records' page
+            onColorRecordsButton={onColorRecordsButton}
+            // Passing userColorRecords to 'Color records' page
+            userColorRecords={userColorRecords}
+            // 4. 'Age records' page
+            onAgeRecordsButton={onAgeRecordsButton}
+            // Passing userColorRecords to 'Color records' page
+            userAgeRecords={userAgeRecords}
+            resetUser={resetUser}
+            resetState={resetState}
+          />
+        </UserContext.Provider>
       ),
       'signin': renderRoute(
-        <Signin 
-          user={user}
-          saveUser={saveUser}
-          onRouteChange={onRouteChange} 
-        />
+        <UserContext.Provider 
+          value={{ 
+            user: user,
+            isSignedIn: isSignedIn,
+            saveUser: saveUser,
+            resetUser: resetUser,
+            onRouteChange: onRouteChange,
+            fetchUserData: fetchUserData
+          }}
+        >
+          <Signin 
+          // user={user}
+          // saveUser={saveUser}
+          // onRouteChange={onRouteChange} 
+          />
+        </UserContext.Provider>
       ),
       'register': renderRoute(
         <Register 
@@ -747,8 +782,10 @@ const App = () => {
           <CheckRecordsPanel 
             user={user}
             isSignedIn={isSignedIn}
-            dimensions={dimensions}
             onRouteChange={onRouteChange}
+
+            dimensions={dimensions}
+            
             // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
             onHomeButton={onHomeButton}
             onCelebrityRecordsButton={onCelebrityRecordsButton}
@@ -758,9 +795,10 @@ const App = () => {
           <AgeRecords
             user={user}
             isSignedIn={isSignedIn}
+            onRouteChange={onRouteChange}
+
             dimensions={dimensions}
             userAgeRecords={userAgeRecords}
-            onRouteChange={onRouteChange}
           />
         </React.Fragment>
       ),
@@ -769,8 +807,10 @@ const App = () => {
           <CheckRecordsPanel 
             user={user}
             isSignedIn={isSignedIn}
-            dimensions={dimensions}
             onRouteChange={onRouteChange}
+
+            dimensions={dimensions}
+            
             // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
             onHomeButton={onHomeButton}
             onCelebrityRecordsButton={onCelebrityRecordsButton}
@@ -780,9 +820,10 @@ const App = () => {
           <ColorRecords
             user={user}
             isSignedIn={isSignedIn}
+            onRouteChange={onRouteChange}
+
             dimensions={dimensions}
             userColorRecords={userColorRecords}
-            onRouteChange={onRouteChange}
           />
         </React.Fragment>
       ),
@@ -791,8 +832,10 @@ const App = () => {
           <CheckRecordsPanel 
             user={user}
             isSignedIn={isSignedIn}
-            dimensions={dimensions}
             onRouteChange={onRouteChange}
+
+            dimensions={dimensions}
+            
             // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
             onHomeButton={onHomeButton}
             onCelebrityRecordsButton={onCelebrityRecordsButton}
@@ -802,7 +845,10 @@ const App = () => {
           <CelebrityRecords
             user={user}
             isSignedIn={isSignedIn}
+            onRouteChange={onRouteChange}
+
             dimensions={dimensions}
+            
             // state.userCelebrityRecords
             userCelebrityRecords={userCelebrityRecords}
             // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
@@ -810,7 +856,6 @@ const App = () => {
             onCelebrityRecordsButton={onCelebrityRecordsButton}
             onColorRecordsButton={onColorRecordsButton}
             onAgeRecordsButton={onAgeRecordsButton}
-            onRouteChange={onRouteChange}
           />
         </React.Fragment>
       )
