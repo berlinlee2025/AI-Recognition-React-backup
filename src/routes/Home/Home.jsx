@@ -9,6 +9,7 @@ import AgeRecognition from '../../components/AIRecognition/AgeRecognition/AgeRec
 // Context API
 import { UserContext } from "../../shared/context/user-context";
 import { RecordContext } from '../../shared/context/record-context';
+import { AIContext } from '../../shared/context/ai-context';
 
 // Parent component
 // src/App.js
@@ -45,6 +46,7 @@ const Home = ( {
 } ) => {
     const userContext = useContext(UserContext);
     const recordContext = useContext(RecordContext);
+    const aiContext = useContext(AIContext);
 
     // Making userData available before <FaceRecognition /> <ColorRecognition /> <AgeRecognition /> needing user.id for fetching data to Node.js server
     
@@ -75,43 +77,43 @@ const Home = ( {
                 onAgeRecordsButton={recordContext.onAgeRecordsButton}
             />
             <ImageLinkForm
-                onInputChange={onInputChange}
-                onCelebrityButton={onCelebrityButton}
-                onColorButton={onColorButton}
-                onAgeButton={onAgeButton}
-                face_hidden={face_hidden}
-                color_hidden={color_hidden}
-                age_hidden={age_hidden}
+                onInputChange={aiContext.onInputChange}
+                onCelebrityButton={aiContext.onCelebrityButton}
+                onColorButton={aiContext.onColorButton}
+                onAgeButton={aiContext.onAgeButton}
+                face_hidden={aiContext.face_hidden}
+                color_hidden={aiContext.color_hidden}
+                age_hidden={aiContext.age_hidden}
             />
             <FaceRecognition
                 user={userContext.user}
                 onRouteChange={userContext.onRouteChange}
 
-                input={input}
-                imageUrl={imageUrl}
-                box={box}
-                celebrityName={celebrityName}
-                face_hidden={face_hidden}
+                input={aiContext.input}
+                imageUrl={aiContext.imageUrl}
+                box={aiContext.box}
+                celebrityName={aiContext.celebrityName}
+                face_hidden={aiContext.face_hidden}
             />
             <ColorRecognition
                 user={userContext.user}
                 onRouteChange={userContext.onRouteChange}
 
-                input={input}
-                imageUrl={imageUrl}
-                color_props={color_props}
-                color_hidden={color_hidden}
-                name={name}
+                input={aiContext.input}
+                imageUrl={aiContext.imageUrl}
+                color_props={aiContext.color_props}
+                color_hidden={aiContext.color_hidden}
+                name={aiContext.name}
                 // onSaveColorButton={onSaveColorButton}
             />
             <AgeRecognition
                 user={userContext.user}
                 onRouteChange={userContext.onRouteChange}
 
-                age={age}
-                input={input}
-                imageUrl={imageUrl}
-                age_hidden={age_hidden}
+                age={aiContext.age}
+                input={aiContext.input}
+                imageUrl={aiContext.imageUrl}
+                age_hidden={aiContext.age_hidden}
             />
         </React.Fragment>
     )

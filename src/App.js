@@ -27,6 +27,7 @@ import axios from 'axios';
 // Context API
 import { UserContext } from './shared/context/user-context';
 import { RecordContext } from './shared/context/record-context';
+import { AIContext } from './shared/context/ai-context';
 
 /* document.cookie 'connect.sid' only becomes available after a user has successfully signed in */
 // const documentCookie = document.cookie;
@@ -76,7 +77,7 @@ const App = () => {
           user: {}
         }))
       }
-    }, 900000);
+    }, 900000); // Resetting User in every 15 mins
     
     const interval = setInterval(() => {
       setState(prevState => ({ ...prevState, dimensions: { width: window.innerWidth } }));
@@ -241,15 +242,6 @@ const App = () => {
     setState(prevState => ({ 
       ...prevState,
       box: box 
-    })
-    );
-  };
-
-  // For <ImageLinkForm />
-  const onInputChange = (event) => {
-    setState(prevState => ({
-      ...prevState, 
-      input: event.target.value 
     })
     );
   };
@@ -488,8 +480,9 @@ const App = () => {
   }, [onRouteChange, resetState, state.user.id, state.userAgeRecords]);
   /** END <RecordContext /> **/
 
+  /** START <AIContext /> **/
   // ClarifaiAPI Celebrity Face Detection model
-  const onCelebrityButton = async () => {
+  const onCelebrityButton = useCallback(async () => {
     // Reset all state variables to allow proper rendering from Detection Models
     // Before next fetch
     resetState();
@@ -548,10 +541,10 @@ const App = () => {
       .catch(err => {
         console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
       });
-  };
+  }, [resetState, state.input, updateEntries]);
 
   // ClarifaiAPI Color Detection model
-  const onColorButton = async () => {
+  const onColorButton = useCallback(async () => {
     // Reset all state variables to allow proper rendering from Detection Models
     // Before next fetch
     resetState(); 
@@ -594,10 +587,10 @@ const App = () => {
     .catch(err => {
       console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
     });
-  };
+  }, [resetState, state.input, updateEntries]);
 
   // ClarifaiAPI Age Detection model
-  const onAgeButton = async () => {
+  const onAgeButton = useCallback(async () => {
     // Reset all state variables to allow proper rendering from Detection Models
     // Before next fetch
     resetState();
@@ -645,9 +638,17 @@ const App = () => {
     .catch((err) => {
       console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
     });
-  };
+  }, [resetState, state.input, updateEntries]);
 
-  
+  // For <ImageLinkForm />
+  const onInputChange = useCallback((event) => {
+    setState(prevState => ({
+      ...prevState, 
+      input: event.target.value 
+    })
+    );
+  }, []);
+  /** END <AIContext /> */
 
   // src/components/Navigation/Navigation.jsx
   const onSignout = useCallback(async () => {
@@ -756,26 +757,30 @@ const App = () => {
             resetState: resetState
           }}
           >
-            <Home
-            name={user?.name}
-            entries={user?.entries}
-            input={input}
-            imageUrl={imageUrl}
-            celebrityName={celebrity?.name}
-            face_hidden={face_hidden}
-            onInputChange={onInputChange}
+            <AIContext.Provider
+            value={{
+              name: user?.name,
+              entries: user?.entries,
+              input: input,
+              imageUrl: imageUrl,
+              celebrityName: celebrity?.name,
+              face_hidden: face_hidden,
 
-            // AI Recognition buttons
-            onCelebrityButton={onCelebrityButton}
-            onColorButton={onColorButton}
-            onAgeButton={onAgeButton}
+              color_props: colors_array,
+              color_hidden: color_hidden,
+              age: age_props,
+              age_hidden: age_hidden,
+              box: box,
 
-            color_props={colors_array}
-            color_hidden={color_hidden}
-            age={age_props}
-            age_hidden={age_hidden}
-            box={box}
-          />
+              onInputChange: onInputChange,
+
+              // AI Recognition buttons
+              onCelebrityButton: onCelebrityButton,
+              onColorButton: onColorButton,
+              onAgeButton: onAgeButton
+            }}>
+              <Home />
+            </AIContext.Provider>            
           </RecordContext.Provider>
         </UserContext.Provider>
       ),
