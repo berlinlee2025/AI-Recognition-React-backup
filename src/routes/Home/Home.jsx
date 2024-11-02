@@ -5,10 +5,10 @@ import ImageLinkForm from '../../components/ImageLinkForm/ImageLinkForm';
 import FaceRecognition from '../../components/AIRecognition/FaceRecognition/FaceRecognition';
 import ColorRecognition from '../../components/AIRecognition/ColorRecognition/ColorRecognition';
 import AgeRecognition from '../../components/AIRecognition/AgeRecognition/AgeRecognition';
-import Loading from '../../components/Loading/Loading';
-import Signin from '../Signin/Signin';
 
+// Context API
 import { UserContext } from "../../shared/context/user-context";
+import { RecordContext } from '../../shared/context/record-context';
 
 // Parent component
 // src/App.js
@@ -30,20 +30,21 @@ const Home = ( {
     age_hidden,
     box,
 
-    // 1. 'Home' page
-    onHomeButton,
-    // 2. 'Celebrity records' page
-    onCelebrityRecordsButton,
-    userCelebrityRecords,
-    // 3. 'Color records' page
-    onColorRecordsButton,
-    userColorRecords,
-    // 4. 'Age records' page
-    onAgeRecordsButton,    
-    userAgeRecords,
-    resetState 
+    // // 1. 'Home' page
+    // onHomeButton,
+    // // 2. 'Celebrity records' page
+    // onCelebrityRecordsButton,
+    // userCelebrityRecords,
+    // // 3. 'Color records' page
+    // onColorRecordsButton,
+    // userColorRecords,
+    // // 4. 'Age records' page
+    // onAgeRecordsButton,    
+    // userAgeRecords,
+    // resetState 
 } ) => {
     const userContext = useContext(UserContext);
+    const recordContext = useContext(RecordContext);
 
     // Making userData available before <FaceRecognition /> <ColorRecognition /> <AgeRecognition /> needing user.id for fetching data to Node.js server
     
@@ -53,26 +54,25 @@ const Home = ( {
         userContext.onRouteChange('home');
     }, []); 
 
-
     return (
         <React.Fragment>
             <CheckRecordsPanel 
                 user={userContext.user} 
                 isSignedIn={userContext.isSignedIn}
-                resetState={resetState} 
                 onRouteChange={userContext.onRouteChange}
 
+                resetState={recordContext.resetState} 
                 // 1. 'Home' page
-                onHomeButton={onHomeButton}
+                onHomeButton={recordContext.onHomeButton}
                 // 2. 'Celebrity records' page
-                userCelebrityRecords={userCelebrityRecords}
-                onCelebrityRecordsButton={onCelebrityRecordsButton}
+                userCelebrityRecords={recordContext.userCelebrityRecords}
+                onCelebrityRecordsButton={recordContext.onCelebrityRecordsButton}
                 // 3. 'Color records' page
-                userColorRecords={userColorRecords}
-                onColorRecordsButton={onColorRecordsButton}
+                userColorRecords={recordContext.userColorRecords}
+                onColorRecordsButton={recordContext.onColorRecordsButton}
                 // 4. 'Age records' page
-                userAgeRecords={userAgeRecords}
-                onAgeRecordsButton={onAgeRecordsButton}
+                userAgeRecords={recordContext.userAgeRecords}
+                onAgeRecordsButton={recordContext.onAgeRecordsButton}
             />
             <ImageLinkForm
                 onInputChange={onInputChange}

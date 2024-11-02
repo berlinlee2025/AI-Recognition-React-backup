@@ -8,12 +8,14 @@ import { FaList } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 
 import { UserContext } from "../../shared/context/user-context";
+import { RecordContext } from "../../shared/context/record-context";
 
 // Parent components
 // 1. src/routes/Home.jsx
 // Child components
 // 2. src/components/CheckRecords/CheckRecordsLi.jsx
 const CheckRecordsPanel = ({ 
+  resetState,
   // 1. 'Home' page
   onHomeButton,
   // 2. 'Celebrity records' page
@@ -26,9 +28,10 @@ const CheckRecordsPanel = ({
   userCelebrityRecords,
   userColorRecords,   
   userAgeRecords,
-  resetState 
+  
 }) => {
   const userContext = useContext(UserContext);
+  const recordContext = useContext(RecordContext);
 
   // Keep monitor resolution changes
   const [dimensions, setDimensions] = useState({
@@ -108,18 +111,18 @@ const CheckRecordsPanel = ({
             fontGt={fontGt}
             fontLt={fontLt}
             dimensions={dimensions}
-            
+
+            resetState={recordContext.resetState}
             // 1. 'Home' page
-            onHomeButton={onHomeButton}
+            onHomeButton={recordContext.onHomeButton}
             // 2. 'Celebrity records' page
-            onCelebrityRecordsButton={onCelebrityRecordsButton}
+            onCelebrityRecordsButton={recordContext.onCelebrityRecordsButton}
             // 3. 'Color records' page
-            userColorRecords={userColorRecords}
-            onColorRecordsButton={onColorRecordsButton}
+            userColorRecords={recordContext.userColorRecords}
+            onColorRecordsButton={recordContext.onColorRecordsButton}
             // 4. 'Age records' page
-            userAgeRecords={userAgeRecords}
-            onAgeRecordsButton={onAgeRecordsButton}
-            resetState={resetState}
+            userAgeRecords={recordContext.userAgeRecords}
+            onAgeRecordsButton={recordContext.onAgeRecordsButton}
           />
       </div>
     );
@@ -174,18 +177,18 @@ const CheckRecordsPanel = ({
               fontGt={fontGt}
               fontLt={fontLt}
               dimensions={dimensions}
-              // 1. 'Home' page
-              onHomeButton={onHomeButton}
-              // 2. 'Celebrity records' page
-              userCelebrityRecords={userCelebrityRecords}
-              onCelebrityRecordsButton={onCelebrityRecordsButton}
-              // 3. 'Color records' page
-              userColorRecords={userColorRecords}
-              onColorRecordsButton={onColorRecordsButton}
-              // 4. 'Age records' page
-              userAgeRecords={userAgeRecords}
-              onAgeRecordsButton={onAgeRecordsButton}
               resetState={resetState}
+              // 1. 'Home' page
+              onHomeButton={recordContext.onHomeButton}
+              // 2. 'Celebrity records' page
+              userCelebrityRecords={recordContext.userCelebrityRecords}
+              onCelebrityRecordsButton={recordContext.onCelebrityRecordsButton}
+              // 3. 'Color records' page
+              userColorRecords={recordContext.userColorRecords}
+              onColorRecordsButton={recordContext.onColorRecordsButton}
+              // 4. 'Age records' page
+              userAgeRecords={recordContext.userAgeRecords}
+              onAgeRecordsButton={recordContext.onAgeRecordsButton} 
             />
           </ul>
         </div>

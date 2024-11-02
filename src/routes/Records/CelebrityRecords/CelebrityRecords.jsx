@@ -10,6 +10,7 @@ import SlideshowCelebrityRecords from './Slideshow-CelebrityRecords/Slideshow-Ce
 import "../records.scss";
 
 import { UserContext } from '../../../shared/context/user-context';
+import { RecordContext } from '../../../shared/context/record-context';
 
 // Parent component
 // src/App.js
@@ -20,6 +21,7 @@ const CelebrityRecords = ( {
     userCelebrityRecords
 } ) => {
     const userContext = useContext(UserContext);
+    const recordContext = useContext(RecordContext);
     
     return (
         <React.Fragment>
@@ -31,7 +33,7 @@ const CelebrityRecords = ( {
                 isSignedIn={userContext.isSignedIn} 
                 dimensions={dimensions}
                 // User's Celebrity Records
-                userCelebrityRecords={userCelebrityRecords}
+                userCelebrityRecords={recordContext.userCelebrityRecords}
             />
             </div>
         </React.Fragment>

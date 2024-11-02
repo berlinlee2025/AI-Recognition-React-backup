@@ -26,6 +26,7 @@ import axios from 'axios';
 
 // Context API
 import { UserContext } from './shared/context/user-context';
+import { RecordContext } from './shared/context/record-context';
 
 /* document.cookie 'connect.sid' only becomes available after a user has successfully signed in */
 // const documentCookie = document.cookie;
@@ -66,6 +67,16 @@ const App = () => {
     };
     
     window.addEventListener('resize', handleResize);  
+
+    const validateUsers = setInterval(() => {
+      if (!state.user.id) {
+        setState(prevState => ({
+          ...prevState,
+          route: 'signin',
+          user: {}
+        }))
+      }
+    }, 900000);
     
     const interval = setInterval(() => {
       setState(prevState => ({ ...prevState, dimensions: { width: window.innerWidth } }));
@@ -74,10 +85,12 @@ const App = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       clearInterval(interval);
+      clearInterval(validateUsers);
     };
-  }, [state.isSignedIn]);
+  }, [state.isSignedIn, state.user.id]);
 
-  /* Mount 'lastRoute' to localStorage
+  /* if user is signed in => state.isSignedIn = true
+  Mount 'lastRoute' to localStorage
   Listen on changes in 'state.route', 'state.isSignedIn' */
   useEffect(() => {
     if (state.isSignedIn) {
@@ -100,8 +113,7 @@ const App = () => {
   }, [state.input, state.face_hidden, state.color_hidden, state.age_hidden, state.responseStatusCode, state.route, state.user, state.isSignedIn]);
 
   
-  /** user-context **/
-
+  /** START <UserContext /> **/
   // ** src/shared/context/user-context.js
   // useCallback means when this saveUser callback is invoked, it never gets recreated
   const saveUser = useCallback((user) => {
@@ -191,12 +203,13 @@ const App = () => {
     });
   }, []);
 
+  /* Invoke fetchUserData() callback on React app start */
   useEffect(() => {
     fetchUserData();
   }, []);
 
-  /** user-context **/
-  
+  /** END <UserContext /> **/
+
   // For Celebrity detection model
   const displayCelebrity = (celebrity) => {
     setState(prevState => ({
@@ -237,24 +250,6 @@ const App = () => {
     setState(prevState => ({
       ...prevState, 
       input: event.target.value 
-    })
-    );
-  };
-
-  // Everytime any of Detection Models is clicked
-  // reset all state variables to allow proper rendering of DOM elements
-  const resetState = () => {
-    setState(prevState => ({
-      ...prevState,
-      box: {},
-      celebrity: {},
-      celebrityName: '',
-      colors: [],
-      age: [],
-      face_hidden: true,
-      color_hidden: true,
-      age_hidden: true,
-      responseStatusCode: Number(''),
     })
     );
   };
@@ -305,8 +300,27 @@ const App = () => {
     });
   }
 
+  /** START <RecordContext /> **/
+  // Everytime any of Detection Models is clicked
+  // reset all state variables to allow proper rendering of DOM elements
+  const resetState = useCallback(() => {
+    setState(prevState => ({
+      ...prevState,
+      box: {},
+      celebrity: {},
+      celebrityName: '',
+      colors: [],
+      age: [],
+      face_hidden: true,
+      color_hidden: true,
+      age_hidden: true,
+      responseStatusCode: Number(''),
+    })
+    );
+  }, []);
+
   // To be passed to <CheckRecordsPanel /> in src/components/CheckRecords/CheckRecrodsPanel.jsx
-  const onHomeButton = () => {
+  const onHomeButton = useCallback(() => {
     // Reset all state variables to allow proper rendering from Detection Models
     resetState();
 
@@ -321,10 +335,10 @@ const App = () => {
       route: 'home' 
     })
     );
-  }
+  }, [onRouteChange, resetState])
 
   // Retrieve User's Color Records from Node.js => PostgreSQL
-  const onCelebrityRecordsButton = async () => {
+  const onCelebrityRecordsButton = useCallback(async () => {
     // Reset all state variables to allow proper rendering of side-effects
     resetState();
 
@@ -375,7 +389,104 @@ const App = () => {
     });
 
     console.log(`\nsrc/App.js this.state.userCelebrityRecords:\n`, state.userCelebrityRecords, `\n`);
-  }
+  }, [onRouteChange, resetState, state.user.id, state.userCelebrityRecords]);
+
+  // Retrieve User's Color Records from Node.js => PostgreSQL
+  const onColorRecordsButton = useCallback(async () => {
+    // Reset all state variables to allow proper rendering of side-effects
+    resetState();
+
+    // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
+    onRouteChange('colorRecords');
+
+    const devFetchGetUserColorUrl = 'http://localhost:3001/records/get-user-color';
+    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com//records/get-user-color';
+
+    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
+
+    const bodyData = JSON.stringify({
+      userId: state.user.id
+    });
+
+    console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
+
+    await fetch(fetchUrl, {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        userId: state.user.id
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log(`\nFetched User's Colors Records obj:\n`, response, `\n`);
+      console.log(`\nFetched User's Colors Records obj:\n`, response.colorData, `\n`);
+      // If there's a response upon fetching Clarifai API
+      // fetch our server-side to update entries count too
+      if (response) { 
+        // updateEntries();
+        setState(prevState => ({
+          ...prevState,
+          userColorRecords: response.colorData
+        })
+      )
+      };
+    })
+    .catch((err) => {
+      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`);
+    });
+
+    console.log(`\nsrc/App.js state.userColorRecords:\n`, state.userColorRecords, `\n`);
+  }, [onRouteChange, resetState, state.user.id, state.userColorRecords]);
+
+  // Retrieve User's Color Records from Node.js => PostgreSQL
+  const onAgeRecordsButton = useCallback(async () => {
+    // Reset all state variables to allow proper rendering of side-effects
+    resetState();
+
+    // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
+    onRouteChange('ageRecords');
+
+    const devFetchGetUserColorUrl = 'http://localhost:3001/records/get-user-age';
+    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com//records/get-user-age';
+
+    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
+
+    const bodyData = JSON.stringify({
+      userId: state.user.id
+    });
+
+    console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
+
+    await fetch(fetchUrl, {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        userId: state.user.id
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log(`\nFetched User's Age Records response:\n`, response, `\n`);
+      console.log(`\nFetched User's Age Records response.ageData:\n`, response.ageData, `\n`);
+      // If there's a response upon fetching Clarifai API
+      // fetch our server-side to update entries count too
+      if (response) { 
+        // updateEntries();
+        setState(prevState => ({
+          ...prevState,
+          userAgeRecords: response.ageData
+        })
+      )
+      };
+    })
+    .catch((err) => {
+      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`);
+    });
+
+    console.log(`\nsrc/App.js state.userAgeRecords:\n`, state.userAgeRecords, `\n`);
+  }, [onRouteChange, resetState, state.user.id, state.userAgeRecords]);
+  /** END <RecordContext /> **/
 
   // ClarifaiAPI Celebrity Face Detection model
   const onCelebrityButton = async () => {
@@ -439,54 +550,6 @@ const App = () => {
       });
   };
 
-  // Retrieve User's Color Records from Node.js => PostgreSQL
-  const onColorRecordsButton = async () => {
-    // Reset all state variables to allow proper rendering of side-effects
-    resetState();
-
-    // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
-    onRouteChange('colorRecords');
-
-    const devFetchGetUserColorUrl = 'http://localhost:3001/records/get-user-color';
-    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com//records/get-user-color';
-
-    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
-
-    const bodyData = JSON.stringify({
-      userId: state.user.id
-    });
-
-    console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
-
-    await fetch(fetchUrl, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        userId: state.user.id
-      })
-    })
-    .then(response => response.json())
-    .then(response => {
-      console.log(`\nFetched User's Colors Records obj:\n`, response, `\n`);
-      console.log(`\nFetched User's Colors Records obj:\n`, response.colorData, `\n`);
-      // If there's a response upon fetching Clarifai API
-      // fetch our server-side to update entries count too
-      if (response) { 
-        // updateEntries();
-        setState(prevState => ({
-          ...prevState,
-          userColorRecords: response.colorData
-        })
-      )
-      };
-    })
-    .catch((err) => {
-      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`);
-    });
-
-    console.log(`\nsrc/App.js state.userColorRecords:\n`, state.userColorRecords, `\n`);
-  }
-
   // ClarifaiAPI Color Detection model
   const onColorButton = async () => {
     // Reset all state variables to allow proper rendering from Detection Models
@@ -532,54 +595,6 @@ const App = () => {
       console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
     });
   };
-  
-  // Retrieve User's Color Records from Node.js => PostgreSQL
-  const onAgeRecordsButton = async () => {
-    // Reset all state variables to allow proper rendering of side-effects
-    resetState();
-
-    // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
-    onRouteChange('ageRecords');
-
-    const devFetchGetUserColorUrl = 'http://localhost:3001/records/get-user-age';
-    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com//records/get-user-age';
-
-    const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
-
-    const bodyData = JSON.stringify({
-      userId: state.user.id
-    });
-
-    console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
-
-    await fetch(fetchUrl, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        userId: state.user.id
-      })
-    })
-    .then(response => response.json())
-    .then(response => {
-      console.log(`\nFetched User's Age Records response:\n`, response, `\n`);
-      console.log(`\nFetched User's Age Records response.ageData:\n`, response.ageData, `\n`);
-      // If there's a response upon fetching Clarifai API
-      // fetch our server-side to update entries count too
-      if (response) { 
-        // updateEntries();
-        setState(prevState => ({
-          ...prevState,
-          userAgeRecords: response.ageData
-        })
-      )
-      };
-    })
-    .catch((err) => {
-      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`);
-    });
-
-    console.log(`\nsrc/App.js state.userAgeRecords:\n`, state.userAgeRecords, `\n`);
-  }
 
   // ClarifaiAPI Age Detection model
   const onAgeButton = async () => {
@@ -632,6 +647,8 @@ const App = () => {
     });
   };
 
+  
+
   // src/components/Navigation/Navigation.jsx
   const onSignout = useCallback(async () => {
     resetState();
@@ -662,15 +679,7 @@ const App = () => {
     .catch((err) => {
       console.error(`Error signing out user: `, err, `\n`);
     })
-  }, [onRouteChange]);
-
-  // To avoid malicious users from breaking in from <Register />
-  // If there's no user.id => route to 'signin' page
-  const validateUsers = () => {
-    if (!state.user.id) {
-      onRouteChange('signin');
-    }
-  };
+  }, [onRouteChange, resetState]);
 
   /* Rendering all components */
   // destructuring props from state
@@ -735,7 +744,19 @@ const App = () => {
             fetchUserData: fetchUserData
           }}
         >
-          <Home
+          <RecordContext.Provider 
+          value={{ 
+            onHomeButton: onHomeButton,
+            onCelebrityRecordsButton: onCelebrityRecordsButton,
+            userCelebrityRecords: userCelebrityRecords,
+            onColorRecordsButton: onColorRecordsButton,
+            userColorRecords: userColorRecords,
+            onAgeRecordsButton: onAgeRecordsButton,
+            userAgeRecords: userAgeRecords,
+            resetState: resetState
+          }}
+          >
+            <Home
             name={user?.name}
             entries={user?.entries}
             input={input}
@@ -754,25 +775,8 @@ const App = () => {
             age={age_props}
             age_hidden={age_hidden}
             box={box}
-
-            // 4 Buttons in <CheckRecordsPanel />
-            // 1. 'Home' page
-            onHomeButton={onHomeButton}
-            // 2. 'Celebrity records' page
-            onCelebrityRecordsButton={onCelebrityRecordsButton}
-            // Passing userColorRecords to 'Color records' page
-            userCelebrityRecords={userCelebrityRecords}
-            // 3. 'Color records' page
-            onColorRecordsButton={onColorRecordsButton}
-            // Passing userColorRecords to 'Color records' page
-            userColorRecords={userColorRecords}
-            // 4. 'Age records' page
-            onAgeRecordsButton={onAgeRecordsButton}
-            // Passing userColorRecords to 'Color records' page
-            userAgeRecords={userAgeRecords}
-            resetUser={resetUser}
-            resetState={resetState}
           />
+          </RecordContext.Provider>
         </UserContext.Provider>
       ),
       'signin': renderRoute(
@@ -800,13 +804,7 @@ const App = () => {
           fetchUserData: fetchUserData
         }}
         >
-          <Register 
-            route={route}
-            user={user}
-            saveUser={saveUser}
-            onRouteChange={onRouteChange}
-            fetchUserData={fetchUserData} 
-          />
+          <Register />
         </UserContext.Provider>
       ),
       'ageRecords': renderRoute(
@@ -821,19 +819,21 @@ const App = () => {
             fetchUserData: fetchUserData
           }}
           >
-            <CheckRecordsPanel 
-              dimensions={dimensions}
-              
-              // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
-              onHomeButton={onHomeButton}
-              onCelebrityRecordsButton={onCelebrityRecordsButton}
-              onColorRecordsButton={onColorRecordsButton}
-              onAgeRecordsButton={onAgeRecordsButton}
-            />
-            <AgeRecords
-              dimensions={dimensions}
-              userAgeRecords={userAgeRecords}
-            />
+            <RecordContext.Provider 
+            value={{ 
+              onHomeButton: onHomeButton,
+              onCelebrityRecordsButton: onCelebrityRecordsButton,
+              userCelebrityRecords: userCelebrityRecords,
+              onColorRecordsButton: onColorRecordsButton,
+              userColorRecords: userColorRecords,
+              onAgeRecordsButton: onAgeRecordsButton,
+              userAgeRecords: userAgeRecords,
+              resetState: resetState
+            }}
+            >
+              <CheckRecordsPanel dimensions={dimensions} />
+              <AgeRecords dimensions={dimensions} />
+            </RecordContext.Provider>
           </UserContext.Provider>
         </React.Fragment>
       ),
@@ -849,19 +849,21 @@ const App = () => {
             fetchUserData: fetchUserData
           }}
           >
-            <CheckRecordsPanel 
-              dimensions={dimensions}
-              
-              // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
-              onHomeButton={onHomeButton}
-              onCelebrityRecordsButton={onCelebrityRecordsButton}
-              onColorRecordsButton={onColorRecordsButton}
-              onAgeRecordsButton={onAgeRecordsButton}
-            />
-            <ColorRecords
-              dimensions={dimensions}
-              userColorRecords={userColorRecords}
-            />
+            <RecordContext.Provider 
+            value={{ 
+              onHomeButton: onHomeButton,
+              onCelebrityRecordsButton: onCelebrityRecordsButton,
+              userCelebrityRecords: userCelebrityRecords,
+              onColorRecordsButton: onColorRecordsButton,
+              userColorRecords: userColorRecords,
+              onAgeRecordsButton: onAgeRecordsButton,
+              userAgeRecords: userAgeRecords,
+              resetState: resetState
+            }}
+            >
+              <CheckRecordsPanel dimensions={dimensions} />
+              <ColorRecords dimensions={dimensions} />
+            </RecordContext.Provider>
           </UserContext.Provider>
         </React.Fragment>
       ),
@@ -877,26 +879,25 @@ const App = () => {
             fetchUserData: fetchUserData
           }}
           >
-            <CheckRecordsPanel 
-            dimensions={dimensions}
-            
-            // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
-            onHomeButton={onHomeButton}
-            onCelebrityRecordsButton={onCelebrityRecordsButton}
-            onColorRecordsButton={onColorRecordsButton}
-            onAgeRecordsButton={onAgeRecordsButton}
-            />
-            <CelebrityRecords
+            <RecordContext.Provider 
+            value={{ 
+              onHomeButton: onHomeButton,
+              onCelebrityRecordsButton: onCelebrityRecordsButton,
+              userCelebrityRecords: userCelebrityRecords,
+              onColorRecordsButton: onColorRecordsButton,
+              userColorRecords: userColorRecords,
+              onAgeRecordsButton: onAgeRecordsButton,
+              userAgeRecords: userAgeRecords,
+              resetState: resetState
+            }}
+            >
+              <CheckRecordsPanel 
               dimensions={dimensions}
-              
-              // state.userCelebrityRecords
-              userCelebrityRecords={userCelebrityRecords}
-              // 4 Buttons in CheckRecordsPanel /> Home, Age records, Celebrity records, Color records
-              onHomeButton={onHomeButton}
-              onCelebrityRecordsButton={onCelebrityRecordsButton}
-              onColorRecordsButton={onColorRecordsButton}
-              onAgeRecordsButton={onAgeRecordsButton}
-            />
+              />
+              <CelebrityRecords
+                dimensions={dimensions}
+              />
+            </RecordContext.Provider>
           </UserContext.Provider>
         </React.Fragment>
       )

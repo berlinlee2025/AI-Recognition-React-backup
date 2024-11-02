@@ -7,6 +7,7 @@ import SlideshowColorRecords from './Slideshow-ColorRecords/Slideshow-ColorRecor
 import "../records.scss";
 
 import { UserContext } from '../../../shared/context/user-context';
+import { RecordContext } from '../../../shared/context/record-context';
 
 // Parent component
 // src/App.js
@@ -17,6 +18,7 @@ const ColorRecords = ( {
     userColorRecords
 } ) => {
     const userContext = useContext(UserContext);
+    const recordContext = useContext(RecordContext);
 
     return (
         <React.Fragment>
@@ -28,7 +30,7 @@ const ColorRecords = ( {
                 isSignedIn={userContext.isSignedIn} 
                 dimensions={dimensions}
                 // User's Color Records
-                userColorRecords={userColorRecords}
+                userColorRecords={recordContext.userColorRecords}
             />
             </div>
         </React.Fragment>
