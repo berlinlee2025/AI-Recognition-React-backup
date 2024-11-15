@@ -440,7 +440,7 @@ const App = () => {
     onRouteChange('ageRecords');
 
     const devFetchGetUserColorUrl = 'http://localhost:3001/records/get-user-age';
-    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com//records/get-user-age';
+    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com/records/get-user-age';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
 
@@ -501,7 +501,7 @@ const App = () => {
 
     /* Celebrity Recognition - Fetching local web server for celebrityimage */
     const devFetchCelebrityImageUrl = 'http://localhost:3001/celebrity-image';
-    const prodFetchCelebrityImageUrl = 'https://www.ai-recognition-backend.com//celebrity-image';
+    const prodFetchCelebrityImageUrl = 'https://www.ai-recognition-backend.com/celebrity-image';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchCelebrityImageUrl : devFetchCelebrityImageUrl;
 
@@ -562,7 +562,7 @@ const App = () => {
 
     /* Color Recognition - Fetching local Web Server vs live Web Server on Render */
     const devFetchColorImageUrl = 'http://localhost:3001/color-image';
-    const prodFetchColorImageUrl = 'https://www.ai-recognition-backend.com//color-image';
+    const prodFetchColorImageUrl = 'https://www.ai-recognition-backend.com/color-image';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchColorImageUrl : devFetchColorImageUrl;
 
@@ -607,7 +607,7 @@ const App = () => {
 
     /* Age Recognition - Fetching local dev server vs live Web Server on Render */
     const devFetchAgeUrl = 'http://localhost:3001/age-image';
-    const prodFetchAgeUrl = 'https://www.ai-recognition-backend.com//age-image';
+    const prodFetchAgeUrl = 'https://www.ai-recognition-backend.com/age-image';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchAgeUrl : devFetchAgeUrl;
 
@@ -655,7 +655,7 @@ const App = () => {
     resetState();
 
     const devSignoutUrl = `http://localhost:3001/signout`;
-    const prodSignoutUrl = `https://www.ai-recognition-backend.com//signout`;
+    const prodSignoutUrl = `https://www.ai-recognition-backend.com/signout`;
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodSignoutUrl : devSignoutUrl;
 
     await fetch(fetchUrl, {
