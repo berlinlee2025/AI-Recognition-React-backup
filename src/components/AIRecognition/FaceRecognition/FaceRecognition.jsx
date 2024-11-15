@@ -89,7 +89,7 @@ const FaceRecognition = ({
       console.log(`\nFaceRecognition saveCelebrity() input: `, input, `\n`);
       console.log(`\nFetching ${fetchUrl} with bodyData`, bodyData, `\n`);
 
-      await fetch(fetchUrl, {
+      fetch(fetchUrl, {
       method: 'post', 
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ // sending stringified this.state variables as JSON objects

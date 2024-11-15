@@ -344,7 +344,7 @@ const App = () => {
     onRouteChange('celebrityRecords');
 
     const devFetchGetUserCelebrityUrl = 'http://localhost:3001/records/get-user-celebrity';
-    const prodFetchGetUserCelebrityUrl = 'https://www.ai-recognition-backend.com//records/get-user-celebrity';
+    const prodFetchGetUserCelebrityUrl = 'https://www.ai-recognition-backend.com/records/get-user-celebrity';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserCelebrityUrl : devFetchGetUserCelebrityUrl;
 
@@ -392,7 +392,7 @@ const App = () => {
     onRouteChange('colorRecords');
 
     const devFetchGetUserColorUrl = 'http://localhost:3001/records/get-user-color';
-    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com//records/get-user-color';
+    const prodFetchGetUserColorUrl = 'https://www.ai-recognition-backend.com/records/get-user-color';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchGetUserColorUrl : devFetchGetUserColorUrl;
 

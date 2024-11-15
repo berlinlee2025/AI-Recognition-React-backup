@@ -3,7 +3,7 @@ body {
   padding: 0;
   font-family: 'Open Sans', sans-serif;
   overflow-y: scroll;
-  background-image: radial-gradient(ellipse at top , #080e21 0%,  #1b2735 20%);
+  background: linear-gradient(180deg, #1a2f70 0%, #537cac 50%);
   // background: linear-gradient(to right, #FF5EDF 0%, #04C8DE 100%);
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
@@ -21,9 +21,6 @@ button {
   cursor: pointer;
 }
 
-html,body {
-  
-}
 
 $n: 15;
 $s: 300;
