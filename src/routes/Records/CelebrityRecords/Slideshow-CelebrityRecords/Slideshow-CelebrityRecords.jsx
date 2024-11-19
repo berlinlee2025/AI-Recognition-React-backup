@@ -37,7 +37,8 @@ const SlideshowCelebrityRecords = ( {
 
     // Depicting userCelebrityRecords[[{}, {}, {}]]
     // const userCelebrityRecordsArray = userCelebrityRecords ? userCelebrityRecords : [];
-    const userCelebrityRecordsArray = localStorage.getItem('celebrityRecords');
+    // const userCelebrityRecordsArray = localStorage.getItem('celebrityRecords');
+    const userCelebrityRecordsArray = Array.isArray(userCelebrityRecords) ? userCelebrityRecords : [];
 
     // To update Slideshow Photos' index
     const updateIndex = (newIndex) => {

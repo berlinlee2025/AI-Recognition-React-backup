@@ -680,16 +680,6 @@ class App extends Component {
     () => console.log('this.state.colors:\n', this.state.colors),
     () => console.log('this.state.age:\n', this.state.age),
     () => this.onRouteChange('signin'));
-    
-    // this.resetUser();
-    // this.removeUserFromLocalStorage();
-    // this.resetState();
-    // this.setState({
-    //   celebrity: {},
-    //   colors: [],
-    //   age: [],
-    // });
-    // this.onRouteChange('signin');
   }
 
   // To avoid malicious users from breaking in from <Register />

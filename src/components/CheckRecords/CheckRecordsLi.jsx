@@ -22,14 +22,14 @@ export default function CheckRecordsLi( {
   return (
     <React.Fragment>
     <div className="buttons">
-      <button 
+      {/* <button 
           onClick={onHomeButton}
           onMouseEnter={useButtonTextRoll(tabs)}
           data-value="Home Page" 
           className={`${classes.lk} buttons__btn`}
       >
         Home Page
-      </button>
+      </button> */}
       <button 
         onClick={onCelebrityRecordsButton}
         onMouseEnter={useButtonTextRoll(tabs)}

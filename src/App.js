@@ -47,11 +47,9 @@ const App = () => {
       color_hidden: true,
       age_hidden: true,
       responseStatusCode: Number(''),
-      // route: documentCookie ? 'home' : 'signin',
 
       /** if user is signed in => retrieve his/her lastRoute
       otherwise => route to 'signin' page **/
-      // route: localStorage.getItem('lastRoute') || (document.cookie ? 'home' : 'signin'),
       // route: localStorage.getItem('userData') ? 'home' : 'signin',
       route: localStorage.getItem('userData') ? localStorage.getItem('lastRoute') : 'signin',
 
@@ -68,6 +66,10 @@ const App = () => {
   });
 
   const [ token, setToken ] = useState(state.user.token);
+
+  useEffect(() => {
+    localStorage.setItem('lastRoute', 'home');
+  }, []);
 
   /** Clear userData including JWT token every 60 minutes */
   useEffect(() => {
@@ -149,7 +151,7 @@ const App = () => {
     })
     );
     console.log(`\nsrc/App.js saveUser() - state.user:\n`, state.user, `\n`);
-  }, []);
+  }, [state.user]);
 
   // ** src/shared/context/user-context.js
   const resetUser = useCallback(() => {
@@ -293,6 +295,7 @@ const App = () => {
   const onCelebrityRecordsButton = useCallback(async () => {
     // Reset all state variables to allow proper rendering of side-effects
     resetState();
+    resetUserRecords();
 
     setState(prevState => ({ 
       ...prevState,
@@ -338,6 +341,7 @@ const App = () => {
         }))
 
         localStorage.setItem('celebrityRecords', JSON.stringify(response.celebrityData));
+        localStorage.setItem('lastRoute', 'home');
       };
     })
     .catch((err) => {
@@ -351,6 +355,7 @@ const App = () => {
   const onColorRecordsButton = useCallback(async () => {
     // Reset all state variables to allow proper rendering of side-effects
     resetState();
+    resetUserRecords();
 
     // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
     onRouteChange('colorRecords');
@@ -390,6 +395,7 @@ const App = () => {
         }))
 
         localStorage.setItem('colorRecords', JSON.stringify(response.colorData));
+        localStorage.setItem('lastRoute', 'home');
       };
     })
     .catch((err) => {
@@ -403,6 +409,7 @@ const App = () => {
   const onAgeRecordsButton = useCallback(async () => {
     // Reset all state variables to allow proper rendering of side-effects
     resetState();
+    resetUserRecords();
 
     // Change Route to 'colorRecords' => Checkout App.js onRouteChange()
     onRouteChange('ageRecords');
@@ -442,6 +449,7 @@ const App = () => {
         }))
 
         localStorage.setItem('ageRecords', JSON.stringify(response.ageData));
+        localStorage.setItem('lastRoute', 'home');
       };
     })
     .catch((err) => {

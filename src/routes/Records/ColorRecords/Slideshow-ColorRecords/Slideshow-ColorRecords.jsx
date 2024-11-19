@@ -45,7 +45,11 @@ const SlideshowColorRecords = ( {
     const indicatorBtnWidthLt = Math.floor(slideshowWidthLt * 0.05);
 
     // Flattening userColorRecords[[{}, {}, {}]]
-    const userColorRecordsArray = userColorRecords ? userColorRecords.flat() : [];
+    // const userColorRecordsArray = userColorRecords ? userColorRecords.flat() : [];
+    
+    const flatten = arr => arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []);
+    
+    const userColorRecordsArray = Array.isArray(userColorRecords) ? flatten(userColorRecords) : [];
 
     // To update Slideshow Photos' index
     const updateIndex = (newIndex) => {

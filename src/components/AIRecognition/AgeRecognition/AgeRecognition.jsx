@@ -98,7 +98,10 @@ const AgeRecognition = ( {
 
         fetch(fetchUrl, {
         method: 'post', 
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`
+        },
         body: JSON.stringify({ // sending stringified this.state variables as JSON objects
             userId: user.id, 
             age: age,

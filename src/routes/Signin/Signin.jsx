@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import classes from './Signin.module.css';
 import '../../sass/base/_utilities.scss';
 
-import Home from "../Home/Home";
 import { UserContext } from "../../shared/context/user-context";
 
 // Parent component
@@ -68,7 +67,6 @@ const Signin = () => {
     .then((user) => {
       if (user.id) { // If the user can be found & user.id exists in Postgres
         localStorage.setItem('userData', JSON.stringify(user));
-        // userContext.saveUser(user);
         userContext.onRouteChange('home');
         userContext.saveUser(user);
       } 

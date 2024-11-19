@@ -416,9 +416,10 @@ const Register = (props) => {
 
       if (response.user) { /* If we get a user with props => route to 'home'; this.props coming from App.js; Parent App.js front-end will handle user features */
         localStorage.setItem('userData', JSON.stringify(response.user));
+        localStorage.setItem('lastRoute', 'home');
         userContext.onRouteChange('home');       
         userContext.saveUser(response.user);
-        
+
       } else {
         // userContext.onRouteChange('register');
         
