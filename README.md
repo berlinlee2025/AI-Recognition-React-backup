@@ -1,9 +1,18 @@
 <h2>Hi, this is my AI React app for Celebrity, Color, Age Recognition</h2>
 <h2>Live Frontend React server on Cloud</h2>
-<h2>https://ai-recognition-frontend.onrender.com</h2>
+<a class="btn btn-inv projects__btn-inv"
+    href="https://ai-recognition-frontend.onrender.com"
+    target="_blank"
+>https://ai-recognition-frontend.onrender.com</a>
+<!-- <h2>https://ai-recognition-frontend.onrender.com</h2> -->
 <br/>
+
 <h2>Live Backend Node.js server on Cloud</h2>
-<h2>https://www.ai-recognition-backend.com</h2>
+<a class="btn btn-inv projects__btn-inv"
+    href="https://www.ai-recognition-backend.com"
+    target="_blank"
+>https://www.ai-recognition-backend.com</a>
+<!-- <h2>https://www.ai-recognition-backend.com</h2> -->
 
 <h2>Clarifai AI 3rd party API</h2>
 <img src="./assets/clarifai-ai.png" alt="clarifai-ai" />
