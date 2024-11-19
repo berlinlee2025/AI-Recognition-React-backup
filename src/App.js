@@ -55,7 +55,8 @@ const App = () => {
       // route: localStorage.getItem('userData') ? 'home' : 'signin',
       route: localStorage.getItem('userData') ? localStorage.getItem('lastRoute') : 'signin',
 
-      user: {},
+      // user: {},
+      user: JSON.parse(localStorage.getItem('userData')) ? JSON.parse(localStorage.getItem('userData')) : {},
       isSignedIn: false,
 
       userCelebrityRecords: [],
@@ -495,9 +496,13 @@ const App = () => {
 
     await fetch(fetchUrl, {
         method: 'POST', 
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${state.user.token}`
+        },
         body: JSON.stringify({ // sending stringified state variables as JSON objects
-          input: state.input
+          input: state.input,
+          userId: state.user.id
         })
       })
       .then(response => response.json())
@@ -529,7 +534,7 @@ const App = () => {
       .catch(err => {
         console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
       });
-  }, [resetState, state.input]);
+  }, [resetState, state.input, state.user.id, state.user.token]);
 
   // ClarifaiAPI Color Detection model
   const onColorButton = useCallback(async () => {
@@ -555,10 +560,14 @@ const App = () => {
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchColorImageUrl : devFetchColorImageUrl;
 
     await fetch(fetchUrl, {
-      method: 'post', 
-      headers: {'Content-Type': 'application/json'},
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${state.user.token}`
+      },
       body: JSON.stringify({ // sending stringified state variables as JSON objects
-        input: state.input
+        input: state.input,
+        userId: state.user.id
       })
     })
     .then(response => response.json())
@@ -575,7 +584,7 @@ const App = () => {
     .catch(err => {
       console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
     });
-  }, [resetState, state.input]);
+  }, [resetState, state.input, state.user.id, state.user.token]);
 
   // ClarifaiAPI Age Detection model
   const onAgeButton = useCallback(async () => {
@@ -600,10 +609,14 @@ const App = () => {
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchAgeUrl : devFetchAgeUrl;
 
     await fetch(fetchUrl, {
-        method: 'post', 
-        headers: {'Content-Type': 'application/json'},
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${state.user.token}`
+        },
         body: JSON.stringify({ // sending stringified state variables as JSON objects
-          input: state.input
+          input: state.input,
+          userId: state.user.id
         })
     })
     .then(response => response.json())
@@ -626,7 +639,7 @@ const App = () => {
     .catch((err) => {
       console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
     });
-  }, [resetState, state.input]);
+  }, [resetState, state.input, state.user.id, state.user.token]);
 
   // For <ImageLinkForm />
   const onInputChange = useCallback((event) => {
@@ -670,6 +683,42 @@ const App = () => {
     })
   }, [onRouteChange, resetState]);
 
+
+  const saveToDevice = async (outerHTML) => {
+
+    const devSaveHtmlUrl = 'http://localhost:3001/save-html';
+    const prodSaveHtmlUrl = 'https://ai-recognition-backend.onrender.com/save-html';
+
+    const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveHtmlUrl : devSaveHtmlUrl;
+    const date = new Date().toISOString().replace(/:/g, '-');  // Format date for filename
+
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: fetchUrl,
+            data: { htmlContent: outerHTML },
+            responseType: 'arraybuffer',
+            headers: {
+                Authorization: `Bearer ${state.user.token}`
+            }
+        });
+
+        console.log(`\nsaveToDevice response.data: `, response.data, `\n`);
+
+        const file = new Blob([response.data], { type: 'application/pdf' });
+        const fileUrl = window.URL.createObjectURL(file);
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.setAttribute('download', `color-details_${date}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (error) {
+        console.error("Failed to save colorHtml to device:", error);
+    }
+  };
+
   /* Rendering all components */
   // destructuring props from state
   const {
@@ -699,6 +748,7 @@ const App = () => {
     console.log('\ndateTime:\n', dateTime, `\n`);
     console.log(`\nstate.user: `, state.user, `\n`);
     console.log(`\nstate.route: `, state.route, `\n`);
+    console.log(`\nstate.user.id: `, state.user.id, `\n`);
     
     const renderRoute = (component) => {
       return user ? 
@@ -764,6 +814,7 @@ const App = () => {
               age_hidden: age_hidden,
               box: box,
 
+              saveToDevice: saveToDevice,
               onInputChange: onInputChange,
 
               // AI Recognition buttons

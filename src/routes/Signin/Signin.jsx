@@ -70,6 +70,7 @@ const Signin = () => {
         localStorage.setItem('userData', JSON.stringify(user));
         // userContext.saveUser(user);
         userContext.onRouteChange('home');
+        userContext.saveUser(user);
       } 
       else {
         throw new Error('No user ID returned'); // Handle cases where no user ID is present

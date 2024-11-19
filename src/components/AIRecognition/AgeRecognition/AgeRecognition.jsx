@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // import './AgeRecognition.css';
 import './AgeRecognition.scss';
 import axios from 'axios';
 // Utility functions
 import blobToBase64 from '../../../util/blobToBase64';
 
-// 'Save to Device' button
-import saveToDevice from '../../../util/saveToDevice';
+import { AIContext } from '../../../shared/context/ai-context';
 
 // Parent component
 // src/components/Home/Home.jsx
@@ -16,7 +15,7 @@ const AgeRecognition = ( {
     imageUrl, 
     age, 
     age_hidden, 
-    onRouteChange 
+    onRouteChange
 } ) => {
     const [imageBlob, setImageBlob] = useState(''); // Blob { size: Number, type: String, userId: undefined }
     const [resData, setResData] = useState('');
@@ -25,6 +24,8 @@ const AgeRecognition = ( {
     // Allow to be passed to other/child components
     // Allow other components to reset latest response.status.code
     const [responseStatusCode, setResponseStatusCode] = useState();
+
+    const aiContext = useContext(AIContext);
 
     // Looking up for Users' inputs images
     // Making imageUrl Blob available before 'saveAge' button is clicked for fetching imageBlob to Node.js server
@@ -174,7 +175,7 @@ const AgeRecognition = ( {
                     <button 
                     className="saveBtn__p"
                     onClick={() => { 
-                        saveToDevice(htmlToSave); 
+                        aiContext.saveToDevice(htmlToSave); 
                         setResponseStatusCode(200);
                         showModal();
                     } } // ColorDetails.jsx saveColor()

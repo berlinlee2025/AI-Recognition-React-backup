@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './FaceRecognition.scss';
 
 import axios from 'axios';
@@ -7,8 +7,10 @@ import blobToBase64 from '../../../util/blobToBase64';
 // 'Save to Device' button
 import saveToDevice from '../../../util/saveToDevice';
 
-import Loading from '../../Loading/Loading';
 import '../../../sass/base/_utilities.scss';
+
+import { UserContext } from '../../../shared/context/user-context';
+import { AIContext } from '../../../shared/context/ai-context';
 
 // Parent component
 // src/components/Home/Home.jsx
@@ -27,6 +29,10 @@ const FaceRecognition = ({
     // Allow to be passed to other/child components
     // Allow other components to reset latest response.status.code
     const [responseStatusCode, setResponseStatusCode] = useState();
+
+    /** using Context API */
+    const userContext = useContext(UserContext);
+    const aiContext = useContext(AIContext);
 
     // Looking up for Users' inputs images
     // Making imageUrl Blob available before 'saveCelebrity' button is clicked for fetching imageBlob to Node.js server
@@ -90,8 +96,11 @@ const FaceRecognition = ({
       console.log(`\nFetching ${fetchUrl} with bodyData`, bodyData, `\n`);
 
       fetch(fetchUrl, {
-      method: 'post', 
-      headers: {'Content-Type': 'application/json'},
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userContext.user.token}`
+      },
       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
           userId: user.id,
           celebrityName: celebrityName,
@@ -195,7 +204,10 @@ const FaceRecognition = ({
           <div className="saveBtn u-margin-top-tiny  u-margin-bottom-small">
             <button 
               className="saveBtn__p"
-              onClick={() => { saveToDevice(htmlToSave); setResponseStatusCode(200); showModal();} } 
+              onClick={() => { 
+                aiContext.saveToDevice(htmlToSave); 
+                setResponseStatusCode(200); showModal();
+              } } 
             >
               Save to Device
             </button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './ColorRecognition.scss';
 import '../../../sass/components/_frosted.scss';
 
@@ -7,8 +7,8 @@ import ColorDetails from './ColorDetails/ColorDetails';
 import axios from 'axios';
 // Utility functions
 import blobToBase64 from '../../../util/blobToBase64';
-// 'Save to Device' button
-import saveToDevice from '../../../util/saveToDevice';
+
+import { AIContext } from '../../../shared/context/ai-context';
 
 // Parent component
 // src/components/Home/Home.jsx
@@ -18,7 +18,8 @@ const ColorRecognition = ({
     imageUrl, 
     color_props, 
     color_hidden,
-    onRouteChange
+    onRouteChange,
+    saveToDevice
 }) => {
     const [imageBlob, setImageBlob] = useState(''); // Blob { size: Number, type: String, userId: undefined }
     const [resData, setResData] = useState(null);
@@ -27,6 +28,8 @@ const ColorRecognition = ({
     // Allow to be passed to other/child components
     // Allow other components to reset latest response.status.code
     const [responseStatusCode, setResponseStatusCode] = useState();
+
+    const aiContext = useContext(AIContext);
 
     // Looking up for Users' inputs images
     // Making imageUrl Blob available before 'saveColor' button is clicked for fetching imageBlob to Node.js server
@@ -186,7 +189,7 @@ const ColorRecognition = ({
             <button 
               className="saveBtn__p"
               onClick={() => { 
-                saveToDevice(htmlToSave); 
+                aiContext.saveToDevice(htmlToSave); 
                 setResponseStatusCode(200); 
                 showModal();
               }} 

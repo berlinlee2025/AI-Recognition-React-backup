@@ -14,6 +14,7 @@ export const AIContext = createContext({
     age_hidden: true,
     box: {},
 
+    saveToDevice: () => {},
     onInputChange: () => {},
     onCelebrityButton: () => {},
     onColorButton: () => {},
