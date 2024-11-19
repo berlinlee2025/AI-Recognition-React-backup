@@ -169,7 +169,7 @@ const AgeRecognition = ( {
 
                 <div className='modal-age'>
                     <h1 class='modal-age--inner'>
-                        {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
+                        {responseStatusCode === 200 ? 'Processed!' : 'Loading...' }
                     </h1>
                 </div>
                 

@@ -189,7 +189,7 @@ const FaceRecognition = ({
 
           <div className='modal-face'>
             <h1 class='modal-face--inner'>
-              {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
+              {responseStatusCode === 200 ? 'Processed!' : 'Loading...' }
             </h1>
           </div>
 

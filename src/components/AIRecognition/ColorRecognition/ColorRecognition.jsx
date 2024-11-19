@@ -175,7 +175,7 @@ const ColorRecognition = ({
           </div>
           <div className='modal-color'>
             <h1 class='modal-color--inner'>
-              {responseStatusCode === 200 ? 'Processed!' : 'Failed action' }
+              {responseStatusCode === 200 ? 'Processed!' : 'Loading...' }
             </h1>
           </div>
           {/* Save to Account button */}

@@ -6,7 +6,7 @@ const calculateFaceLocation = (data) => {
     // bounding_box is % of image size
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
-      
+
     // DOM manipulation
     // for <img id='...'/> in <FaceRecognition/>
     const image = document.getElementById('face-image');
@@ -25,6 +25,11 @@ const calculateFaceLocation = (data) => {
     // left_col: 76.89(w),
     // bottom_row: 66.42(h),
     // right_col: 64.5(w) }
+    console.log(`\ntopRow`, clarifaiFace.top_row * height, `\n`);
+    console.log(`\nleftCol`, clarifaiFace.left_col * width, `\n`);
+    console.log(`\nbottomRow`, height - clarifaiFace.bottom_row * height, `\n`);
+    console.log(`\nrightCol`, width - clarifaiFace.right_col * width, `\n`);
+
     return {
       topRow: clarifaiFace.top_row * height,
       leftCol: clarifaiFace.left_col * width,
