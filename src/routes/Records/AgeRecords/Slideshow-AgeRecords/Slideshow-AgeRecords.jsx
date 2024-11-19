@@ -41,7 +41,8 @@ const SlideshowAgeRecords = ( {
     const indicatorBtnWidthLt = Math.floor(slideshowWidthLt * 0.05);
 
     // Depicting userCelebrityRecords[[{}, {}, {}]]
-    const userAgeRecordsArray = userAgeRecords ? userAgeRecords : [];
+    // const userAgeRecordsArray = userAgeRecords ? userAgeRecords : [];
+    const userAgeRecordsArray = JSON.parse(localStorage.getItem('ageRecords'));
 
     // To update Slideshow Photos' index
     const updateIndex = (newIndex) => {

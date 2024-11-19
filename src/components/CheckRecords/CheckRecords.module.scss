@@ -220,13 +220,14 @@
 }
 
 .ls {
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
+    margin-top: -14rem;
     height: 0vh;
     list-style-type: none;
     display: flex;
     justify-content: flex-end;
     gap: 60px;
-    padding-inline: 20;
+    padding-inline: 20%;
 }
 
 .lswrap {

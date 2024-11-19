@@ -36,7 +36,8 @@ const SlideshowCelebrityRecords = ( {
     const indicatorBtnWidthLt = Math.floor(slideshowWidthLt * 0.05);
 
     // Depicting userCelebrityRecords[[{}, {}, {}]]
-    const userCelebrityRecordsArray = userCelebrityRecords ? userCelebrityRecords : [];
+    // const userCelebrityRecordsArray = userCelebrityRecords ? userCelebrityRecords : [];
+    const userCelebrityRecordsArray = localStorage.getItem('celebrityRecords');
 
     // To update Slideshow Photos' index
     const updateIndex = (newIndex) => {

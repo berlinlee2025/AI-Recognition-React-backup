@@ -59,9 +59,12 @@ const App = () => {
       user: JSON.parse(localStorage.getItem('userData')) ? JSON.parse(localStorage.getItem('userData')) : {},
       isSignedIn: false,
 
-      userCelebrityRecords: [],
-      userColorRecords: [],
-      userAgeRecords: [],
+      // userCelebrityRecords: [],
+      // userColorRecords: [],
+      // userAgeRecords: [],
+      userCelebrityRecords: localStorage.getItem('celebrityRecords') ? localStorage.getItem('celebrityRecords') : [],
+      userColorRecords: localStorage.getItem('colorRecords') ? localStorage.getItem('colorRecords') : [],
+      userAgeRecords: localStorage.getItem('ageRecords') ? localStorage.getItem('ageRecords') : []
   });
 
   const [ token, setToken ] = useState(state.user.token);
@@ -242,44 +245,12 @@ const App = () => {
       userColorRecords: [],
       userCelebrityRecords: [],
       userAgeRecords: []
-    })
-    );
+    }));
+
+    localStorage.removeItem('celebrityRecords');
+    localStorage.removeItem('colorRecords');
+    localStorage.removeItem('ageRecords');
   }
-
-  // Everytime any of the Detection Models is activated
-  // update this.state.user.entries by 1 through
-  // sending data to server-side
-  
-  /* Updating Entries - Fetching local web server vs live web server on Render */
-  // const updateEntries = async () => {
-  //   const devUpdateEntriesUrl = 'http://localhost:3001/image';
-  //   const prodUpdateEntriesUrl = 'https://www.ai-recognition-backend.com/image';
-
-  //   const fetchUrl = process.env.NODE_ENV === 'production' ? prodUpdateEntriesUrl : devUpdateEntriesUrl;
-    
-  //   await fetch(fetchUrl, {
-  //       method: 'PUT', // PUT (Update) 
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
-  //       id: state.user.id
-  //       })
-  //     })
-  //     .then(response => {
-  //       return response.json()
-  //   })
-  //   .then(fetchedEntries => {
-  //     console.log(`fetched ENTRIES from server: \n ${fetchedEntries}`);
-  //     console.log(`typeof fetched ENTRIES from server: \n ${typeof fetchedEntries}`);
-
-  //     setState(prevState => ({
-  //         ...prevState,
-  //         entries: fetchedEntries
-  //     }))
-  //   })
-  //   .catch(err => {
-  //     console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
-  //   });
-  // }
 
   /** START <RecordContext /> **/
   // Everytime any of Detection Models is clicked
@@ -344,8 +315,11 @@ const App = () => {
     console.log(`\nonCelebrityRecordsButton is fetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
 
     await fetch(fetchUrl, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${state.user.token}`
+      },
       body: JSON.stringify({
         userId: state.user.id
       })
@@ -361,8 +335,9 @@ const App = () => {
         setState(prevState => ({
           ...prevState,
           userCelebrityRecords: response.celebrityData
-        })
-      )
+        }))
+
+        localStorage.setItem('celebrityRecords', JSON.stringify(response.celebrityData));
       };
     })
     .catch((err) => {
@@ -370,7 +345,7 @@ const App = () => {
     });
 
     console.log(`\nsrc/App.js this.state.userCelebrityRecords:\n`, state.userCelebrityRecords, `\n`);
-  }, [onRouteChange, resetState, state.user.id, state.userCelebrityRecords]);
+  }, [onRouteChange, resetState, state.user.id, state.userCelebrityRecords, state.user.token]);
 
   // Retrieve User's Color Records from Node.js => PostgreSQL
   const onColorRecordsButton = useCallback(async () => {
@@ -392,8 +367,11 @@ const App = () => {
     console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
 
     await fetch(fetchUrl, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${state.user.token}`
+      },
       body: JSON.stringify({
         userId: state.user.id
       })
@@ -409,8 +387,9 @@ const App = () => {
         setState(prevState => ({
           ...prevState,
           userColorRecords: response.colorData
-        })
-      )
+        }))
+
+        localStorage.setItem('colorRecords', JSON.stringify(response.colorData));
       };
     })
     .catch((err) => {
@@ -418,7 +397,7 @@ const App = () => {
     });
 
     console.log(`\nsrc/App.js state.userColorRecords:\n`, state.userColorRecords, `\n`);
-  }, [onRouteChange, resetState, state.user.id, state.userColorRecords]);
+  }, [onRouteChange, resetState, state.user.id, state.userColorRecords, state.user.token]);
 
   // Retrieve User's Color Records from Node.js => PostgreSQL
   const onAgeRecordsButton = useCallback(async () => {
@@ -439,9 +418,12 @@ const App = () => {
 
     console.log(`\nFetching ${fetchUrl} with bodyData: `, bodyData, `\n`);
 
-    await fetch(fetchUrl, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
+    fetch(fetchUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${state.user.token}`
+      },
       body: JSON.stringify({
         userId: state.user.id
       })
@@ -457,8 +439,9 @@ const App = () => {
         setState(prevState => ({
           ...prevState,
           userAgeRecords: response.ageData
-        })
-      )
+        }))
+
+        localStorage.setItem('ageRecords', JSON.stringify(response.ageData));
       };
     })
     .catch((err) => {
@@ -466,7 +449,7 @@ const App = () => {
     });
 
     console.log(`\nsrc/App.js state.userAgeRecords:\n`, state.userAgeRecords, `\n`);
-  }, [onRouteChange, resetState, state.user.id, state.userAgeRecords]);
+  }, [onRouteChange, resetState, state.user.id, state.userAgeRecords, state.user.token]);
   /** END <RecordContext /> **/
 
   /** START <AIContext /> **/
@@ -494,7 +477,7 @@ const App = () => {
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchCelebrityImageUrl : devFetchCelebrityImageUrl;
 
-    await fetch(fetchUrl, {
+      fetch(fetchUrl, {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
@@ -559,7 +542,7 @@ const App = () => {
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchColorImageUrl : devFetchColorImageUrl;
 
-    await fetch(fetchUrl, {
+    fetch(fetchUrl, {
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
@@ -608,7 +591,7 @@ const App = () => {
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchAgeUrl : devFetchAgeUrl;
 
-    await fetch(fetchUrl, {
+    fetch(fetchUrl, {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
@@ -659,7 +642,7 @@ const App = () => {
     const prodSignoutUrl = `https://www.ai-recognition-backend.com/signout`;
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodSignoutUrl : devSignoutUrl;
 
-    await fetch(fetchUrl, {
+    fetch(fetchUrl, {
       method: 'post',
       credentials: 'include', // To include credentials for cookies
     })
@@ -783,8 +766,7 @@ const App = () => {
             setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
-            onRouteChange: onRouteChange,
-            // fetchUserData: fetchUserData
+            onRouteChange: onRouteChange
           }}
         >
           <RecordContext.Provider 
@@ -836,8 +818,7 @@ const App = () => {
             setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
-            onRouteChange: onRouteChange,
-            // fetchUserData: fetchUserData
+            onRouteChange: onRouteChange
           }}
         >
           <Signin />
@@ -852,8 +833,7 @@ const App = () => {
           setToken: setToken,
           saveUser: saveUser,
           resetUser: resetUser,
-          onRouteChange: onRouteChange,
-          // fetchUserData: fetchUserData
+          onRouteChange: onRouteChange
         }}
         >
           <Register />
@@ -869,8 +849,7 @@ const App = () => {
             setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
-            onRouteChange: onRouteChange,
-            // fetchUserData: fetchUserData
+            onRouteChange: onRouteChange
           }}
           >
             <RecordContext.Provider 

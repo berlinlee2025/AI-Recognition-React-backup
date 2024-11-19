@@ -4,8 +4,6 @@ import '../../sass/base/_utilities.scss';
 
 import CheckRecordsLi from "./CheckRecordsLi";
 import Logo from "../Logo/Logo";
-import { FaList } from "react-icons/fa";
-import { ImCross } from "react-icons/im";
 
 import { UserContext } from "../../shared/context/user-context";
 import { RecordContext } from "../../shared/context/record-context";
@@ -15,20 +13,7 @@ import { RecordContext } from "../../shared/context/record-context";
 // Child components
 // 2. src/components/CheckRecords/CheckRecordsLi.jsx
 const CheckRecordsPanel = ({ 
-  resetState,
-  // 1. 'Home' page
-  onHomeButton,
-  // 2. 'Celebrity records' page
-  onCelebrityRecordsButton,
-  // 3. 'Color records' page
-  onColorRecordsButton,
-  // 4. 'Age records' page
-  onAgeRecordsButton, 
-
-  userCelebrityRecords,
-  userColorRecords,   
-  userAgeRecords,
-  
+  resetState  
 }) => {
   const userContext = useContext(UserContext);
   const recordContext = useContext(RecordContext);
@@ -81,75 +66,7 @@ const CheckRecordsPanel = ({
       };
   });
   
-
-  const onToggle = () => {
-    setToggle((toggle) => !toggle);
-  };
-
-  function NavLt860() {
-    return toggle ? <NavLt860List /> : <NavLt860Hide />;
-  }
-
-  function NavLt860List() {
-    return (
-      <div className={classes.navShow} >
-        <div className={classes.navShowList} >
-          <Logo className={classes.logo} value="Smart Brain" />
-          <ImCross
-            onClick={onToggle}
-            //size={30}
-            className={classes.imcross}
-            size={FaListWidth*0.8}
-            style={{
-              borderRadius: "1rem",
-            }}
-          />
-        </div>
-          <CheckRecordsLi
-            user={userContext.user}
-
-            fontGt={fontGt}
-            fontLt={fontLt}
-            dimensions={dimensions}
-
-            resetState={recordContext.resetState}
-            // 1. 'Home' page
-            onHomeButton={recordContext.onHomeButton}
-            // 2. 'Celebrity records' page
-            onCelebrityRecordsButton={recordContext.onCelebrityRecordsButton}
-            // 3. 'Color records' page
-            userColorRecords={recordContext.userColorRecords}
-            onColorRecordsButton={recordContext.onColorRecordsButton}
-            // 4. 'Age records' page
-            userAgeRecords={recordContext.userAgeRecords}
-            onAgeRecordsButton={recordContext.onAgeRecordsButton}
-          />
-      </div>
-    );
-  }
-
-  function NavLt860Hide() {
-    return (
-      <div
-        className={`${classes.navHideList} u-margin-bottom-small`}
-      >
-        <div style={{marginLeft: "4%"}}>
-          <Logo className={classes.logo} value="Smart Brain" />
-        </div>
-
-        <FaList
-          onClick={onToggle}
-          size={FaListWidth}
-          className={classes.falist}
-          style={{
-            width: dimensions.width < mobileBreakpoint ? FaListWidth : ""
-          }}
-        />
-      </div>
-    );
-  }
-
-  function NavGt860() {
+  function Nav() {
     return (
       <div 
         className={classes.navgt}
@@ -198,9 +115,7 @@ const CheckRecordsPanel = ({
 
   return (
     userContext.isSignedIn
-      ? (dimensions.width > mobileBreakpoint 
-         ? <NavGt860 /> 
-         : <NavLt860 />)
+      ? <Nav />
       : <p>&nbsp;</p>
   );
 
