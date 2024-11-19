@@ -6,6 +6,7 @@ const calculateFaceLocation = (data) => {
     // bounding_box is % of image size
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
+      
     // DOM manipulation
     // for <img id='...'/> in <FaceRecognition/>
     const image = document.getElementById('face-image');

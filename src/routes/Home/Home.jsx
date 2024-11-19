@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 // import Rank from '../../components/Rank/Rank';
 import CheckRecordsPanel from '../../components/CheckRecords/CheckRecordsPanel';
 import ImageLinkForm from '../../components/ImageLinkForm/ImageLinkForm';
@@ -13,37 +13,7 @@ import { AIContext } from '../../shared/context/ai-context';
 
 // Parent component
 // src/App.js
-const Home = ( {
-    name,
-    entries,
-    input,
-    imageUrl,
-    celebrityName,
-    face_hidden,
-    onInputChange,
-    onCelebrityButton,
-    onColorButton,
-    onSaveColorButton,
-    onAgeButton,
-    color_props,
-    color_hidden,
-    age,
-    age_hidden,
-    box,
-
-    // // 1. 'Home' page
-    // onHomeButton,
-    // // 2. 'Celebrity records' page
-    // onCelebrityRecordsButton,
-    // userCelebrityRecords,
-    // // 3. 'Color records' page
-    // onColorRecordsButton,
-    // userColorRecords,
-    // // 4. 'Age records' page
-    // onAgeRecordsButton,    
-    // userAgeRecords,
-    // resetState 
-} ) => {
+const Home = () => {
     const userContext = useContext(UserContext);
     const recordContext = useContext(RecordContext);
     const aiContext = useContext(AIContext);

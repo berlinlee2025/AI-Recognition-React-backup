@@ -8,6 +8,7 @@ import blobToBase64 from '../../../util/blobToBase64';
 import saveToDevice from '../../../util/saveToDevice';
 
 import '../../../sass/base/_utilities.scss';
+import '../../../sass/components/_frosted.scss';
 
 import { UserContext } from '../../../shared/context/user-context';
 import { AIContext } from '../../../shared/context/ai-context';
@@ -170,9 +171,10 @@ const FaceRecognition = ({
               {/* Create a button to show Celebrity name && 
                 allow users to google search it for comparison 
                 on a new browser window*/}
-                <div className="celebrity-container">
+                <div className="celebrity-container frosted">
                   <button 
                     className=
+                    // {celebrityName ? "celebrity-name frosted__children": "invisible"}
                     {celebrityName ? "celebrity-name": "invisible"}
                     onClick={() => 
                       window.open(`https://www.google.com/search?q=${celebrityName}`, '_blank')}
