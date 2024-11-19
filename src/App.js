@@ -667,6 +667,8 @@ const App = () => {
       );
       // Remove 'lastRoute' from localStorage when user signs out
       localStorage.removeItem('lastRoute');
+      localStorage.removeItem('userData');
+      resetUserRecords();
       onRouteChange('signin')
     })
     .catch((err) => {
