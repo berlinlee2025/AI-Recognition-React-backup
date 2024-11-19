@@ -49,26 +49,26 @@ const Signin = () => {
   const onSubmitSignIn = async (event) => {
     event.preventDefault(); // Stop page from refreshing on Signin form submission
 
-    const devSigninUrl = 'http://localhost:3001/signin';
-    const prodSigninUrl = 'https://www.ai-recognition-backend.com/signin';
+    const devSigninUrl = 'http://localhost:3001/api/user/signin';
+    const prodSigninUrl = 'https://www.ai-recognition-backend.com/api/user/signin';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodSigninUrl : devSigninUrl;
 
-    // Fetching http://localhost:3001/signin to retrieve user
+    // Fetching http://localhost:3001/api/user/signin to retrieve user
     fetch(fetchUrl, {
       method: 'POST', // Post (Create) to avoid Query Strings
       headers: {'Content-Type': 'application/json'},
-      credentials: 'include', // Include credentials to handle cookies
+      // credentials: 'include', // Include credentials to handle cookies
       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
         email: signInEmail,
         password: signInPassword
       })
     })
-    .then(response => response.json()) // http://localhost:3001/signin server response to parse JSON data user
+    .then(response => response.json()) // http://localhost:3001/api/user/signin server response to parse JSON data user
     .then((user) => {
       if (user.id) { // If the user can be found & user.id exists in Postgres
-        
-        userContext.saveUser(user);
+        localStorage.setItem('userData', JSON.stringify(user));
+        // userContext.saveUser(user);
         userContext.onRouteChange('home');
       } 
       else {

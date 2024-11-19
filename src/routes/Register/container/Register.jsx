@@ -394,8 +394,8 @@ const Register = (props) => {
     event.preventDefault();
 
     // Fetching local web server or on Render
-    const devRegisterUrl = 'http://localhost:3001/register';
-    const prodRegisterUrl = 'https://www.ai-recognition-backend.com/register';
+    const devRegisterUrl = 'http://localhost:3001/api/user/register';
+    const prodRegisterUrl = 'https://www.ai-recognition-backend.com/api/user/register';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodRegisterUrl : devRegisterUrl;
 
@@ -407,19 +407,19 @@ const Register = (props) => {
         email: state.email,
         password: state.password
       }),
-      credentials: 'include' // Frontend to receive Cookies from Node backend
+      // credentials: 'include' // Frontend to receive Cookies from Node backend
     })
     .then(response => response.json()) // res.json() to parse data
-    .then((user) => { // data passing in as user with props
-      console.log('onRegisterSignIn - user: \n', user);
+    .then((response) => { // data passing in as user with props
+      // response: { success: boolean, status: { code: 200 }, user: { userId: number, email: string, token: string }, message: string }
+      console.log('onSubmitRegister - response: \n', response);
 
-      if (user.id) { /* If we get a user with props => route to 'home'; this.props coming from App.js; Parent App.js front-end will handle user features */
-        userContext.saveUser(user);
-        userContext.fetchUserData();
-        userContext.onRouteChange('home'); 
+      if (response.user) { /* If we get a user with props => route to 'home'; this.props coming from App.js; Parent App.js front-end will handle user features */
+        localStorage.setItem('userData', JSON.stringify(response.user));
+        userContext.onRouteChange('home');       
 
       } else {
-        userContext.onRouteChange('register');
+        // userContext.onRouteChange('register');
         
         // If users registered with existed emails
         setState(prevState => ({

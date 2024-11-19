@@ -51,7 +51,9 @@ const App = () => {
 
       /** if user is signed in => retrieve his/her lastRoute
       otherwise => route to 'signin' page **/
-      route: localStorage.getItem('lastRoute') || (document.cookie ? 'home' : 'signin'),
+      // route: localStorage.getItem('lastRoute') || (document.cookie ? 'home' : 'signin'),
+      // route: localStorage.getItem('userData') ? 'home' : 'signin',
+      route: localStorage.getItem('userData') ? localStorage.getItem('lastRoute') : 'signin',
 
       user: {},
       isSignedIn: false,
@@ -60,6 +62,25 @@ const App = () => {
       userColorRecords: [],
       userAgeRecords: [],
   });
+
+  const [ token, setToken ] = useState(state.user.token);
+
+  /** Clear userData including JWT token every 60 minutes */
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      localStorage.removeItem('userData');
+      console.log('userData removed'); // Added for debugging
+  
+      setState(prevState => ({
+        ...prevState,
+        route: 'signin',
+        user: {},
+        isSignedIn: false,
+      }));
+    }, 60 * 60 * 1000);
+  
+    return () => clearInterval(intervalId); // Cleanup function
+  }, []);
 
   /* Listen to changes in state.isSignedIn for any updates needing re-mount */
   useEffect(() => {
@@ -132,6 +153,7 @@ const App = () => {
       ...prevState,
       user: {}, 
       isSignedIn: false, 
+      token: false,
       route: 'signin' 
     })
     );
@@ -145,6 +167,7 @@ const App = () => {
         case 'signout':
           setState(prevState => ({ 
             ...prevState,
+            token: false,
             route: 'signin',
             isSignedIn: routeInput !== 'signin'
           })
@@ -175,41 +198,6 @@ const App = () => {
           return;
     }
   }, []);
-
-  // ** src/shared/context/user-context.js
-  /* Session cookie */
-  const fetchUserData = useCallback(() => {
-    const devUserDataUrl = `http://localhost:3001/api/get-user-data`;
-    const prodUserDataUrl = `https://www.ai-recognition-backend.com/api/get-user-data`;
-
-    const fetchUrl = process.env.NODE_ENV === 'production' ? prodUserDataUrl : devUserDataUrl;
-
-    axios.get(fetchUrl, { withCredentials: true })
-    .then((response) => {
-      if (response.data) {
-        setState(prevState => ({
-          ...prevState,
-          user: response.data,
-          isSignedIn: true,
-        })); 
-      }
-    })
-    .catch((err) => {
-      console.error(`\nFailed to fetch user data: `, err, `\n`);
-      setState(prevState => ({ 
-        ...prevState, 
-        isSignedIn: false, 
-        route: 'signin' 
-      }));
-    });
-  }, []);
-
-  /* Invoke fetchUserData() callback on React app start */
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  /** END <UserContext /> **/
 
   // For Celebrity detection model
   const displayCelebrity = (celebrity) => {
@@ -262,35 +250,35 @@ const App = () => {
   // sending data to server-side
   
   /* Updating Entries - Fetching local web server vs live web server on Render */
-  const updateEntries = async () => {
-    const devUpdateEntriesUrl = 'http://localhost:3001/image';
-    const prodUpdateEntriesUrl = 'https://www.ai-recognition-backend.com/image';
+  // const updateEntries = async () => {
+  //   const devUpdateEntriesUrl = 'http://localhost:3001/image';
+  //   const prodUpdateEntriesUrl = 'https://www.ai-recognition-backend.com/image';
 
-    const fetchUrl = process.env.NODE_ENV === 'production' ? prodUpdateEntriesUrl : devUpdateEntriesUrl;
+  //   const fetchUrl = process.env.NODE_ENV === 'production' ? prodUpdateEntriesUrl : devUpdateEntriesUrl;
     
-    await fetch(fetchUrl, {
-        method: 'PUT', // PUT (Update) 
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ // sending stringified this.state variables as JSON objects
-        id: state.user.id
-        })
-      })
-      .then(response => {
-        return response.json()
-    })
-    .then(fetchedEntries => {
-      console.log(`fetched ENTRIES from server: \n ${fetchedEntries}`);
-      console.log(`typeof fetched ENTRIES from server: \n ${typeof fetchedEntries}`);
+  //   await fetch(fetchUrl, {
+  //       method: 'PUT', // PUT (Update) 
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
+  //       id: state.user.id
+  //       })
+  //     })
+  //     .then(response => {
+  //       return response.json()
+  //   })
+  //   .then(fetchedEntries => {
+  //     console.log(`fetched ENTRIES from server: \n ${fetchedEntries}`);
+  //     console.log(`typeof fetched ENTRIES from server: \n ${typeof fetchedEntries}`);
 
-      setState(prevState => ({
-          ...prevState,
-          entries: fetchedEntries
-      }))
-    })
-    .catch(err => {
-      console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
-    });
-  }
+  //     setState(prevState => ({
+  //         ...prevState,
+  //         entries: fetchedEntries
+  //     }))
+  //   })
+  //   .catch(err => {
+  //     console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
+  //   });
+  // }
 
   /** START <RecordContext /> **/
   // Everytime any of Detection Models is clicked
@@ -526,7 +514,7 @@ const App = () => {
         );
 
         if (response) { 
-          updateEntries();
+          // updateEntries();
         };
 
         displayFaceBox(calculateFaceLocation(response));
@@ -541,7 +529,7 @@ const App = () => {
       .catch(err => {
         console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
       });
-  }, [resetState, state.input, updateEntries]);
+  }, [resetState, state.input]);
 
   // ClarifaiAPI Color Detection model
   const onColorButton = useCallback(async () => {
@@ -579,7 +567,7 @@ const App = () => {
       // If there's a response upon fetching Clarifai API
       // fetch our server-side to update entries count too
       if (response) { 
-        updateEntries();
+        // updateEntries();
       };
 
       displayColor(findColor(response));
@@ -587,7 +575,7 @@ const App = () => {
     .catch(err => {
       console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
     });
-  }, [resetState, state.input, updateEntries]);
+  }, [resetState, state.input]);
 
   // ClarifaiAPI Age Detection model
   const onAgeButton = useCallback(async () => {
@@ -631,14 +619,14 @@ const App = () => {
     // displayColor adding color hex to state.color
     // findColor(response) returns color hex
     if (response) { 
-      updateEntries();
+      // updateEntries();
       };
       displayAge(findAge(response));
     })
     .catch((err) => {
       console.log(`\nError Fetching ${fetchUrl}:\n${err}\n`)
     });
-  }, [resetState, state.input, updateEntries]);
+  }, [resetState, state.input]);
 
   // For <ImageLinkForm />
   const onInputChange = useCallback((event) => {
@@ -720,10 +708,12 @@ const App = () => {
           value={{ 
             user: user,
             isSignedIn: isSignedIn,
+            token: token,
+            setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
             onRouteChange: onRouteChange,
-            fetchUserData: fetchUserData,
+            // fetchUserData: fetchUserData,
             resetState: resetState,
             onSignout: onSignout
           }}
@@ -739,10 +729,12 @@ const App = () => {
           value={{ 
             user: user,
             isSignedIn: isSignedIn,
+            token: token,
+            setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
             onRouteChange: onRouteChange,
-            fetchUserData: fetchUserData
+            // fetchUserData: fetchUserData
           }}
         >
           <RecordContext.Provider 
@@ -789,10 +781,12 @@ const App = () => {
           value={{ 
             user: user,
             isSignedIn: isSignedIn,
+            token: token,
+            setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
             onRouteChange: onRouteChange,
-            fetchUserData: fetchUserData
+            // fetchUserData: fetchUserData
           }}
         >
           <Signin />
@@ -803,10 +797,12 @@ const App = () => {
         value={{ 
           user: user,
           isSignedIn: isSignedIn,
+          token: token,
+          setToken: setToken,
           saveUser: saveUser,
           resetUser: resetUser,
           onRouteChange: onRouteChange,
-          fetchUserData: fetchUserData
+          // fetchUserData: fetchUserData
         }}
         >
           <Register />
@@ -818,10 +814,12 @@ const App = () => {
           value={{ 
             user: user,
             isSignedIn: isSignedIn,
+            token: token,
+            setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
             onRouteChange: onRouteChange,
-            fetchUserData: fetchUserData
+            // fetchUserData: fetchUserData
           }}
           >
             <RecordContext.Provider 
@@ -848,10 +846,12 @@ const App = () => {
           value={{ 
             user: user,
             isSignedIn: isSignedIn,
+            token: token,
+            setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
             onRouteChange: onRouteChange,
-            fetchUserData: fetchUserData
+            // fetchUserData: fetchUserData
           }}
           >
             <RecordContext.Provider 
@@ -878,10 +878,12 @@ const App = () => {
           value={{ 
             user: user,
             isSignedIn: isSignedIn,
+            token: token,
+            setToken: setToken,
             saveUser: saveUser,
             resetUser: resetUser,
             onRouteChange: onRouteChange,
-            fetchUserData: fetchUserData
+            // fetchUserData: fetchUserData
           }}
           >
             <RecordContext.Provider 
@@ -918,7 +920,7 @@ const App = () => {
             saveUser: saveUser,
             resetUser: resetUser,
             onRouteChange: onRouteChange,
-            fetchUserData: fetchUserData,
+            // fetchUserData: fetchUserData,
             resetState: resetState,
             onSignout: onSignout
           }}
