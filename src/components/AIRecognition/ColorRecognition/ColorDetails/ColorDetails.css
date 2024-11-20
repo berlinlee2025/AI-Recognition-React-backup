@@ -16,10 +16,11 @@
     padding-inline: 2% 2%;
 }
 
-/* .color-table {
-    width: 48vw;
-    padding-right: 2vw;
-} */
+.color-table {
+    /* width: 48vw;
+    padding-right: 2vw; */
+    margin-top: 1.5rem;
+}
 
 .color {
     border-radius: 5px;

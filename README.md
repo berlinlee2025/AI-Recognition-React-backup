@@ -5,7 +5,6 @@
     target="_blank"
 >https://ai-recognition-frontend.onrender.com</a>
 <!-- <h2>https://ai-recognition-frontend.onrender.com</h2> -->
-<br/>
 
 <h2>Live Backend Node.js server on Cloud</h2>
 <a class="btn btn-inv projects__btn-inv"
@@ -16,16 +15,14 @@
 
 <h2>Clarifai AI 3rd party API</h2>
 <img src="./assets/clarifai-ai.png" alt="clarifai-ai" />
-<br/>
+
 <h2>React.js</h2>
 <img src="./assets//React.jpg" alt="react" />
-<br/>
 
 <h2>Learn more about Clarifai API</h2>
 <h2>https://clarifai.com/explore/models?searchQuery=face-detection</h2>
 <h2>Clarifai AI documentation</h2>
 <h2>https://docs.clarifai.com/</h2>
-<br/>
 
 <h2>1. To download this React app:</h2>
 

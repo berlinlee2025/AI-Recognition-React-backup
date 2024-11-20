@@ -70,11 +70,6 @@ const CheckRecordsPanel = ({
     return (
       <div 
         className={classes.navgt}
-        style={{
-          // Nav List Margin bottom
-          marginBottom: dimensions.width < 2800 ? 
-            navListMarginBottomGt : navListMarginBottomGGt
-        }}
       >
         <div
           style={{
