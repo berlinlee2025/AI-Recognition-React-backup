@@ -83,24 +83,11 @@ const FaceRecognition = ({
         onRouteChange('home');
       }
         
-      const bodyData = JSON.stringify({ 
-          userId: user.id, 
-          celebrityName: celebrityName,
-          imageUrl: input,
-          imageBlob: imageBlob ? imageBlob : '',
-          metadata: base64Metadata ? base64Metadata : '',
-          dateTime: new Date().toISOString()
-      });
-      console.log(`\nFaceRecognition saveCelebrity() resData: `, resData, `\n`);
-      console.log(`\nFaceRecognition saveCelebrity() user.id: `, user.id, `\n`);
-      console.log(`\nFaceRecognition saveCelebrity() input: `, input, `\n`);
-      console.log(`\nFetching ${fetchUrl} with bodyData`, bodyData, `\n`);
-
       fetch(fetchUrl, {
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userContext.user.token}`
+        Authorization: `Bearer ${user.token}`
       },
       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
           userId: user.id,

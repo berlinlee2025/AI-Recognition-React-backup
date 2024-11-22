@@ -485,6 +485,10 @@ const App = () => {
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodFetchCelebrityImageUrl : devFetchCelebrityImageUrl;
 
+    // const userData = JSON.parse(localStorage.getItem('userData'));
+    console.log(`\nonCelebrityButton():\nstate.user.id: `, state.user.id, `\n`)
+    console.log(`\nonCelebrityButton():\nstate.user.token: `, state.user.token, `\n`)
+
       fetch(fetchUrl, {
         method: 'POST', 
         headers: {
