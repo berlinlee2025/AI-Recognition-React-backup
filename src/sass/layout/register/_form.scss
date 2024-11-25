@@ -30,9 +30,9 @@ $padding-right-small: 4rem;
 @mixin input($font-size) {
     font-weight: bold;
     padding: 0.5rem;
-    border-style: solid;
-    border-width: 1px;
-    background-color: var(--transparent);
+    // border-style: solid;
+    // border-width: 1px;
+    // background-color: var(--transparent);
     font-size: $font-size;
 }
 
