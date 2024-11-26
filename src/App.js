@@ -650,34 +650,50 @@ const App = () => {
   const onSignout = useCallback(async () => {
     resetState();
 
-    const devSignoutUrl = `http://localhost:3001/signout`;
-    const prodSignoutUrl = `https://www.ai-recognition-backend.com/signout`;
-    const fetchUrl = process.env.NODE_ENV === 'production' ? prodSignoutUrl : devSignoutUrl;
+    setState(prevState => ({
+      ...prevState,
+      celebrity: {},
+      colors: [],
+      age: [],
+      user: {},
+      isSignedIn: false,
+      route: 'signin'
+    })
+    );
 
-    fetch(fetchUrl, {
-      method: 'post',
-      credentials: 'include', // To include credentials for cookies
-    })
-    .then((response) => {
-      setState(prevState => ({
-        ...prevState,
-        celebrity: {},
-        colors: [],
-        age: [],
-        user: {},
-        isSignedIn: false,
-        route: 'signin'
-      })
-      );
-      // Remove 'lastRoute' from localStorage when user signs out
-      localStorage.removeItem('lastRoute');
-      localStorage.removeItem('userData');
-      resetUserRecords();
-      onRouteChange('signin')
-    })
-    .catch((err) => {
-      console.error(`Error signing out user: `, err, `\n`);
-    })
+    localStorage.removeItem('lastRoute');
+    localStorage.removeItem('userData');
+    resetUserRecords();
+    onRouteChange('signin')
+
+    // const devSignoutUrl = `http://localhost:3001/signout`;
+    // const prodSignoutUrl = `https://www.ai-recognition-backend.com/signout`;
+    // const fetchUrl = process.env.NODE_ENV === 'production' ? prodSignoutUrl : devSignoutUrl;
+
+    // fetch(fetchUrl, {
+    //   method: 'post',
+    //   // credentials: 'include', // To include credentials for cookies
+    // })
+    // .then((response) => {
+    //   setState(prevState => ({
+    //     ...prevState,
+    //     celebrity: {},
+    //     colors: [],
+    //     age: [],
+    //     user: {},
+    //     isSignedIn: false,
+    //     route: 'signin'
+    //   })
+    //   );
+    //   // Remove 'lastRoute' from localStorage when user signs out
+    //   localStorage.removeItem('lastRoute');
+    //   localStorage.removeItem('userData');
+    //   resetUserRecords();
+    //   onRouteChange('signin');
+    // })
+    // .catch((err) => {
+    //   console.error(`Error signing out user: `, err, `\n`);
+    // })
   }, [onRouteChange, resetState]);
 
 

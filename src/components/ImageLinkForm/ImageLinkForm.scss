@@ -114,8 +114,7 @@ $gutter-horizontal: 3.75rem;
         min-width: 5rem;
     
         &__btn {
-            box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
-            0.025rem 0.025rem 0.025rem #ffffff;
+            border: 1px solid aqua;
             margin-bottom: 0.55rem;
             border-radius: 0.5rem;
             -moz-osx-font-smoothing: grayscale;

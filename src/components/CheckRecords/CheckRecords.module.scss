@@ -259,7 +259,6 @@
 }
 
 .lk {
-    //color: var(--white-1);
     box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
             0.025rem 0.025rem 0.025rem #ffffff;
     text-align: left;
@@ -267,19 +266,13 @@
     width: 8rem;
     padding: 0.5rem 0.5rem; 
     margin-bottom: 0.5rem;
-    // box-shadow: 0 0.25rem 0.25rem 0.1rem rgba($color-primary, 0.6);
     border-radius: 1rem;
     color: rgba($font-light, .8);
     background: transparent;
-    // background-color: #a463f2;
-    // background-color: rgba(1,205,221, 1);
-    // background-image: linear-gradient(to bottom left, rgb(1,231,238), rgb(1,205,221));
-    // background-image: linear-gradient(to bottom left, rgb(1,254,255), rgb(1,231,238), rgb(1,205,221), rgb(0,175,200),rgb(2,138,175));
     font-size: 1.3rem;
     font-weight: 400;
     font-family: sans-serif;
     padding-block: 10px 0;
-    border-bottom: 10px solid transparent;
     text-decoration: none;
     transition: 0.5s;
     display: inline-block;
