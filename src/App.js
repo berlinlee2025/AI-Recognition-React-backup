@@ -666,41 +666,12 @@ const App = () => {
     resetUserRecords();
     onRouteChange('signin')
 
-    // const devSignoutUrl = `http://localhost:3001/signout`;
-    // const prodSignoutUrl = `https://www.ai-recognition-backend.com/signout`;
-    // const fetchUrl = process.env.NODE_ENV === 'production' ? prodSignoutUrl : devSignoutUrl;
-
-    // fetch(fetchUrl, {
-    //   method: 'post',
-    //   // credentials: 'include', // To include credentials for cookies
-    // })
-    // .then((response) => {
-    //   setState(prevState => ({
-    //     ...prevState,
-    //     celebrity: {},
-    //     colors: [],
-    //     age: [],
-    //     user: {},
-    //     isSignedIn: false,
-    //     route: 'signin'
-    //   })
-    //   );
-    //   // Remove 'lastRoute' from localStorage when user signs out
-    //   localStorage.removeItem('lastRoute');
-    //   localStorage.removeItem('userData');
-    //   resetUserRecords();
-    //   onRouteChange('signin');
-    // })
-    // .catch((err) => {
-    //   console.error(`Error signing out user: `, err, `\n`);
-    // })
   }, [onRouteChange, resetState]);
 
 
   const saveToDevice = async (outerHTML) => {
-
     const devSaveHtmlUrl = 'http://localhost:3001/save-html';
-    const prodSaveHtmlUrl = 'https://ai-recognition-backend.onrender.com/save-html';
+    const prodSaveHtmlUrl = 'https://www.ai-recognition-backend.com/save-html';
 
     const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveHtmlUrl : devSaveHtmlUrl;
     const date = new Date().toISOString().replace(/:/g, '-');  // Format date for filename
@@ -709,7 +680,9 @@ const App = () => {
         const response = await axios({
             method: 'POST',
             url: fetchUrl,
-            data: { htmlContent: outerHTML },
+            data: { 
+              htmlContent: outerHTML 
+            },
             responseType: 'arraybuffer',
             headers: {
                 Authorization: `Bearer ${state.user.token}`

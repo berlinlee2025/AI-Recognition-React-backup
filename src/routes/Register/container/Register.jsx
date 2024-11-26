@@ -418,7 +418,7 @@ const Register = (props) => {
         console.log(`response: `, response, `\n`);
         
         localStorage.setItem('userData', JSON.stringify(response.user));
-        localStorage.setItem('lastRoute', 'home');
+        // localStorage.setItem('lastRoute', 'home');
         userContext.onRouteChange('home');       
         userContext.saveUser(response.user);
 
