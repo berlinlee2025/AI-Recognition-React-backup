@@ -25,7 +25,9 @@ const FaceRecognition = ({
   onRouteChange
 }) => {
     const [imageBlob, setImageBlob] = useState(''); // Blob { size: Number, type: String, userId: undefined }
+    
     const [resData, setResData] = useState('');
+
     // Keep tracking response.status.code as a number
     // Allow to be passed to other/child components
     // Allow other components to reset latest response.status.code
@@ -94,12 +96,12 @@ const FaceRecognition = ({
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.token}`
+        Authorization: `Bearer ${userContext.user.token}`
       },
       body: JSON.stringify({ // sending stringified this.state variables as JSON objects
-          userId: user.id,
-          celebrityName: celebrityName,
-          imageUrl: input,
+          userId: userContext.user.id,
+          celebrityName: aiContext.celebrityName,
+          imageUrl: aiContext.input,
           imageBlob: imageBlob,
           metadata: base64Metadata,
           dateTime: new Date().toISOString()

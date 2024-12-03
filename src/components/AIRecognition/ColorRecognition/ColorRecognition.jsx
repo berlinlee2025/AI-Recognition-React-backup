@@ -61,7 +61,9 @@ const ColorRecognition = ({
     }, [input]); // State management array[] to listen on imageUrl
 
     /* For saving Celebrity record to User's local machine using Puppeteer */
-    const htmlToSave =  document.querySelector('.color-container') ? document.querySelector('.color-container').outerHTML : null;
+    // const htmlToSave =  document.querySelector('.color-container') ? document.querySelector('.color-container').outerHTML : null;
+
+    const htmlToSave = document.querySelector('#color-container') ? document.querySelector('#color-container').outerHTML : null;
 
     /* 1. Save to Account button to save Color details into PostgreSQL as blob metadata */
     const saveColor = async () => {
@@ -85,9 +87,9 @@ const ColorRecognition = ({
         }
     
         const imageRecord = {
-        imageUrl: input,
-        metadata: base64Metadata,
-        dateTime: new Date().toISOString()
+          imageUrl: input,
+          metadata: base64Metadata,
+          dateTime: new Date().toISOString()
         };
 
         const imageDetails = color_props_array.map((eachColor) => {
@@ -110,8 +112,7 @@ const ColorRecognition = ({
         console.log(`\nColorDetails saveColor user.id: `, user.id, `\n`);
         console.log(`\nColorDetails color_props: `, color_props, `\n`);
         console.log(`\nColorDetails input: `, input, `\n`);
-        // console.log(`\nColorDetails saveColor imageRecord:\n`, imageRecord, `\n`);
-        // console.log(`\nColorDetails saveColor imageDetails:\n`, imageDetails, `\n`);
+
         console.log(`\nFetching ${fetchUrl} with bodyData`, bodyData, `\n`);
 
         fetch(fetchUrl, {
@@ -130,6 +131,7 @@ const ColorRecognition = ({
         })
         .then((response) => response.json())
         .then((response) => {
+
         console.log(`\nColorDetails saveColor response: `, response, `\n`);
         console.log(`\nColorDetails saveColor response.message: `, response.message, `\n`);
         console.log(`\nColorDetails saveColor response.status.code: `, response.status.code);
@@ -164,6 +166,7 @@ const ColorRecognition = ({
                       <img 
                           className="color-image frosted__children"
                           src={imageUrl}
+
                           alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
                       />
                   </div>
@@ -191,9 +194,12 @@ const ColorRecognition = ({
           <div className="saveBtn u-margin-top-tiny u-margin-bottom-small">
             <button 
               className="saveBtn__p"
+
               onClick={() => { 
                 aiContext.saveToDevice(htmlToSave); 
+
                 setResponseStatusCode(200); 
+
                 showModal();
               }} 
             >

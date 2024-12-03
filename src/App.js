@@ -67,6 +67,20 @@ const App = () => {
 
   const [ token, setToken ] = useState(state.user.token);
 
+  // Clear local storage when the browser tab is closed
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.clear(); // Clears all localStorage data
+      console.log('Local storage cleared');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('lastRoute', 'home');
   }, []);
@@ -668,7 +682,7 @@ const App = () => {
 
   }, [onRouteChange, resetState]);
 
-
+  /** For 'Save to Device' button that accepts outerHtml to receive .pdf file Buffer from Node.js Backend Puppeteer */
   const saveToDevice = async (outerHTML) => {
     const devSaveHtmlUrl = 'http://localhost:3001/save-html';
     const prodSaveHtmlUrl = 'https://www.ai-recognition-backend.com/save-html';
@@ -694,10 +708,15 @@ const App = () => {
         const file = new Blob([response.data], { type: 'application/pdf' });
         
         const fileUrl = window.URL.createObjectURL(file);
+
         const link = document.createElement('a');
+
         link.href = fileUrl;
+
         link.setAttribute('download', `color-details_${date}.pdf`);
+
         document.body.appendChild(link);
+
         link.click();
         document.body.removeChild(link);
 
