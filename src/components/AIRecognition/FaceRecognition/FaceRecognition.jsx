@@ -44,16 +44,21 @@ const FaceRecognition = ({
     
           try {
             const response = await axios.get(`${fetchUrl}`, { responseType: 'blob' });
+
             console.log(`\nReceived metadata blob response:`, response, `\n`);
     
+            /* Browser API - new FileReader */
             const reader = new FileReader();
             reader.onloadend = () => {
               // useState() to store this.state.imageBlob: response.data
               setImageBlob(reader.result);
             };
+
             reader.readAsDataURL(response.data);
             setResData(response.data);
+
             console.log(`\nresponse.data:\n$`, response.data, `\n`);
+            
           } catch (err) {
             console.error(`\nFailed to get 'blob' via axios.get(${fetchUrl}\nError: ${err}\n`);
           }
@@ -72,7 +77,9 @@ const FaceRecognition = ({
       const callbackName = `src/components/AIRecognition/ColorRecognition/ColorDetails/ColorDetails.jsx\nsaveFace = async () => {...}`;
       
       const devSaveColorUrl = 'http://localhost:3001/records/save-user-celebrity';
+      
       const prodSaveColorUrl = 'https://www.ai-recognition-backend.com/records/save-user-celebrity';
+
       const fetchUrl = process.env.NODE_ENV === 'production' ? prodSaveColorUrl : devSaveColorUrl;
 
       // Assuming resData is the Blob
