@@ -1,7 +1,7 @@
 .logo-container {
-    margin: 2rem;
-    margin-top: 1rem;
-    border-radius: 0.25rem;
+    // margin: 2rem;
+    // margin-top: 1rem;
+    // border-radius: 0.25rem;
 }
 
 .Tilt {
@@ -17,10 +17,6 @@
     border-radius: 0.5rem;
     padding: 1rem;
     transition: all 1s ease-in-out;
-
-    &:hover {
-        box-shadow: 0.3rem 0.3rem 1rem #f6f8f8, -2px -2px 1rem #eefa43;
-    }
 }
 
 .logo {

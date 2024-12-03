@@ -34,7 +34,6 @@ const CheckRecordsPanel = ({
   // window.dimensions.width >= 850
   const navListMarginBottomGt = Math.floor(dimensions.width * 0.1);
   const navListMarginBottomGGt = Math.floor(navListMarginBottomGt * 2.0);
-  //console.log(`navListMarginBottom: ${navListMarginBottom}`);
 
   // For Nav List items font sizes
   // When window.inner.width >= 860px
@@ -71,19 +70,10 @@ const CheckRecordsPanel = ({
       <div 
         className={classes.navgt}
       >
-        <div
-          style={{
-            width: "40%",
-            paddingLeft: "0%",
-            alignItems: "center",
-            height: "100%",
-            marginTop: 5,
-          }}
-        >
+        <div>
           <Logo className={classes.logo} value="Smart Brain" />
         </div>
         <div className={`${classes.nav}`}>
-          <ul className={`${classes.ls} ${classes.frosted}`}>
             <CheckRecordsLi
               user={userContext.user}
               fontGt={fontGt}
@@ -102,7 +92,6 @@ const CheckRecordsPanel = ({
               userAgeRecords={recordContext.userAgeRecords}
               onAgeRecordsButton={recordContext.onAgeRecordsButton} 
             />
-          </ul>
         </div>
       </div>
     );

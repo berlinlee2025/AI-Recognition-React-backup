@@ -62,6 +62,8 @@ $gutter-horizontal: 3.75rem;
 }
 
 .link-container {
+    border: 1px solid rgba(255,255,255, 0.8);
+    
     box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
             0.025rem 0.025rem 0.025rem #ffffff;
     font-size: 1.25rem;
@@ -69,11 +71,6 @@ $gutter-horizontal: 3.75rem;
     margin-right: auto;
     padding: 0 1rem;
     border-radius: 0.5rem;
-    
-    // background-image: radial-gradient(closest-side, transparent 98%, rgba(75, 181, 210, 0.3) 99%),
-    //     radial-gradient(closest-side, transparent 98%, rgba(248, 64, 245, 0.3) 99%);
-    
-    // background-size: 80px 80px;
 
     background-position: 0 0, 40px 40px;
     display: flex;

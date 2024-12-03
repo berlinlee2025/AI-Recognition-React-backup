@@ -13,7 +13,9 @@
     flex-flow: row wrap;
     background-color: rgba($color-primary, 1);
 }
-
+.button{
+    display: flex;
+}
 .nav {
     display: flex;
     flex-flow: column;
@@ -28,7 +30,7 @@
     justify-content: space-between;
     // height: 18rem;
     //background-color: rgba($color-primary-light2, 1);
-    padding-inline: 5%;
+    // padding-inline: 5%;
 }
 
 .logo {
@@ -220,13 +222,13 @@
 }
 
 .ls {
-    margin-top: -9rem;
-    height: 0vh;
-    list-style-type: none;
-    display: flex;
-    justify-content: flex-end;
-    gap: 60px;
-    padding-inline: 20%;
+    // margin-top: -9rem;
+    // height: 0vh;
+    // list-style-type: none;
+    // display: flex;
+    // justify-content: flex-end;
+    // gap: 60px;
+    // padding-inline: 20%;
 }
 
 .lswrap {
@@ -259,20 +261,22 @@
 }
 
 .lk {
-    box-shadow: 0.025rem 0.025rem 0.025rem 0.025rem #93e9fa,
-            0.025rem 0.025rem 0.025rem #ffffff;
+    // box-shadow: 0.1rem 0.1rem 0.25rem 0.1rem rgba(255,255,255, 0.3);
+
+    border: 1px solid white;
+   width: 92px;
     text-align: left;
     margin-right: 1rem;
-    width: 8rem;
+    // width: 8rem;
     padding: 0.5rem 0.5rem; 
     margin-bottom: 0.5rem;
     border-radius: 1rem;
     color: rgba($font-light, .8);
     background: transparent;
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 400;
     font-family: sans-serif;
-    padding-block: 10px 0;
+    // padding-block: 10px 0;
     text-decoration: none;
     transition: 0.5s;
     display: inline-block;
@@ -280,11 +284,9 @@
 
     &:hover {
         text-decoration: none;
-        // padding: 0.6rem;
-        border-radius: 1.5rem;
-        transform: scale(1.02) translateY(-0.3rem);
+        transform: translateY(0.2rem);
         color: rgba($font-light, 1);
-        box-shadow: 0.3rem 0.3rem 1rem #f6f8f8, -2px -2px 1rem #eefa43;
+        // box-shadow: 2px 2px 2px #f6f8f8, -2px -2px 1px #eefa43;
         flex-grow: 5px;
         
     }

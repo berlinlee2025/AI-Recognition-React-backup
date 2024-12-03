@@ -28,7 +28,7 @@ export default function CheckRecordsLi( {
           data-value="Home Page" 
           className={`${classes.lk} buttons__btn`}
       >
-        Home Page
+        Home <br/>Page
       </button>
       <button 
         onClick={onCelebrityRecordsButton}
