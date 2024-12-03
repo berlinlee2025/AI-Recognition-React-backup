@@ -444,7 +444,7 @@ const Register = (props) => {
   }
 
   return (
-    <div>
+    <div class="register-container">
       <article className="article"> 
       <main className="article__main">
         <form className="measure" >

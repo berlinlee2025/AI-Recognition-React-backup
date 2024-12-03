@@ -82,7 +82,7 @@ const Signin = () => {
 
   return (
     <React.Fragment>
-    <div className="signin u-margin-bottom-medium">
+    <div className={`${classes.signin} u-margin-bottom-medium`}>  
       <article className={`${classes.article}`} >
       <main className={`${classes.main}`}>
         <form className="measure">
