@@ -67,20 +67,6 @@ const App = () => {
 
   const [ token, setToken ] = useState(state.user.token);
 
-  // Clear local storage when the browser tab is closed
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      localStorage.clear(); // Clears all localStorage data
-      console.log('Local storage cleared');
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-
   useEffect(() => {
     localStorage.setItem('lastRoute', 'home');
   }, []);
