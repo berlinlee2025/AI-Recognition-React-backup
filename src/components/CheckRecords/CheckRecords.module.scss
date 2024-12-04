@@ -281,12 +281,12 @@
     transition: 0.5s;
     display: inline-block;
     cursor: pointer;
+    transition: all .5s ease-in-out;
 
     &:hover {
         text-decoration: none;
-        transform: translateY(0.2rem);
+        transform: translateY(1px);
         color: rgba($font-light, 1);
-        // box-shadow: 2px 2px 2px #f6f8f8, -2px -2px 1px #eefa43;
         flex-grow: 5px;
         
     }

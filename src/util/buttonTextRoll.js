@@ -16,7 +16,9 @@ const useButtonTextRoll = (tabs) => {
             let iterations = 0;
             const interval = setInterval(() => {
                 target.style.height = '42px';
-                target.style.width = '80px';
+                target.style.width = '40px';
+                target.style.overflow = 'hidden';
+                target.style.textOverflow = 'ellipsis';
 
                 target.innerText = finalText
                     .split("")
@@ -27,6 +29,7 @@ const useButtonTextRoll = (tabs) => {
                     .join("");
 
                 iterations++;
+
                 if (iterations > finalText.length) {
                     clearInterval(interval);
                     target.innerText = finalText; // Ensure final text is set after animation
