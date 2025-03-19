@@ -153,6 +153,7 @@ const ColorRecognition = ({
             
         modal.style.opacity = 1;
        
+        // Hide modal in 2 seconds
         setTimeout(() => modal.style.opacity=0, 2000)
     }
 
@@ -190,7 +191,9 @@ const ColorRecognition = ({
               Save to Account
             </button>
           </div>
+
           {/* Save to Device button */}
+          {/*
           <div className="saveBtn u-margin-top-tiny u-margin-bottom-small">
             <button 
               className="saveBtn__p"
@@ -206,6 +209,7 @@ const ColorRecognition = ({
               Save to Device
             </button>
           </div>
+          */}
         </React.Fragment>
   );
 };
